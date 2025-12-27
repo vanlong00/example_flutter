@@ -1,9 +1,8 @@
-import 'package:example/config/injection.dart';
+import 'package:example/core/configs/di/injection.dart';
+import 'package:example/features/home/pages/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'config/theme.dart';
-import 'features/counter/bloc/counter_bloc.dart';
-import 'features/counter/pages/counter_page.dart';
+
+import 'core/configs/theme.dart';
 
 void main() {
   configureDependencies(); // Initialize DI
@@ -15,14 +14,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      home: BlocProvider(
-        create: (context) => getIt<CounterBloc>(),
-        child: const CounterPage(title: 'Flutter Demo Home Page'),
-      ),
-    );
+    return MaterialApp(title: 'Flutter Demo', theme: AppTheme.lightTheme, darkTheme: AppTheme.darkTheme, home: const HomePage());
   }
 }
