@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'melon_metadata.dart';
+part of 'melon_metadata_v4.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_MelonMetadata _$MelonMetadataFromJson(Map<String, dynamic> json) =>
-    _MelonMetadata(
+_MelonMetadataV4 _$MelonMetadataV4FromJson(Map<String, dynamic> json) =>
+    _MelonMetadataV4(
       isActivated: json['isActivated'] as bool?,
       uniqueId: json['uniqueId'] as String?,
       modType: (json['modType'] as num?)?.toInt(),
@@ -27,7 +27,7 @@ _MelonMetadata _$MelonMetadataFromJson(Map<String, dynamic> json) =>
       workshopMetadata: json['WorkshopMetadata'],
     );
 
-Map<String, dynamic> _$MelonMetadataToJson(_MelonMetadata instance) =>
+Map<String, dynamic> _$MelonMetadataV4ToJson(_MelonMetadataV4 instance) =>
     <String, dynamic>{
       'isActivated': instance.isActivated,
       'uniqueId': instance.uniqueId,

@@ -11,8 +11,10 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
+  file_picker: ^10.3.8
+  uuid: ^4.0.0
 
-  # Dependency Injection 
+  # Dependency Injection
   get_it:
   injectable:
 
@@ -51,4 +53,3 @@ flutter:
     # - assets/lottie/
     # - assets/rive/
     - assets/data/
-  
