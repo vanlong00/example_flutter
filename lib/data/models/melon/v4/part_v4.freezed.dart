@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PartV4 {
 
- AssetReference? get mainTexture; bool? get pixelsPerUnit; List<String>? get colliderJson; Object? get glowMap; MelonVector3? get grabPosition; bool? get canBeTaken; bool? get canGlow; bool? get canBurn; bool? get canFloat;@JsonKey(name: 'RotateViaPointer') bool? get rotateViaPointer;
+ AssetReference? get mainTexture; double? get pixelsPerUnit; List<String>? get colliderJson; Object? get glowMap; MelonVector3? get grabPosition; bool? get canBeTaken; bool? get canGlow; bool? get canBurn; bool? get canFloat;@JsonKey(name: 'RotateViaPointer') bool? get rotateViaPointer;
 /// Create a copy of PartV4
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $PartV4CopyWith<$Res>  {
   factory $PartV4CopyWith(PartV4 value, $Res Function(PartV4) _then) = _$PartV4CopyWithImpl;
 @useResult
 $Res call({
- AssetReference? mainTexture, bool? pixelsPerUnit, List<String>? colliderJson, Object? glowMap, MelonVector3? grabPosition, bool? canBeTaken, bool? canGlow, bool? canBurn, bool? canFloat,@JsonKey(name: 'RotateViaPointer') bool? rotateViaPointer
+ AssetReference? mainTexture, double? pixelsPerUnit, List<String>? colliderJson, Object? glowMap, MelonVector3? grabPosition, bool? canBeTaken, bool? canGlow, bool? canBurn, bool? canFloat,@JsonKey(name: 'RotateViaPointer') bool? rotateViaPointer
 });
 
 
@@ -69,7 +69,7 @@ class _$PartV4CopyWithImpl<$Res>
   return _then(_self.copyWith(
 mainTexture: freezed == mainTexture ? _self.mainTexture : mainTexture // ignore: cast_nullable_to_non_nullable
 as AssetReference?,pixelsPerUnit: freezed == pixelsPerUnit ? _self.pixelsPerUnit : pixelsPerUnit // ignore: cast_nullable_to_non_nullable
-as bool?,colliderJson: freezed == colliderJson ? _self.colliderJson : colliderJson // ignore: cast_nullable_to_non_nullable
+as double?,colliderJson: freezed == colliderJson ? _self.colliderJson : colliderJson // ignore: cast_nullable_to_non_nullable
 as List<String>?,glowMap: freezed == glowMap ? _self.glowMap : glowMap ,grabPosition: freezed == grabPosition ? _self.grabPosition : grabPosition // ignore: cast_nullable_to_non_nullable
 as MelonVector3?,canBeTaken: freezed == canBeTaken ? _self.canBeTaken : canBeTaken // ignore: cast_nullable_to_non_nullable
 as bool?,canGlow: freezed == canGlow ? _self.canGlow : canGlow // ignore: cast_nullable_to_non_nullable
@@ -185,7 +185,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( AssetReference? mainTexture,  bool? pixelsPerUnit,  List<String>? colliderJson,  Object? glowMap,  MelonVector3? grabPosition,  bool? canBeTaken,  bool? canGlow,  bool? canBurn,  bool? canFloat, @JsonKey(name: 'RotateViaPointer')  bool? rotateViaPointer)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( AssetReference? mainTexture,  double? pixelsPerUnit,  List<String>? colliderJson,  Object? glowMap,  MelonVector3? grabPosition,  bool? canBeTaken,  bool? canGlow,  bool? canBurn,  bool? canFloat, @JsonKey(name: 'RotateViaPointer')  bool? rotateViaPointer)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PartV4() when $default != null:
 return $default(_that.mainTexture,_that.pixelsPerUnit,_that.colliderJson,_that.glowMap,_that.grabPosition,_that.canBeTaken,_that.canGlow,_that.canBurn,_that.canFloat,_that.rotateViaPointer);case _:
@@ -206,7 +206,7 @@ return $default(_that.mainTexture,_that.pixelsPerUnit,_that.colliderJson,_that.g
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( AssetReference? mainTexture,  bool? pixelsPerUnit,  List<String>? colliderJson,  Object? glowMap,  MelonVector3? grabPosition,  bool? canBeTaken,  bool? canGlow,  bool? canBurn,  bool? canFloat, @JsonKey(name: 'RotateViaPointer')  bool? rotateViaPointer)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( AssetReference? mainTexture,  double? pixelsPerUnit,  List<String>? colliderJson,  Object? glowMap,  MelonVector3? grabPosition,  bool? canBeTaken,  bool? canGlow,  bool? canBurn,  bool? canFloat, @JsonKey(name: 'RotateViaPointer')  bool? rotateViaPointer)  $default,) {final _that = this;
 switch (_that) {
 case _PartV4():
 return $default(_that.mainTexture,_that.pixelsPerUnit,_that.colliderJson,_that.glowMap,_that.grabPosition,_that.canBeTaken,_that.canGlow,_that.canBurn,_that.canFloat,_that.rotateViaPointer);case _:
@@ -226,7 +226,7 @@ return $default(_that.mainTexture,_that.pixelsPerUnit,_that.colliderJson,_that.g
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( AssetReference? mainTexture,  bool? pixelsPerUnit,  List<String>? colliderJson,  Object? glowMap,  MelonVector3? grabPosition,  bool? canBeTaken,  bool? canGlow,  bool? canBurn,  bool? canFloat, @JsonKey(name: 'RotateViaPointer')  bool? rotateViaPointer)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( AssetReference? mainTexture,  double? pixelsPerUnit,  List<String>? colliderJson,  Object? glowMap,  MelonVector3? grabPosition,  bool? canBeTaken,  bool? canGlow,  bool? canBurn,  bool? canFloat, @JsonKey(name: 'RotateViaPointer')  bool? rotateViaPointer)?  $default,) {final _that = this;
 switch (_that) {
 case _PartV4() when $default != null:
 return $default(_that.mainTexture,_that.pixelsPerUnit,_that.colliderJson,_that.glowMap,_that.grabPosition,_that.canBeTaken,_that.canGlow,_that.canBurn,_that.canFloat,_that.rotateViaPointer);case _:
@@ -245,7 +245,7 @@ class _PartV4 implements PartV4 {
   factory _PartV4.fromJson(Map<String, dynamic> json) => _$PartV4FromJson(json);
 
 @override final  AssetReference? mainTexture;
-@override final  bool? pixelsPerUnit;
+@override final  double? pixelsPerUnit;
  final  List<String>? _colliderJson;
 @override List<String>? get colliderJson {
   final value = _colliderJson;
@@ -296,7 +296,7 @@ abstract mixin class _$PartV4CopyWith<$Res> implements $PartV4CopyWith<$Res> {
   factory _$PartV4CopyWith(_PartV4 value, $Res Function(_PartV4) _then) = __$PartV4CopyWithImpl;
 @override @useResult
 $Res call({
- AssetReference? mainTexture, bool? pixelsPerUnit, List<String>? colliderJson, Object? glowMap, MelonVector3? grabPosition, bool? canBeTaken, bool? canGlow, bool? canBurn, bool? canFloat,@JsonKey(name: 'RotateViaPointer') bool? rotateViaPointer
+ AssetReference? mainTexture, double? pixelsPerUnit, List<String>? colliderJson, Object? glowMap, MelonVector3? grabPosition, bool? canBeTaken, bool? canGlow, bool? canBurn, bool? canFloat,@JsonKey(name: 'RotateViaPointer') bool? rotateViaPointer
 });
 
 
@@ -317,7 +317,7 @@ class __$PartV4CopyWithImpl<$Res>
   return _then(_PartV4(
 mainTexture: freezed == mainTexture ? _self.mainTexture : mainTexture // ignore: cast_nullable_to_non_nullable
 as AssetReference?,pixelsPerUnit: freezed == pixelsPerUnit ? _self.pixelsPerUnit : pixelsPerUnit // ignore: cast_nullable_to_non_nullable
-as bool?,colliderJson: freezed == colliderJson ? _self._colliderJson : colliderJson // ignore: cast_nullable_to_non_nullable
+as double?,colliderJson: freezed == colliderJson ? _self._colliderJson : colliderJson // ignore: cast_nullable_to_non_nullable
 as List<String>?,glowMap: freezed == glowMap ? _self.glowMap : glowMap ,grabPosition: freezed == grabPosition ? _self.grabPosition : grabPosition // ignore: cast_nullable_to_non_nullable
 as MelonVector3?,canBeTaken: freezed == canBeTaken ? _self.canBeTaken : canBeTaken // ignore: cast_nullable_to_non_nullable
 as bool?,canGlow: freezed == canGlow ? _self.canGlow : canGlow // ignore: cast_nullable_to_non_nullable

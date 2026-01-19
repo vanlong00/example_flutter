@@ -10,7 +10,7 @@ _PartV4 _$PartV4FromJson(Map<String, dynamic> json) => _PartV4(
   mainTexture: json['mainTexture'] == null
       ? null
       : AssetReference.fromJson(json['mainTexture'] as Map<String, dynamic>),
-  pixelsPerUnit: json['pixelsPerUnit'] as bool?,
+  pixelsPerUnit: (json['pixelsPerUnit'] as num?)?.toDouble(),
   colliderJson: (json['colliderJson'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),

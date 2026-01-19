@@ -14,9 +14,9 @@ _ModHumanV4 _$ModHumanV4FromJson(Map<String, dynamic> json) => _ModHumanV4(
   bloodColor: json['bloodColor'] == null
       ? null
       : MelonColor.fromJson(json['bloodColor'] as Map<String, dynamic>),
-  eyePos: json['eyePos'] == null
-      ? null
-      : MelonVector2.fromJson(json['eyePos'] as Map<String, dynamic>),
+  eyePos: (json['eyePos'] as List<dynamic>?)
+      ?.map((e) => MelonVector2.fromJson(e as Map<String, dynamic>))
+      .toList(),
   secondTextures: (json['secondTextures'] as List<dynamic>?)
       ?.map((e) => AssetReference.fromJson(e as Map<String, dynamic>))
       .toList(),

@@ -12,11 +12,17 @@ part of 'manage_file_bloc.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$ManageFileEvent {
+mixin _$ManageFileEvent implements DiagnosticableTreeMixin {
 
 
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'ManageFileEvent'))
+    ;
+}
 
 @override
 bool operator ==(Object other) {
@@ -28,7 +34,7 @@ bool operator ==(Object other) {
 int get hashCode => runtimeType.hashCode;
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'ManageFileEvent()';
 }
 
@@ -55,13 +61,14 @@ extension ManageFileEventPatterns on ManageFileEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _PickFile value)?  pickFile,TResult Function( _ClearFile value)?  clearFile,TResult Function( _RemoveFile value)?  removeFile,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _PickFile value)?  pickFile,TResult Function( _ClearFile value)?  clearFile,TResult Function( _RemoveFile value)?  removeFile,TResult Function( _Initialize value)?  initialize,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _PickFile() when pickFile != null:
 return pickFile(_that);case _ClearFile() when clearFile != null:
 return clearFile(_that);case _RemoveFile() when removeFile != null:
-return removeFile(_that);case _:
+return removeFile(_that);case _Initialize() when initialize != null:
+return initialize(_that);case _:
   return orElse();
 
 }
@@ -79,13 +86,14 @@ return removeFile(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _PickFile value)  pickFile,required TResult Function( _ClearFile value)  clearFile,required TResult Function( _RemoveFile value)  removeFile,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _PickFile value)  pickFile,required TResult Function( _ClearFile value)  clearFile,required TResult Function( _RemoveFile value)  removeFile,required TResult Function( _Initialize value)  initialize,}){
 final _that = this;
 switch (_that) {
 case _PickFile():
 return pickFile(_that);case _ClearFile():
 return clearFile(_that);case _RemoveFile():
-return removeFile(_that);case _:
+return removeFile(_that);case _Initialize():
+return initialize(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -102,13 +110,14 @@ return removeFile(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _PickFile value)?  pickFile,TResult? Function( _ClearFile value)?  clearFile,TResult? Function( _RemoveFile value)?  removeFile,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _PickFile value)?  pickFile,TResult? Function( _ClearFile value)?  clearFile,TResult? Function( _RemoveFile value)?  removeFile,TResult? Function( _Initialize value)?  initialize,}){
 final _that = this;
 switch (_that) {
 case _PickFile() when pickFile != null:
 return pickFile(_that);case _ClearFile() when clearFile != null:
 return clearFile(_that);case _RemoveFile() when removeFile != null:
-return removeFile(_that);case _:
+return removeFile(_that);case _Initialize() when initialize != null:
+return initialize(_that);case _:
   return null;
 
 }
@@ -125,12 +134,13 @@ return removeFile(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  pickFile,TResult Function()?  clearFile,TResult Function( int index)?  removeFile,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  pickFile,TResult Function()?  clearFile,TResult Function( int index)?  removeFile,TResult Function()?  initialize,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PickFile() when pickFile != null:
 return pickFile();case _ClearFile() when clearFile != null:
 return clearFile();case _RemoveFile() when removeFile != null:
-return removeFile(_that.index);case _:
+return removeFile(_that.index);case _Initialize() when initialize != null:
+return initialize();case _:
   return orElse();
 
 }
@@ -148,12 +158,13 @@ return removeFile(_that.index);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  pickFile,required TResult Function()  clearFile,required TResult Function( int index)  removeFile,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  pickFile,required TResult Function()  clearFile,required TResult Function( int index)  removeFile,required TResult Function()  initialize,}) {final _that = this;
 switch (_that) {
 case _PickFile():
 return pickFile();case _ClearFile():
 return clearFile();case _RemoveFile():
-return removeFile(_that.index);case _:
+return removeFile(_that.index);case _Initialize():
+return initialize();case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -170,12 +181,13 @@ return removeFile(_that.index);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  pickFile,TResult? Function()?  clearFile,TResult? Function( int index)?  removeFile,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  pickFile,TResult? Function()?  clearFile,TResult? Function( int index)?  removeFile,TResult? Function()?  initialize,}) {final _that = this;
 switch (_that) {
 case _PickFile() when pickFile != null:
 return pickFile();case _ClearFile() when clearFile != null:
 return clearFile();case _RemoveFile() when removeFile != null:
-return removeFile(_that.index);case _:
+return removeFile(_that.index);case _Initialize() when initialize != null:
+return initialize();case _:
   return null;
 
 }
@@ -186,7 +198,7 @@ return removeFile(_that.index);case _:
 /// @nodoc
 
 
-class _PickFile implements ManageFileEvent {
+class _PickFile with DiagnosticableTreeMixin implements ManageFileEvent {
   const _PickFile();
   
 
@@ -194,6 +206,12 @@ class _PickFile implements ManageFileEvent {
 
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'ManageFileEvent.pickFile'))
+    ;
+}
 
 @override
 bool operator ==(Object other) {
@@ -205,7 +223,7 @@ bool operator ==(Object other) {
 int get hashCode => runtimeType.hashCode;
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'ManageFileEvent.pickFile()';
 }
 
@@ -218,7 +236,7 @@ String toString() {
 /// @nodoc
 
 
-class _ClearFile implements ManageFileEvent {
+class _ClearFile with DiagnosticableTreeMixin implements ManageFileEvent {
   const _ClearFile();
   
 
@@ -226,6 +244,12 @@ class _ClearFile implements ManageFileEvent {
 
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'ManageFileEvent.clearFile'))
+    ;
+}
 
 @override
 bool operator ==(Object other) {
@@ -237,7 +261,7 @@ bool operator ==(Object other) {
 int get hashCode => runtimeType.hashCode;
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'ManageFileEvent.clearFile()';
 }
 
@@ -250,7 +274,7 @@ String toString() {
 /// @nodoc
 
 
-class _RemoveFile implements ManageFileEvent {
+class _RemoveFile with DiagnosticableTreeMixin implements ManageFileEvent {
   const _RemoveFile(this.index);
   
 
@@ -263,6 +287,12 @@ class _RemoveFile implements ManageFileEvent {
 _$RemoveFileCopyWith<_RemoveFile> get copyWith => __$RemoveFileCopyWithImpl<_RemoveFile>(this, _$identity);
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'ManageFileEvent.removeFile'))
+    ..add(DiagnosticsProperty('index', index));
+}
 
 @override
 bool operator ==(Object other) {
@@ -274,7 +304,7 @@ bool operator ==(Object other) {
 int get hashCode => Object.hash(runtimeType,index);
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'ManageFileEvent.removeFile(index: $index)';
 }
 
@@ -314,11 +344,55 @@ as int,
 }
 
 /// @nodoc
-mixin _$ManageFileState {
+
+
+class _Initialize with DiagnosticableTreeMixin implements ManageFileEvent {
+  const _Initialize();
+  
 
 
 
 
+
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'ManageFileEvent.initialize'))
+    ;
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initialize);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'ManageFileEvent.initialize()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+mixin _$ManageFileState implements DiagnosticableTreeMixin {
+
+
+
+
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'ManageFileState'))
+    ;
+}
 
 @override
 bool operator ==(Object other) {
@@ -330,7 +404,7 @@ bool operator ==(Object other) {
 int get hashCode => runtimeType.hashCode;
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'ManageFileState()';
 }
 
@@ -430,7 +504,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<PickedFileData> files)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<UserFileData> files)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -454,7 +528,7 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<PickedFileData> files)  loaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<UserFileData> files)  loaded,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
@@ -477,7 +551,7 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<PickedFileData> files)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<UserFileData> files)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -494,7 +568,7 @@ return error(_that.message);case _:
 /// @nodoc
 
 
-class _Initial implements ManageFileState {
+class _Initial with DiagnosticableTreeMixin implements ManageFileState {
   const _Initial();
   
 
@@ -502,6 +576,12 @@ class _Initial implements ManageFileState {
 
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'ManageFileState.initial'))
+    ;
+}
 
 @override
 bool operator ==(Object other) {
@@ -513,7 +593,7 @@ bool operator ==(Object other) {
 int get hashCode => runtimeType.hashCode;
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'ManageFileState.initial()';
 }
 
@@ -526,7 +606,7 @@ String toString() {
 /// @nodoc
 
 
-class _Loading implements ManageFileState {
+class _Loading with DiagnosticableTreeMixin implements ManageFileState {
   const _Loading();
   
 
@@ -534,6 +614,12 @@ class _Loading implements ManageFileState {
 
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'ManageFileState.loading'))
+    ;
+}
 
 @override
 bool operator ==(Object other) {
@@ -545,7 +631,7 @@ bool operator ==(Object other) {
 int get hashCode => runtimeType.hashCode;
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'ManageFileState.loading()';
 }
 
@@ -558,12 +644,12 @@ String toString() {
 /// @nodoc
 
 
-class _Loaded implements ManageFileState {
-  const _Loaded({required final  List<PickedFileData> files}): _files = files;
+class _Loaded with DiagnosticableTreeMixin implements ManageFileState {
+  const _Loaded({required final  List<UserFileData> files}): _files = files;
   
 
- final  List<PickedFileData> _files;
- List<PickedFileData> get files {
+ final  List<UserFileData> _files;
+ List<UserFileData> get files {
   if (_files is EqualUnmodifiableListView) return _files;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_files);
@@ -577,6 +663,12 @@ class _Loaded implements ManageFileState {
 _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _$identity);
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'ManageFileState.loaded'))
+    ..add(DiagnosticsProperty('files', files));
+}
 
 @override
 bool operator ==(Object other) {
@@ -588,7 +680,7 @@ bool operator ==(Object other) {
 int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_files));
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'ManageFileState.loaded(files: $files)';
 }
 
@@ -600,7 +692,7 @@ abstract mixin class _$LoadedCopyWith<$Res> implements $ManageFileStateCopyWith<
   factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) = __$LoadedCopyWithImpl;
 @useResult
 $Res call({
- List<PickedFileData> files
+ List<UserFileData> files
 });
 
 
@@ -620,7 +712,7 @@ class __$LoadedCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? files = null,}) {
   return _then(_Loaded(
 files: null == files ? _self._files : files // ignore: cast_nullable_to_non_nullable
-as List<PickedFileData>,
+as List<UserFileData>,
   ));
 }
 
@@ -630,7 +722,7 @@ as List<PickedFileData>,
 /// @nodoc
 
 
-class _Error implements ManageFileState {
+class _Error with DiagnosticableTreeMixin implements ManageFileState {
   const _Error(this.message);
   
 
@@ -643,6 +735,12 @@ class _Error implements ManageFileState {
 _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$identity);
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'ManageFileState.error'))
+    ..add(DiagnosticsProperty('message', message));
+}
 
 @override
 bool operator ==(Object other) {
@@ -654,7 +752,7 @@ bool operator ==(Object other) {
 int get hashCode => Object.hash(runtimeType,message);
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'ManageFileState.error(message: $message)';
 }
 

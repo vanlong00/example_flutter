@@ -10,7 +10,7 @@ part 'part_v4.g.dart';
 abstract class PartV4 with _$PartV4 {
   const factory PartV4({
     AssetReference? mainTexture,
-    bool? pixelsPerUnit,
+    double? pixelsPerUnit,
     List<String>? colliderJson,
     Object? glowMap,
     MelonVector3? grabPosition,

@@ -1,87 +1,65 @@
+import 'dart:io';
+
 import 'package:example/data/models/models.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart' as p;
+
+import 'storage_helper.dart';
 
 /// Helper class for file operations
 class FileHelper {
   FileHelper._();
 
-  static Future<PickedFileData?> pickFileAsBytes({List<String>? allowedExtensions, FileType type = FileType.any}) async {
+  static Future<void> clearTemporaryFiles() async {
+    await FilePicker.platform.clearTemporaryFiles();
+    await StorageHelper.clearTemporaryFiles();
+  }
+
+  static Future<List<UserFileData>> selectFileFormat() async {
     try {
       final result = await FilePicker.platform.pickFiles(
-        type: type,
-        allowedExtensions: allowedExtensions,
+        type: FileType.custom,
+        allowedExtensions: ['bin', 'zip'],
         withData: true, // Important: reads file into memory on Android
         allowMultiple: false,
       );
 
-      if (result == null || result.files.isEmpty) {
-        return null;
+      if (result == null || result.files.length != 1) {
+        // User canceled or invalid selection
+        throw Exception('No file selected or multiple files selected');
       }
 
       final file = result.files.first;
-
-      // For Android: withData: true ensures bytes are available directly
-      // This is memory efficient as it avoids creating temporary file copies
-      if (file.bytes != null) {
-        return PickedFileData.create(fileName: file.name, bytes: file.bytes!);
+      final extension = p.extension(file.name).toLowerCase().replaceFirst('.', '');
+      if (!_isValidExtension(file.name, ['melmod', 'melsave', 'melmap', 'zip'])) {
+        // Invalid file extension
+        throw Exception('Invalid file extension');
       }
 
-      // TODO: iOS - May need to read from path for large files
-      // Consider using file.path and reading in chunks for better memory management
-
-      // TODO: Web - bytes should be available directly via file.bytes
-      // Web platform always provides bytes without file path
-
-      return null;
+      switch (extension) {
+        case 'zip':
+          // Todo: Handle zip file if needed
+          return [];
+        default:
+          // Handle other file types if needed
+          return [await handleFile(file)];
+      }
     } catch (e) {
-      // Handle permission errors, IO errors, etc.
-      return null;
+      return [];
     }
   }
 
-  /// Picks a file with size limit to prevent memory issues
-  ///
-  /// [maxSizeInBytes] Maximum file size allowed (default: 10MB)
-  /// Returns null if file exceeds size limit
-  static Future<PickedFileData?> pickFileAsBytesWithSizeLimit({
-    List<String>? allowedExtensions,
-    FileType type = FileType.any,
-    int maxSizeInBytes = 10 * 1024 * 1024, // 10MB default
-  }) async {
-    try {
-      final result = await FilePicker.platform.pickFiles(
-        type: type,
-        allowedExtensions: allowedExtensions,
-        withData: false, // Don't load data yet, check size first
-        allowMultiple: false,
-      );
-
-      if (result == null || result.files.isEmpty) {
-        return null;
-      }
-
-      final file = result.files.first;
-
-      // Check size before loading into memory
-      if (file.size > maxSizeInBytes) {
-        return null; // File too large
-      }
-
-      // Now load the file data
-      final resultWithData = await FilePicker.platform.pickFiles(
-        type: type,
-        allowedExtensions: allowedExtensions,
-        withData: true,
-        allowMultiple: false,
-      );
-
-      if (resultWithData?.files.first.bytes != null) {
-        return PickedFileData.create(fileName: resultWithData!.files.first.name, bytes: resultWithData.files.first.bytes!);
-      }
-
-      return null;
-    } catch (e) {
-      return null;
+  static Future<UserFileData> handleFile(PlatformFile file) async {
+    if (file.bytes == null) {
+      throw Exception('File bytes are null');
     }
+
+    final File savedFile = await StorageHelper.saveFileToCache(fileName: file.name, bytes: file.bytes!);
+    return UserFileData.create(fileName: p.basename(savedFile.path), bytes: file.bytes!, path: savedFile.path);
+  }
+
+  static bool _isValidExtension(String fileName, List<String> allowedExtensions) {
+    final extension = p.extension(fileName).toLowerCase().replaceFirst('.', '');
+    return allowedExtensions.map((e) => e.toLowerCase()).contains(extension);
   }
 }

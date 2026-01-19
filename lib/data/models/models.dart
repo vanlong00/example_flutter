@@ -13,6 +13,9 @@ export 'melon/v4/melon_v4.dart';
 export 'melon/v4/mod_human_v4.dart';
 export 'melon/v4/part_v4.dart';
 
+// V2
+export 'melon/v2/melon_v2.dart';
+
 
 // Models
-export 'picked_file_data/picked_file_data.dart';
+export 'user_file_data/user_file_data.dart';

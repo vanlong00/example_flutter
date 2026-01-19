@@ -12,10 +12,17 @@ _MelonV4 _$MelonV4FromJson(Map<String, dynamic> json) => _MelonV4(
       : MelonDataV4.fromJson(json['data'] as Map<String, dynamic>),
   metadata: json['metadata'] == null
       ? null
-      : MelonV4.fromJson(json['metadata'] as Map<String, dynamic>),
+      : MelonMetadataV4.fromJson(json['metadata'] as Map<String, dynamic>),
+  assets: (json['assets'] as Map<String, dynamic>?)?.map(
+    (k, e) => MapEntry(
+      k,
+      (e as List<dynamic>).map((e) => (e as num).toInt()).toList(),
+    ),
+  ),
 );
 
 Map<String, dynamic> _$MelonV4ToJson(_MelonV4 instance) => <String, dynamic>{
   'data': instance.data,
   'metadata': instance.metadata,
+  'assets': instance.assets,
 };

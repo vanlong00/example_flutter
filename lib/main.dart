@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'core/configs/theme.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   configureDependencies(); // Initialize DI
   runApp(const MyApp());
 }

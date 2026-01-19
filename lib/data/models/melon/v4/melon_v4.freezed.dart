@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MelonV4 {
 
- MelonDataV4? get data; MelonV4? get metadata;
+ MelonDataV4? get data; MelonMetadataV4? get metadata;/// Map of AssetId -> binary data for asset files
+ Map<String, List<int>>? get assets;
 /// Create a copy of MelonV4
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +29,16 @@ $MelonV4CopyWith<MelonV4> get copyWith => _$MelonV4CopyWithImpl<MelonV4>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MelonV4&&(identical(other.data, data) || other.data == data)&&(identical(other.metadata, metadata) || other.metadata == metadata));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MelonV4&&(identical(other.data, data) || other.data == data)&&(identical(other.metadata, metadata) || other.metadata == metadata)&&const DeepCollectionEquality().equals(other.assets, assets));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,data,metadata);
+int get hashCode => Object.hash(runtimeType,data,metadata,const DeepCollectionEquality().hash(assets));
 
 @override
 String toString() {
-  return 'MelonV4(data: $data, metadata: $metadata)';
+  return 'MelonV4(data: $data, metadata: $metadata, assets: $assets)';
 }
 
 
@@ -48,11 +49,11 @@ abstract mixin class $MelonV4CopyWith<$Res>  {
   factory $MelonV4CopyWith(MelonV4 value, $Res Function(MelonV4) _then) = _$MelonV4CopyWithImpl;
 @useResult
 $Res call({
- MelonDataV4? data, MelonV4? metadata
+ MelonDataV4? data, MelonMetadataV4? metadata, Map<String, List<int>>? assets
 });
 
 
-$MelonDataV4CopyWith<$Res>? get data;$MelonV4CopyWith<$Res>? get metadata;
+$MelonDataV4CopyWith<$Res>? get data;$MelonMetadataV4CopyWith<$Res>? get metadata;
 
 }
 /// @nodoc
@@ -65,11 +66,12 @@ class _$MelonV4CopyWithImpl<$Res>
 
 /// Create a copy of MelonV4
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? data = freezed,Object? metadata = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? data = freezed,Object? metadata = freezed,Object? assets = freezed,}) {
   return _then(_self.copyWith(
 data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as MelonDataV4?,metadata: freezed == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable
-as MelonV4?,
+as MelonMetadataV4?,assets: freezed == assets ? _self.assets : assets // ignore: cast_nullable_to_non_nullable
+as Map<String, List<int>>?,
   ));
 }
 /// Create a copy of MelonV4
@@ -88,12 +90,12 @@ $MelonDataV4CopyWith<$Res>? get data {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$MelonV4CopyWith<$Res>? get metadata {
+$MelonMetadataV4CopyWith<$Res>? get metadata {
     if (_self.metadata == null) {
     return null;
   }
 
-  return $MelonV4CopyWith<$Res>(_self.metadata!, (value) {
+  return $MelonMetadataV4CopyWith<$Res>(_self.metadata!, (value) {
     return _then(_self.copyWith(metadata: value));
   });
 }
@@ -178,10 +180,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MelonDataV4? data,  MelonV4? metadata)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MelonDataV4? data,  MelonMetadataV4? metadata,  Map<String, List<int>>? assets)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MelonV4() when $default != null:
-return $default(_that.data,_that.metadata);case _:
+return $default(_that.data,_that.metadata,_that.assets);case _:
   return orElse();
 
 }
@@ -199,10 +201,10 @@ return $default(_that.data,_that.metadata);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MelonDataV4? data,  MelonV4? metadata)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MelonDataV4? data,  MelonMetadataV4? metadata,  Map<String, List<int>>? assets)  $default,) {final _that = this;
 switch (_that) {
 case _MelonV4():
-return $default(_that.data,_that.metadata);case _:
+return $default(_that.data,_that.metadata,_that.assets);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -219,10 +221,10 @@ return $default(_that.data,_that.metadata);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MelonDataV4? data,  MelonV4? metadata)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MelonDataV4? data,  MelonMetadataV4? metadata,  Map<String, List<int>>? assets)?  $default,) {final _that = this;
 switch (_that) {
 case _MelonV4() when $default != null:
-return $default(_that.data,_that.metadata);case _:
+return $default(_that.data,_that.metadata,_that.assets);case _:
   return null;
 
 }
@@ -234,11 +236,22 @@ return $default(_that.data,_that.metadata);case _:
 @JsonSerializable()
 
 class _MelonV4 implements MelonV4 {
-  const _MelonV4({required this.data, required this.metadata});
+  const _MelonV4({required this.data, required this.metadata, final  Map<String, List<int>>? assets}): _assets = assets;
   factory _MelonV4.fromJson(Map<String, dynamic> json) => _$MelonV4FromJson(json);
 
 @override final  MelonDataV4? data;
-@override final  MelonV4? metadata;
+@override final  MelonMetadataV4? metadata;
+/// Map of AssetId -> binary data for asset files
+ final  Map<String, List<int>>? _assets;
+/// Map of AssetId -> binary data for asset files
+@override Map<String, List<int>>? get assets {
+  final value = _assets;
+  if (value == null) return null;
+  if (_assets is EqualUnmodifiableMapView) return _assets;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(value);
+}
+
 
 /// Create a copy of MelonV4
 /// with the given fields replaced by the non-null parameter values.
@@ -253,16 +266,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MelonV4&&(identical(other.data, data) || other.data == data)&&(identical(other.metadata, metadata) || other.metadata == metadata));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MelonV4&&(identical(other.data, data) || other.data == data)&&(identical(other.metadata, metadata) || other.metadata == metadata)&&const DeepCollectionEquality().equals(other._assets, _assets));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,data,metadata);
+int get hashCode => Object.hash(runtimeType,data,metadata,const DeepCollectionEquality().hash(_assets));
 
 @override
 String toString() {
-  return 'MelonV4(data: $data, metadata: $metadata)';
+  return 'MelonV4(data: $data, metadata: $metadata, assets: $assets)';
 }
 
 
@@ -273,11 +286,11 @@ abstract mixin class _$MelonV4CopyWith<$Res> implements $MelonV4CopyWith<$Res> {
   factory _$MelonV4CopyWith(_MelonV4 value, $Res Function(_MelonV4) _then) = __$MelonV4CopyWithImpl;
 @override @useResult
 $Res call({
- MelonDataV4? data, MelonV4? metadata
+ MelonDataV4? data, MelonMetadataV4? metadata, Map<String, List<int>>? assets
 });
 
 
-@override $MelonDataV4CopyWith<$Res>? get data;@override $MelonV4CopyWith<$Res>? get metadata;
+@override $MelonDataV4CopyWith<$Res>? get data;@override $MelonMetadataV4CopyWith<$Res>? get metadata;
 
 }
 /// @nodoc
@@ -290,11 +303,12 @@ class __$MelonV4CopyWithImpl<$Res>
 
 /// Create a copy of MelonV4
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? data = freezed,Object? metadata = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? data = freezed,Object? metadata = freezed,Object? assets = freezed,}) {
   return _then(_MelonV4(
 data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as MelonDataV4?,metadata: freezed == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable
-as MelonV4?,
+as MelonMetadataV4?,assets: freezed == assets ? _self._assets : assets // ignore: cast_nullable_to_non_nullable
+as Map<String, List<int>>?,
   ));
 }
 
@@ -314,12 +328,12 @@ $MelonDataV4CopyWith<$Res>? get data {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$MelonV4CopyWith<$Res>? get metadata {
+$MelonMetadataV4CopyWith<$Res>? get metadata {
     if (_self.metadata == null) {
     return null;
   }
 
-  return $MelonV4CopyWith<$Res>(_self.metadata!, (value) {
+  return $MelonMetadataV4CopyWith<$Res>(_self.metadata!, (value) {
     return _then(_self.copyWith(metadata: value));
   });
 }

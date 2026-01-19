@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ModHumanV4 {
 
- bool? get canBlink; MelonColor? get eyeLid; MelonColor? get bloodColor; MelonVector2? get eyePos; List<AssetReference>? get secondTextures; List<AssetReference>? get thirdTextures;
+ bool? get canBlink; MelonColor? get eyeLid; MelonColor? get bloodColor; List<MelonVector2>? get eyePos; List<AssetReference>? get secondTextures; List<AssetReference>? get thirdTextures;
 /// Create a copy of ModHumanV4
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $ModHumanV4CopyWith<ModHumanV4> get copyWith => _$ModHumanV4CopyWithImpl<ModHuma
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ModHumanV4&&(identical(other.canBlink, canBlink) || other.canBlink == canBlink)&&(identical(other.eyeLid, eyeLid) || other.eyeLid == eyeLid)&&(identical(other.bloodColor, bloodColor) || other.bloodColor == bloodColor)&&(identical(other.eyePos, eyePos) || other.eyePos == eyePos)&&const DeepCollectionEquality().equals(other.secondTextures, secondTextures)&&const DeepCollectionEquality().equals(other.thirdTextures, thirdTextures));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ModHumanV4&&(identical(other.canBlink, canBlink) || other.canBlink == canBlink)&&(identical(other.eyeLid, eyeLid) || other.eyeLid == eyeLid)&&(identical(other.bloodColor, bloodColor) || other.bloodColor == bloodColor)&&const DeepCollectionEquality().equals(other.eyePos, eyePos)&&const DeepCollectionEquality().equals(other.secondTextures, secondTextures)&&const DeepCollectionEquality().equals(other.thirdTextures, thirdTextures));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,canBlink,eyeLid,bloodColor,eyePos,const DeepCollectionEquality().hash(secondTextures),const DeepCollectionEquality().hash(thirdTextures));
+int get hashCode => Object.hash(runtimeType,canBlink,eyeLid,bloodColor,const DeepCollectionEquality().hash(eyePos),const DeepCollectionEquality().hash(secondTextures),const DeepCollectionEquality().hash(thirdTextures));
 
 @override
 String toString() {
@@ -48,11 +48,11 @@ abstract mixin class $ModHumanV4CopyWith<$Res>  {
   factory $ModHumanV4CopyWith(ModHumanV4 value, $Res Function(ModHumanV4) _then) = _$ModHumanV4CopyWithImpl;
 @useResult
 $Res call({
- bool? canBlink, MelonColor? eyeLid, MelonColor? bloodColor, MelonVector2? eyePos, List<AssetReference>? secondTextures, List<AssetReference>? thirdTextures
+ bool? canBlink, MelonColor? eyeLid, MelonColor? bloodColor, List<MelonVector2>? eyePos, List<AssetReference>? secondTextures, List<AssetReference>? thirdTextures
 });
 
 
-$MelonColorCopyWith<$Res>? get eyeLid;$MelonColorCopyWith<$Res>? get bloodColor;$MelonVector2CopyWith<$Res>? get eyePos;
+$MelonColorCopyWith<$Res>? get eyeLid;$MelonColorCopyWith<$Res>? get bloodColor;
 
 }
 /// @nodoc
@@ -71,7 +71,7 @@ canBlink: freezed == canBlink ? _self.canBlink : canBlink // ignore: cast_nullab
 as bool?,eyeLid: freezed == eyeLid ? _self.eyeLid : eyeLid // ignore: cast_nullable_to_non_nullable
 as MelonColor?,bloodColor: freezed == bloodColor ? _self.bloodColor : bloodColor // ignore: cast_nullable_to_non_nullable
 as MelonColor?,eyePos: freezed == eyePos ? _self.eyePos : eyePos // ignore: cast_nullable_to_non_nullable
-as MelonVector2?,secondTextures: freezed == secondTextures ? _self.secondTextures : secondTextures // ignore: cast_nullable_to_non_nullable
+as List<MelonVector2>?,secondTextures: freezed == secondTextures ? _self.secondTextures : secondTextures // ignore: cast_nullable_to_non_nullable
 as List<AssetReference>?,thirdTextures: freezed == thirdTextures ? _self.thirdTextures : thirdTextures // ignore: cast_nullable_to_non_nullable
 as List<AssetReference>?,
   ));
@@ -99,18 +99,6 @@ $MelonColorCopyWith<$Res>? get bloodColor {
 
   return $MelonColorCopyWith<$Res>(_self.bloodColor!, (value) {
     return _then(_self.copyWith(bloodColor: value));
-  });
-}/// Create a copy of ModHumanV4
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$MelonVector2CopyWith<$Res>? get eyePos {
-    if (_self.eyePos == null) {
-    return null;
-  }
-
-  return $MelonVector2CopyWith<$Res>(_self.eyePos!, (value) {
-    return _then(_self.copyWith(eyePos: value));
   });
 }
 }
@@ -194,7 +182,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool? canBlink,  MelonColor? eyeLid,  MelonColor? bloodColor,  MelonVector2? eyePos,  List<AssetReference>? secondTextures,  List<AssetReference>? thirdTextures)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool? canBlink,  MelonColor? eyeLid,  MelonColor? bloodColor,  List<MelonVector2>? eyePos,  List<AssetReference>? secondTextures,  List<AssetReference>? thirdTextures)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ModHumanV4() when $default != null:
 return $default(_that.canBlink,_that.eyeLid,_that.bloodColor,_that.eyePos,_that.secondTextures,_that.thirdTextures);case _:
@@ -215,7 +203,7 @@ return $default(_that.canBlink,_that.eyeLid,_that.bloodColor,_that.eyePos,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool? canBlink,  MelonColor? eyeLid,  MelonColor? bloodColor,  MelonVector2? eyePos,  List<AssetReference>? secondTextures,  List<AssetReference>? thirdTextures)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool? canBlink,  MelonColor? eyeLid,  MelonColor? bloodColor,  List<MelonVector2>? eyePos,  List<AssetReference>? secondTextures,  List<AssetReference>? thirdTextures)  $default,) {final _that = this;
 switch (_that) {
 case _ModHumanV4():
 return $default(_that.canBlink,_that.eyeLid,_that.bloodColor,_that.eyePos,_that.secondTextures,_that.thirdTextures);case _:
@@ -235,7 +223,7 @@ return $default(_that.canBlink,_that.eyeLid,_that.bloodColor,_that.eyePos,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool? canBlink,  MelonColor? eyeLid,  MelonColor? bloodColor,  MelonVector2? eyePos,  List<AssetReference>? secondTextures,  List<AssetReference>? thirdTextures)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool? canBlink,  MelonColor? eyeLid,  MelonColor? bloodColor,  List<MelonVector2>? eyePos,  List<AssetReference>? secondTextures,  List<AssetReference>? thirdTextures)?  $default,) {final _that = this;
 switch (_that) {
 case _ModHumanV4() when $default != null:
 return $default(_that.canBlink,_that.eyeLid,_that.bloodColor,_that.eyePos,_that.secondTextures,_that.thirdTextures);case _:
@@ -250,13 +238,21 @@ return $default(_that.canBlink,_that.eyeLid,_that.bloodColor,_that.eyePos,_that.
 @JsonSerializable()
 
 class _ModHumanV4 implements ModHumanV4 {
-  const _ModHumanV4({this.canBlink, this.eyeLid, this.bloodColor, this.eyePos, final  List<AssetReference>? secondTextures, final  List<AssetReference>? thirdTextures}): _secondTextures = secondTextures,_thirdTextures = thirdTextures;
+  const _ModHumanV4({this.canBlink, this.eyeLid, this.bloodColor, final  List<MelonVector2>? eyePos, final  List<AssetReference>? secondTextures, final  List<AssetReference>? thirdTextures}): _eyePos = eyePos,_secondTextures = secondTextures,_thirdTextures = thirdTextures;
   factory _ModHumanV4.fromJson(Map<String, dynamic> json) => _$ModHumanV4FromJson(json);
 
 @override final  bool? canBlink;
 @override final  MelonColor? eyeLid;
 @override final  MelonColor? bloodColor;
-@override final  MelonVector2? eyePos;
+ final  List<MelonVector2>? _eyePos;
+@override List<MelonVector2>? get eyePos {
+  final value = _eyePos;
+  if (value == null) return null;
+  if (_eyePos is EqualUnmodifiableListView) return _eyePos;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
  final  List<AssetReference>? _secondTextures;
 @override List<AssetReference>? get secondTextures {
   final value = _secondTextures;
@@ -289,12 +285,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ModHumanV4&&(identical(other.canBlink, canBlink) || other.canBlink == canBlink)&&(identical(other.eyeLid, eyeLid) || other.eyeLid == eyeLid)&&(identical(other.bloodColor, bloodColor) || other.bloodColor == bloodColor)&&(identical(other.eyePos, eyePos) || other.eyePos == eyePos)&&const DeepCollectionEquality().equals(other._secondTextures, _secondTextures)&&const DeepCollectionEquality().equals(other._thirdTextures, _thirdTextures));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ModHumanV4&&(identical(other.canBlink, canBlink) || other.canBlink == canBlink)&&(identical(other.eyeLid, eyeLid) || other.eyeLid == eyeLid)&&(identical(other.bloodColor, bloodColor) || other.bloodColor == bloodColor)&&const DeepCollectionEquality().equals(other._eyePos, _eyePos)&&const DeepCollectionEquality().equals(other._secondTextures, _secondTextures)&&const DeepCollectionEquality().equals(other._thirdTextures, _thirdTextures));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,canBlink,eyeLid,bloodColor,eyePos,const DeepCollectionEquality().hash(_secondTextures),const DeepCollectionEquality().hash(_thirdTextures));
+int get hashCode => Object.hash(runtimeType,canBlink,eyeLid,bloodColor,const DeepCollectionEquality().hash(_eyePos),const DeepCollectionEquality().hash(_secondTextures),const DeepCollectionEquality().hash(_thirdTextures));
 
 @override
 String toString() {
@@ -309,11 +305,11 @@ abstract mixin class _$ModHumanV4CopyWith<$Res> implements $ModHumanV4CopyWith<$
   factory _$ModHumanV4CopyWith(_ModHumanV4 value, $Res Function(_ModHumanV4) _then) = __$ModHumanV4CopyWithImpl;
 @override @useResult
 $Res call({
- bool? canBlink, MelonColor? eyeLid, MelonColor? bloodColor, MelonVector2? eyePos, List<AssetReference>? secondTextures, List<AssetReference>? thirdTextures
+ bool? canBlink, MelonColor? eyeLid, MelonColor? bloodColor, List<MelonVector2>? eyePos, List<AssetReference>? secondTextures, List<AssetReference>? thirdTextures
 });
 
 
-@override $MelonColorCopyWith<$Res>? get eyeLid;@override $MelonColorCopyWith<$Res>? get bloodColor;@override $MelonVector2CopyWith<$Res>? get eyePos;
+@override $MelonColorCopyWith<$Res>? get eyeLid;@override $MelonColorCopyWith<$Res>? get bloodColor;
 
 }
 /// @nodoc
@@ -331,8 +327,8 @@ class __$ModHumanV4CopyWithImpl<$Res>
 canBlink: freezed == canBlink ? _self.canBlink : canBlink // ignore: cast_nullable_to_non_nullable
 as bool?,eyeLid: freezed == eyeLid ? _self.eyeLid : eyeLid // ignore: cast_nullable_to_non_nullable
 as MelonColor?,bloodColor: freezed == bloodColor ? _self.bloodColor : bloodColor // ignore: cast_nullable_to_non_nullable
-as MelonColor?,eyePos: freezed == eyePos ? _self.eyePos : eyePos // ignore: cast_nullable_to_non_nullable
-as MelonVector2?,secondTextures: freezed == secondTextures ? _self._secondTextures : secondTextures // ignore: cast_nullable_to_non_nullable
+as MelonColor?,eyePos: freezed == eyePos ? _self._eyePos : eyePos // ignore: cast_nullable_to_non_nullable
+as List<MelonVector2>?,secondTextures: freezed == secondTextures ? _self._secondTextures : secondTextures // ignore: cast_nullable_to_non_nullable
 as List<AssetReference>?,thirdTextures: freezed == thirdTextures ? _self._thirdTextures : thirdTextures // ignore: cast_nullable_to_non_nullable
 as List<AssetReference>?,
   ));
@@ -361,18 +357,6 @@ $MelonColorCopyWith<$Res>? get bloodColor {
 
   return $MelonColorCopyWith<$Res>(_self.bloodColor!, (value) {
     return _then(_self.copyWith(bloodColor: value));
-  });
-}/// Create a copy of ModHumanV4
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$MelonVector2CopyWith<$Res>? get eyePos {
-    if (_self.eyePos == null) {
-    return null;
-  }
-
-  return $MelonVector2CopyWith<$Res>(_self.eyePos!, (value) {
-    return _then(_self.copyWith(eyePos: value));
   });
 }
 }

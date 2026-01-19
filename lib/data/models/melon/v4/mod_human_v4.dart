@@ -14,7 +14,7 @@ abstract class ModHumanV4 with _$ModHumanV4 {
     bool? canBlink,
     MelonColor? eyeLid,
     MelonColor? bloodColor,
-    MelonVector2? eyePos,
+    List<MelonVector2>? eyePos,
     List<AssetReference>? secondTextures,
     List<AssetReference>? thirdTextures,
   }) = _ModHumanV4;

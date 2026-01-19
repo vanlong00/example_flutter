@@ -14,23 +14,18 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MelonBase {
 
- MelonV4 get item;
-/// Create a copy of MelonBase
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$MelonBaseCopyWith<MelonBase> get copyWith => _$MelonBaseCopyWithImpl<MelonBase>(this as MelonBase, _$identity);
+ Object get item;
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MelonBase&&(identical(other.item, item) || other.item == item));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MelonBase&&const DeepCollectionEquality().equals(other.item, item));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,item);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(item));
 
 @override
 String toString() {
@@ -41,43 +36,8 @@ String toString() {
 }
 
 /// @nodoc
-abstract mixin class $MelonBaseCopyWith<$Res>  {
-  factory $MelonBaseCopyWith(MelonBase value, $Res Function(MelonBase) _then) = _$MelonBaseCopyWithImpl;
-@useResult
-$Res call({
- MelonV4 item
-});
-
-
-$MelonV4CopyWith<$Res> get item;
-
-}
-/// @nodoc
-class _$MelonBaseCopyWithImpl<$Res>
-    implements $MelonBaseCopyWith<$Res> {
-  _$MelonBaseCopyWithImpl(this._self, this._then);
-
-  final MelonBase _self;
-  final $Res Function(MelonBase) _then;
-
-/// Create a copy of MelonBase
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? item = null,}) {
-  return _then(_self.copyWith(
-item: null == item ? _self.item : item // ignore: cast_nullable_to_non_nullable
-as MelonV4,
-  ));
-}
-/// Create a copy of MelonBase
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$MelonV4CopyWith<$Res> get item {
-  
-  return $MelonV4CopyWith<$Res>(_self.item, (value) {
-    return _then(_self.copyWith(item: value));
-  });
-}
+class $MelonBaseCopyWith<$Res>  {
+$MelonBaseCopyWith(MelonBase _, $Res Function(MelonBase) __);
 }
 
 
@@ -95,11 +55,12 @@ extension MelonBasePatterns on MelonBase {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _MelonBaseV4 value)?  v4,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _MelonBaseV4 value)?  v4,TResult Function( _MelonBaseV2 value)?  v2,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _MelonBaseV4() when v4 != null:
-return v4(_that);case _:
+return v4(_that);case _MelonBaseV2() when v2 != null:
+return v2(_that);case _:
   return orElse();
 
 }
@@ -117,11 +78,12 @@ return v4(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _MelonBaseV4 value)  v4,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _MelonBaseV4 value)  v4,required TResult Function( _MelonBaseV2 value)  v2,}){
 final _that = this;
 switch (_that) {
 case _MelonBaseV4():
-return v4(_that);case _:
+return v4(_that);case _MelonBaseV2():
+return v2(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -138,11 +100,12 @@ return v4(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _MelonBaseV4 value)?  v4,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _MelonBaseV4 value)?  v4,TResult? Function( _MelonBaseV2 value)?  v2,}){
 final _that = this;
 switch (_that) {
 case _MelonBaseV4() when v4 != null:
-return v4(_that);case _:
+return v4(_that);case _MelonBaseV2() when v2 != null:
+return v2(_that);case _:
   return null;
 
 }
@@ -159,10 +122,11 @@ return v4(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( MelonV4 item)?  v4,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( MelonV4 item)?  v4,TResult Function( MelonV2 item)?  v2,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MelonBaseV4() when v4 != null:
-return v4(_that.item);case _:
+return v4(_that.item);case _MelonBaseV2() when v2 != null:
+return v2(_that.item);case _:
   return orElse();
 
 }
@@ -180,10 +144,11 @@ return v4(_that.item);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( MelonV4 item)  v4,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( MelonV4 item)  v4,required TResult Function( MelonV2 item)  v2,}) {final _that = this;
 switch (_that) {
 case _MelonBaseV4():
-return v4(_that.item);case _:
+return v4(_that.item);case _MelonBaseV2():
+return v2(_that.item);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +165,11 @@ return v4(_that.item);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( MelonV4 item)?  v4,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( MelonV4 item)?  v4,TResult? Function( MelonV2 item)?  v2,}) {final _that = this;
 switch (_that) {
 case _MelonBaseV4() when v4 != null:
-return v4(_that.item);case _:
+return v4(_that.item);case _MelonBaseV2() when v2 != null:
+return v2(_that.item);case _:
   return null;
 
 }
@@ -222,7 +188,7 @@ class _MelonBaseV4 extends MelonBase {
 
 /// Create a copy of MelonBase
 /// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
+@JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 _$MelonBaseV4CopyWith<_MelonBaseV4> get copyWith => __$MelonBaseV4CopyWithImpl<_MelonBaseV4>(this, _$identity);
 
@@ -248,13 +214,13 @@ String toString() {
 /// @nodoc
 abstract mixin class _$MelonBaseV4CopyWith<$Res> implements $MelonBaseCopyWith<$Res> {
   factory _$MelonBaseV4CopyWith(_MelonBaseV4 value, $Res Function(_MelonBaseV4) _then) = __$MelonBaseV4CopyWithImpl;
-@override @useResult
+@useResult
 $Res call({
  MelonV4 item
 });
 
 
-@override $MelonV4CopyWith<$Res> get item;
+$MelonV4CopyWith<$Res> get item;
 
 }
 /// @nodoc
@@ -267,7 +233,7 @@ class __$MelonBaseV4CopyWithImpl<$Res>
 
 /// Create a copy of MelonBase
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? item = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? item = null,}) {
   return _then(_MelonBaseV4(
 null == item ? _self.item : item // ignore: cast_nullable_to_non_nullable
 as MelonV4,
@@ -281,6 +247,81 @@ as MelonV4,
 $MelonV4CopyWith<$Res> get item {
   
   return $MelonV4CopyWith<$Res>(_self.item, (value) {
+    return _then(_self.copyWith(item: value));
+  });
+}
+}
+
+/// @nodoc
+
+
+class _MelonBaseV2 extends MelonBase {
+  const _MelonBaseV2(this.item): super._();
+  
+
+@override final  MelonV2 item;
+
+/// Create a copy of MelonBase
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$MelonBaseV2CopyWith<_MelonBaseV2> get copyWith => __$MelonBaseV2CopyWithImpl<_MelonBaseV2>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MelonBaseV2&&(identical(other.item, item) || other.item == item));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,item);
+
+@override
+String toString() {
+  return 'MelonBase.v2(item: $item)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$MelonBaseV2CopyWith<$Res> implements $MelonBaseCopyWith<$Res> {
+  factory _$MelonBaseV2CopyWith(_MelonBaseV2 value, $Res Function(_MelonBaseV2) _then) = __$MelonBaseV2CopyWithImpl;
+@useResult
+$Res call({
+ MelonV2 item
+});
+
+
+$MelonV2CopyWith<$Res> get item;
+
+}
+/// @nodoc
+class __$MelonBaseV2CopyWithImpl<$Res>
+    implements _$MelonBaseV2CopyWith<$Res> {
+  __$MelonBaseV2CopyWithImpl(this._self, this._then);
+
+  final _MelonBaseV2 _self;
+  final $Res Function(_MelonBaseV2) _then;
+
+/// Create a copy of MelonBase
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? item = null,}) {
+  return _then(_MelonBaseV2(
+null == item ? _self.item : item // ignore: cast_nullable_to_non_nullable
+as MelonV2,
+  ));
+}
+
+/// Create a copy of MelonBase
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MelonV2CopyWith<$Res> get item {
+  
+  return $MelonV2CopyWith<$Res>(_self.item, (value) {
     return _then(_self.copyWith(item: value));
   });
 }
