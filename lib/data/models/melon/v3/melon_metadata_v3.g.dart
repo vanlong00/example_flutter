@@ -1,18 +1,16 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'melon_metadata_v4.dart';
+part of 'melon_metadata_v3.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_MelonMetadataV4 _$MelonMetadataV4FromJson(Map<String, dynamic> json) =>
-    _MelonMetadataV4(
+_MelonMetadataV3 _$MelonMetadataV3FromJson(Map<String, dynamic> json) =>
+    _MelonMetadataV3(
       isActivated: json['isActivated'] as bool?,
       uniqueId: json['uniqueId'] as String?,
       modType: (json['modType'] as num?)?.toInt(),
-      overrideId: json['overrideId'] as String?,
-      overrideFileId: json['overrideFileId'] as String?,
       category: json['category'] as String?,
       customCategory: json['customCategory'] as String?,
       type: json['type'] as String?,
@@ -21,19 +19,15 @@ _MelonMetadataV4 _$MelonMetadataV4FromJson(Map<String, dynamic> json) =>
       changedTimestamp: (json['ChangedTimestamp'] as num?)?.toInt(),
       icon: json['Icon'] == null
           ? null
-          : AssetReferenceV4.fromJson(json['Icon'] as Map<String, dynamic>),
-      isCustomIcon: json['isCustomIcon'] as bool?,
-      templateId: json['templateId'] as String?,
+          : AssetReferenceV3.fromJson(json['Icon'] as Map<String, dynamic>),
       workshopMetadata: json['WorkshopMetadata'],
     );
 
-Map<String, dynamic> _$MelonMetadataV4ToJson(_MelonMetadataV4 instance) =>
+Map<String, dynamic> _$MelonMetadataV3ToJson(_MelonMetadataV3 instance) =>
     <String, dynamic>{
       'isActivated': instance.isActivated,
       'uniqueId': instance.uniqueId,
       'modType': instance.modType,
-      'overrideId': instance.overrideId,
-      'overrideFileId': instance.overrideFileId,
       'category': instance.category,
       'customCategory': instance.customCategory,
       'type': instance.type,
@@ -41,7 +35,5 @@ Map<String, dynamic> _$MelonMetadataV4ToJson(_MelonMetadataV4 instance) =>
       'appVersion': instance.appVersion,
       'ChangedTimestamp': instance.changedTimestamp,
       'Icon': instance.icon,
-      'isCustomIcon': instance.isCustomIcon,
-      'templateId': instance.templateId,
       'WorkshopMetadata': instance.workshopMetadata,
     };

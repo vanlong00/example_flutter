@@ -53,9 +53,9 @@ class FileHelper {
     if (file.bytes == null) {
       throw Exception('File bytes are null');
     }
+    final File savedFile = await StorageHelper.saveFileToCache(fileName: p.normalize(file.name), bytes: file.bytes!);
 
-    final File savedFile = await StorageHelper.saveFileToCache(fileName: file.name, bytes: file.bytes!);
-    return UserFileData.create(fileName: p.basename(savedFile.path), bytes: file.bytes!, path: savedFile.path);
+    return UserFileData.create(fileName: p.normalize(p.basename(savedFile.path)), bytes: file.bytes!, path: savedFile.path);
   }
 
   static bool _isValidExtension(String fileName, List<String> allowedExtensions) {

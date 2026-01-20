@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../commons/melon_vector.dart';
-import 'asset_reference.dart';
+import '../commons/asset_reference.dart';
 
 part 'part_v4.freezed.dart';
 part 'part_v4.g.dart';
@@ -9,7 +9,7 @@ part 'part_v4.g.dart';
 @freezed
 abstract class PartV4 with _$PartV4 {
   const factory PartV4({
-    AssetReference? mainTexture,
+    AssetReferenceV4? mainTexture,
     double? pixelsPerUnit,
     List<String>? colliderJson,
     Object? glowMap,

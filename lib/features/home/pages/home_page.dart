@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:example/data/models/models.dart';
 import 'package:example/features/home/bloc/manage_file_bloc.dart';
 import 'package:flutter/material.dart';
@@ -111,7 +109,7 @@ class FileMelonItem extends StatelessWidget {
       builder: (context, fileState) {
         return Card(
           child: ListTile(
-            leading: Container(child: _icon(fileState)),
+            leading: SizedBox.square(dimension: 40, child: _icon(fileState)),
             title: Text(fileState.fileName ?? 'Unnamed File'),
             subtitle: Text('${fileState.bytes?.length ?? 0} bytes'),
           ),
@@ -123,13 +121,14 @@ class FileMelonItem extends StatelessWidget {
   Widget _icon(UserFileData fileState) {
     final icon = fileState.melon?.iconBytes;
     if (icon == null || icon.isEmpty) {
-      return FittedBox(fit: BoxFit.contain, child: Icon(Icons.insert_drive_file));
+      return FittedBox(fit: BoxFit.contain, child: Icon(Icons.image_not_supported));
     }
     return Image.memory(
       icon,
+      filterQuality: FilterQuality.none,
       fit: BoxFit.contain,
       errorBuilder: (context, error, stackTrace) {
-        return const Icon(Icons.image_not_supported);
+        return FittedBox(fit: BoxFit.contain, child: Icon(Icons.image_not_supported));
       },
     );
   }

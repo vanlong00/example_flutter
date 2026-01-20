@@ -1,9 +1,8 @@
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../commons/melon_color.dart';
 import '../commons/melon_vector.dart';
-import 'asset_reference.dart';
+import '../commons/asset_reference.dart';
 
 part 'mod_human_v4.freezed.dart';
 part 'mod_human_v4.g.dart';
@@ -15,8 +14,8 @@ abstract class ModHumanV4 with _$ModHumanV4 {
     MelonColor? eyeLid,
     MelonColor? bloodColor,
     List<MelonVector2>? eyePos,
-    List<AssetReference>? secondTextures,
-    List<AssetReference>? thirdTextures,
+    List<AssetReferenceV4>? secondTextures,
+    List<AssetReferenceV4>? thirdTextures,
   }) = _ModHumanV4;
 
   factory ModHumanV4.fromJson(Map<String, Object?> json) => _$ModHumanV4FromJson(json);

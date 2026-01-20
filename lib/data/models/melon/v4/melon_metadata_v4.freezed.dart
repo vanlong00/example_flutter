@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MelonMetadataV4 {
 
- bool? get isActivated; String? get uniqueId; int? get modType; dynamic get overrideId; dynamic get overrideFileId; String? get category; String? get customCategory; String? get type; int? get version; String? get appVersion;@JsonKey(name: 'ChangedTimestamp') int? get changedTimestamp;@JsonKey(name: 'Icon') AssetReference? get icon;@JsonKey(name: 'isCustomIcon') bool? get isCustomIcon;@JsonKey(name: 'templateId') dynamic get templateId;@JsonKey(name: 'WorkshopMetadata') dynamic get workshopMetadata;
+ bool? get isActivated; String? get uniqueId; int? get modType; String? get overrideId; String? get overrideFileId; String? get category; String? get customCategory; String? get type; int? get version; String? get appVersion;@JsonKey(name: 'ChangedTimestamp') int? get changedTimestamp;@JsonKey(name: 'Icon') AssetReferenceV4? get icon;@JsonKey(name: 'isCustomIcon') bool? get isCustomIcon;@JsonKey(name: 'templateId') String? get templateId;@JsonKey(name: 'WorkshopMetadata') dynamic get workshopMetadata;
 /// Create a copy of MelonMetadataV4
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $MelonMetadataV4CopyWith<MelonMetadataV4> get copyWith => _$MelonMetadataV4CopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MelonMetadataV4&&(identical(other.isActivated, isActivated) || other.isActivated == isActivated)&&(identical(other.uniqueId, uniqueId) || other.uniqueId == uniqueId)&&(identical(other.modType, modType) || other.modType == modType)&&const DeepCollectionEquality().equals(other.overrideId, overrideId)&&const DeepCollectionEquality().equals(other.overrideFileId, overrideFileId)&&(identical(other.category, category) || other.category == category)&&(identical(other.customCategory, customCategory) || other.customCategory == customCategory)&&(identical(other.type, type) || other.type == type)&&(identical(other.version, version) || other.version == version)&&(identical(other.appVersion, appVersion) || other.appVersion == appVersion)&&(identical(other.changedTimestamp, changedTimestamp) || other.changedTimestamp == changedTimestamp)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.isCustomIcon, isCustomIcon) || other.isCustomIcon == isCustomIcon)&&const DeepCollectionEquality().equals(other.templateId, templateId)&&const DeepCollectionEquality().equals(other.workshopMetadata, workshopMetadata));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MelonMetadataV4&&(identical(other.isActivated, isActivated) || other.isActivated == isActivated)&&(identical(other.uniqueId, uniqueId) || other.uniqueId == uniqueId)&&(identical(other.modType, modType) || other.modType == modType)&&(identical(other.overrideId, overrideId) || other.overrideId == overrideId)&&(identical(other.overrideFileId, overrideFileId) || other.overrideFileId == overrideFileId)&&(identical(other.category, category) || other.category == category)&&(identical(other.customCategory, customCategory) || other.customCategory == customCategory)&&(identical(other.type, type) || other.type == type)&&(identical(other.version, version) || other.version == version)&&(identical(other.appVersion, appVersion) || other.appVersion == appVersion)&&(identical(other.changedTimestamp, changedTimestamp) || other.changedTimestamp == changedTimestamp)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.isCustomIcon, isCustomIcon) || other.isCustomIcon == isCustomIcon)&&(identical(other.templateId, templateId) || other.templateId == templateId)&&const DeepCollectionEquality().equals(other.workshopMetadata, workshopMetadata));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isActivated,uniqueId,modType,const DeepCollectionEquality().hash(overrideId),const DeepCollectionEquality().hash(overrideFileId),category,customCategory,type,version,appVersion,changedTimestamp,icon,isCustomIcon,const DeepCollectionEquality().hash(templateId),const DeepCollectionEquality().hash(workshopMetadata));
+int get hashCode => Object.hash(runtimeType,isActivated,uniqueId,modType,overrideId,overrideFileId,category,customCategory,type,version,appVersion,changedTimestamp,icon,isCustomIcon,templateId,const DeepCollectionEquality().hash(workshopMetadata));
 
 @override
 String toString() {
@@ -48,11 +48,11 @@ abstract mixin class $MelonMetadataV4CopyWith<$Res>  {
   factory $MelonMetadataV4CopyWith(MelonMetadataV4 value, $Res Function(MelonMetadataV4) _then) = _$MelonMetadataV4CopyWithImpl;
 @useResult
 $Res call({
- bool? isActivated, String? uniqueId, int? modType, dynamic overrideId, dynamic overrideFileId, String? category, String? customCategory, String? type, int? version, String? appVersion,@JsonKey(name: 'ChangedTimestamp') int? changedTimestamp,@JsonKey(name: 'Icon') AssetReference? icon,@JsonKey(name: 'isCustomIcon') bool? isCustomIcon,@JsonKey(name: 'templateId') dynamic templateId,@JsonKey(name: 'WorkshopMetadata') dynamic workshopMetadata
+ bool? isActivated, String? uniqueId, int? modType, String? overrideId, String? overrideFileId, String? category, String? customCategory, String? type, int? version, String? appVersion,@JsonKey(name: 'ChangedTimestamp') int? changedTimestamp,@JsonKey(name: 'Icon') AssetReferenceV4? icon,@JsonKey(name: 'isCustomIcon') bool? isCustomIcon,@JsonKey(name: 'templateId') String? templateId,@JsonKey(name: 'WorkshopMetadata') dynamic workshopMetadata
 });
 
 
-$AssetReferenceCopyWith<$Res>? get icon;
+$AssetReferenceV4CopyWith<$Res>? get icon;
 
 }
 /// @nodoc
@@ -71,17 +71,17 @@ isActivated: freezed == isActivated ? _self.isActivated : isActivated // ignore:
 as bool?,uniqueId: freezed == uniqueId ? _self.uniqueId : uniqueId // ignore: cast_nullable_to_non_nullable
 as String?,modType: freezed == modType ? _self.modType : modType // ignore: cast_nullable_to_non_nullable
 as int?,overrideId: freezed == overrideId ? _self.overrideId : overrideId // ignore: cast_nullable_to_non_nullable
-as dynamic,overrideFileId: freezed == overrideFileId ? _self.overrideFileId : overrideFileId // ignore: cast_nullable_to_non_nullable
-as dynamic,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as String?,overrideFileId: freezed == overrideFileId ? _self.overrideFileId : overrideFileId // ignore: cast_nullable_to_non_nullable
+as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as String?,customCategory: freezed == customCategory ? _self.customCategory : customCategory // ignore: cast_nullable_to_non_nullable
 as String?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String?,version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as int?,appVersion: freezed == appVersion ? _self.appVersion : appVersion // ignore: cast_nullable_to_non_nullable
 as String?,changedTimestamp: freezed == changedTimestamp ? _self.changedTimestamp : changedTimestamp // ignore: cast_nullable_to_non_nullable
 as int?,icon: freezed == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
-as AssetReference?,isCustomIcon: freezed == isCustomIcon ? _self.isCustomIcon : isCustomIcon // ignore: cast_nullable_to_non_nullable
+as AssetReferenceV4?,isCustomIcon: freezed == isCustomIcon ? _self.isCustomIcon : isCustomIcon // ignore: cast_nullable_to_non_nullable
 as bool?,templateId: freezed == templateId ? _self.templateId : templateId // ignore: cast_nullable_to_non_nullable
-as dynamic,workshopMetadata: freezed == workshopMetadata ? _self.workshopMetadata : workshopMetadata // ignore: cast_nullable_to_non_nullable
+as String?,workshopMetadata: freezed == workshopMetadata ? _self.workshopMetadata : workshopMetadata // ignore: cast_nullable_to_non_nullable
 as dynamic,
   ));
 }
@@ -89,12 +89,12 @@ as dynamic,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$AssetReferenceCopyWith<$Res>? get icon {
+$AssetReferenceV4CopyWith<$Res>? get icon {
     if (_self.icon == null) {
     return null;
   }
 
-  return $AssetReferenceCopyWith<$Res>(_self.icon!, (value) {
+  return $AssetReferenceV4CopyWith<$Res>(_self.icon!, (value) {
     return _then(_self.copyWith(icon: value));
   });
 }
@@ -179,7 +179,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool? isActivated,  String? uniqueId,  int? modType,  dynamic overrideId,  dynamic overrideFileId,  String? category,  String? customCategory,  String? type,  int? version,  String? appVersion, @JsonKey(name: 'ChangedTimestamp')  int? changedTimestamp, @JsonKey(name: 'Icon')  AssetReference? icon, @JsonKey(name: 'isCustomIcon')  bool? isCustomIcon, @JsonKey(name: 'templateId')  dynamic templateId, @JsonKey(name: 'WorkshopMetadata')  dynamic workshopMetadata)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool? isActivated,  String? uniqueId,  int? modType,  String? overrideId,  String? overrideFileId,  String? category,  String? customCategory,  String? type,  int? version,  String? appVersion, @JsonKey(name: 'ChangedTimestamp')  int? changedTimestamp, @JsonKey(name: 'Icon')  AssetReferenceV4? icon, @JsonKey(name: 'isCustomIcon')  bool? isCustomIcon, @JsonKey(name: 'templateId')  String? templateId, @JsonKey(name: 'WorkshopMetadata')  dynamic workshopMetadata)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MelonMetadataV4() when $default != null:
 return $default(_that.isActivated,_that.uniqueId,_that.modType,_that.overrideId,_that.overrideFileId,_that.category,_that.customCategory,_that.type,_that.version,_that.appVersion,_that.changedTimestamp,_that.icon,_that.isCustomIcon,_that.templateId,_that.workshopMetadata);case _:
@@ -200,7 +200,7 @@ return $default(_that.isActivated,_that.uniqueId,_that.modType,_that.overrideId,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool? isActivated,  String? uniqueId,  int? modType,  dynamic overrideId,  dynamic overrideFileId,  String? category,  String? customCategory,  String? type,  int? version,  String? appVersion, @JsonKey(name: 'ChangedTimestamp')  int? changedTimestamp, @JsonKey(name: 'Icon')  AssetReference? icon, @JsonKey(name: 'isCustomIcon')  bool? isCustomIcon, @JsonKey(name: 'templateId')  dynamic templateId, @JsonKey(name: 'WorkshopMetadata')  dynamic workshopMetadata)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool? isActivated,  String? uniqueId,  int? modType,  String? overrideId,  String? overrideFileId,  String? category,  String? customCategory,  String? type,  int? version,  String? appVersion, @JsonKey(name: 'ChangedTimestamp')  int? changedTimestamp, @JsonKey(name: 'Icon')  AssetReferenceV4? icon, @JsonKey(name: 'isCustomIcon')  bool? isCustomIcon, @JsonKey(name: 'templateId')  String? templateId, @JsonKey(name: 'WorkshopMetadata')  dynamic workshopMetadata)  $default,) {final _that = this;
 switch (_that) {
 case _MelonMetadataV4():
 return $default(_that.isActivated,_that.uniqueId,_that.modType,_that.overrideId,_that.overrideFileId,_that.category,_that.customCategory,_that.type,_that.version,_that.appVersion,_that.changedTimestamp,_that.icon,_that.isCustomIcon,_that.templateId,_that.workshopMetadata);case _:
@@ -220,7 +220,7 @@ return $default(_that.isActivated,_that.uniqueId,_that.modType,_that.overrideId,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool? isActivated,  String? uniqueId,  int? modType,  dynamic overrideId,  dynamic overrideFileId,  String? category,  String? customCategory,  String? type,  int? version,  String? appVersion, @JsonKey(name: 'ChangedTimestamp')  int? changedTimestamp, @JsonKey(name: 'Icon')  AssetReference? icon, @JsonKey(name: 'isCustomIcon')  bool? isCustomIcon, @JsonKey(name: 'templateId')  dynamic templateId, @JsonKey(name: 'WorkshopMetadata')  dynamic workshopMetadata)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool? isActivated,  String? uniqueId,  int? modType,  String? overrideId,  String? overrideFileId,  String? category,  String? customCategory,  String? type,  int? version,  String? appVersion, @JsonKey(name: 'ChangedTimestamp')  int? changedTimestamp, @JsonKey(name: 'Icon')  AssetReferenceV4? icon, @JsonKey(name: 'isCustomIcon')  bool? isCustomIcon, @JsonKey(name: 'templateId')  String? templateId, @JsonKey(name: 'WorkshopMetadata')  dynamic workshopMetadata)?  $default,) {final _that = this;
 switch (_that) {
 case _MelonMetadataV4() when $default != null:
 return $default(_that.isActivated,_that.uniqueId,_that.modType,_that.overrideId,_that.overrideFileId,_that.category,_that.customCategory,_that.type,_that.version,_that.appVersion,_that.changedTimestamp,_that.icon,_that.isCustomIcon,_that.templateId,_that.workshopMetadata);case _:
@@ -241,17 +241,17 @@ class _MelonMetadataV4 implements MelonMetadataV4 {
 @override final  bool? isActivated;
 @override final  String? uniqueId;
 @override final  int? modType;
-@override final  dynamic overrideId;
-@override final  dynamic overrideFileId;
+@override final  String? overrideId;
+@override final  String? overrideFileId;
 @override final  String? category;
 @override final  String? customCategory;
 @override final  String? type;
 @override final  int? version;
 @override final  String? appVersion;
 @override@JsonKey(name: 'ChangedTimestamp') final  int? changedTimestamp;
-@override@JsonKey(name: 'Icon') final  AssetReference? icon;
+@override@JsonKey(name: 'Icon') final  AssetReferenceV4? icon;
 @override@JsonKey(name: 'isCustomIcon') final  bool? isCustomIcon;
-@override@JsonKey(name: 'templateId') final  dynamic templateId;
+@override@JsonKey(name: 'templateId') final  String? templateId;
 @override@JsonKey(name: 'WorkshopMetadata') final  dynamic workshopMetadata;
 
 /// Create a copy of MelonMetadataV4
@@ -267,12 +267,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MelonMetadataV4&&(identical(other.isActivated, isActivated) || other.isActivated == isActivated)&&(identical(other.uniqueId, uniqueId) || other.uniqueId == uniqueId)&&(identical(other.modType, modType) || other.modType == modType)&&const DeepCollectionEquality().equals(other.overrideId, overrideId)&&const DeepCollectionEquality().equals(other.overrideFileId, overrideFileId)&&(identical(other.category, category) || other.category == category)&&(identical(other.customCategory, customCategory) || other.customCategory == customCategory)&&(identical(other.type, type) || other.type == type)&&(identical(other.version, version) || other.version == version)&&(identical(other.appVersion, appVersion) || other.appVersion == appVersion)&&(identical(other.changedTimestamp, changedTimestamp) || other.changedTimestamp == changedTimestamp)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.isCustomIcon, isCustomIcon) || other.isCustomIcon == isCustomIcon)&&const DeepCollectionEquality().equals(other.templateId, templateId)&&const DeepCollectionEquality().equals(other.workshopMetadata, workshopMetadata));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MelonMetadataV4&&(identical(other.isActivated, isActivated) || other.isActivated == isActivated)&&(identical(other.uniqueId, uniqueId) || other.uniqueId == uniqueId)&&(identical(other.modType, modType) || other.modType == modType)&&(identical(other.overrideId, overrideId) || other.overrideId == overrideId)&&(identical(other.overrideFileId, overrideFileId) || other.overrideFileId == overrideFileId)&&(identical(other.category, category) || other.category == category)&&(identical(other.customCategory, customCategory) || other.customCategory == customCategory)&&(identical(other.type, type) || other.type == type)&&(identical(other.version, version) || other.version == version)&&(identical(other.appVersion, appVersion) || other.appVersion == appVersion)&&(identical(other.changedTimestamp, changedTimestamp) || other.changedTimestamp == changedTimestamp)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.isCustomIcon, isCustomIcon) || other.isCustomIcon == isCustomIcon)&&(identical(other.templateId, templateId) || other.templateId == templateId)&&const DeepCollectionEquality().equals(other.workshopMetadata, workshopMetadata));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isActivated,uniqueId,modType,const DeepCollectionEquality().hash(overrideId),const DeepCollectionEquality().hash(overrideFileId),category,customCategory,type,version,appVersion,changedTimestamp,icon,isCustomIcon,const DeepCollectionEquality().hash(templateId),const DeepCollectionEquality().hash(workshopMetadata));
+int get hashCode => Object.hash(runtimeType,isActivated,uniqueId,modType,overrideId,overrideFileId,category,customCategory,type,version,appVersion,changedTimestamp,icon,isCustomIcon,templateId,const DeepCollectionEquality().hash(workshopMetadata));
 
 @override
 String toString() {
@@ -287,11 +287,11 @@ abstract mixin class _$MelonMetadataV4CopyWith<$Res> implements $MelonMetadataV4
   factory _$MelonMetadataV4CopyWith(_MelonMetadataV4 value, $Res Function(_MelonMetadataV4) _then) = __$MelonMetadataV4CopyWithImpl;
 @override @useResult
 $Res call({
- bool? isActivated, String? uniqueId, int? modType, dynamic overrideId, dynamic overrideFileId, String? category, String? customCategory, String? type, int? version, String? appVersion,@JsonKey(name: 'ChangedTimestamp') int? changedTimestamp,@JsonKey(name: 'Icon') AssetReference? icon,@JsonKey(name: 'isCustomIcon') bool? isCustomIcon,@JsonKey(name: 'templateId') dynamic templateId,@JsonKey(name: 'WorkshopMetadata') dynamic workshopMetadata
+ bool? isActivated, String? uniqueId, int? modType, String? overrideId, String? overrideFileId, String? category, String? customCategory, String? type, int? version, String? appVersion,@JsonKey(name: 'ChangedTimestamp') int? changedTimestamp,@JsonKey(name: 'Icon') AssetReferenceV4? icon,@JsonKey(name: 'isCustomIcon') bool? isCustomIcon,@JsonKey(name: 'templateId') String? templateId,@JsonKey(name: 'WorkshopMetadata') dynamic workshopMetadata
 });
 
 
-@override $AssetReferenceCopyWith<$Res>? get icon;
+@override $AssetReferenceV4CopyWith<$Res>? get icon;
 
 }
 /// @nodoc
@@ -310,17 +310,17 @@ isActivated: freezed == isActivated ? _self.isActivated : isActivated // ignore:
 as bool?,uniqueId: freezed == uniqueId ? _self.uniqueId : uniqueId // ignore: cast_nullable_to_non_nullable
 as String?,modType: freezed == modType ? _self.modType : modType // ignore: cast_nullable_to_non_nullable
 as int?,overrideId: freezed == overrideId ? _self.overrideId : overrideId // ignore: cast_nullable_to_non_nullable
-as dynamic,overrideFileId: freezed == overrideFileId ? _self.overrideFileId : overrideFileId // ignore: cast_nullable_to_non_nullable
-as dynamic,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as String?,overrideFileId: freezed == overrideFileId ? _self.overrideFileId : overrideFileId // ignore: cast_nullable_to_non_nullable
+as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as String?,customCategory: freezed == customCategory ? _self.customCategory : customCategory // ignore: cast_nullable_to_non_nullable
 as String?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String?,version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as int?,appVersion: freezed == appVersion ? _self.appVersion : appVersion // ignore: cast_nullable_to_non_nullable
 as String?,changedTimestamp: freezed == changedTimestamp ? _self.changedTimestamp : changedTimestamp // ignore: cast_nullable_to_non_nullable
 as int?,icon: freezed == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
-as AssetReference?,isCustomIcon: freezed == isCustomIcon ? _self.isCustomIcon : isCustomIcon // ignore: cast_nullable_to_non_nullable
+as AssetReferenceV4?,isCustomIcon: freezed == isCustomIcon ? _self.isCustomIcon : isCustomIcon // ignore: cast_nullable_to_non_nullable
 as bool?,templateId: freezed == templateId ? _self.templateId : templateId // ignore: cast_nullable_to_non_nullable
-as dynamic,workshopMetadata: freezed == workshopMetadata ? _self.workshopMetadata : workshopMetadata // ignore: cast_nullable_to_non_nullable
+as String?,workshopMetadata: freezed == workshopMetadata ? _self.workshopMetadata : workshopMetadata // ignore: cast_nullable_to_non_nullable
 as dynamic,
   ));
 }
@@ -329,12 +329,12 @@ as dynamic,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$AssetReferenceCopyWith<$Res>? get icon {
+$AssetReferenceV4CopyWith<$Res>? get icon {
     if (_self.icon == null) {
     return null;
   }
 
-  return $AssetReferenceCopyWith<$Res>(_self.icon!, (value) {
+  return $AssetReferenceV4CopyWith<$Res>(_self.icon!, (value) {
     return _then(_self.copyWith(icon: value));
   });
 }

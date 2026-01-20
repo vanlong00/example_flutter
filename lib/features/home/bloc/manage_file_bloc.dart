@@ -5,6 +5,7 @@ import 'package:example/data/models/models.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:path/path.dart' as p;
 
 part 'manage_file_event.dart';
 part 'manage_file_state.dart';
@@ -63,7 +64,7 @@ class ManageFileBloc extends Bloc<ManageFileEvent, ManageFileState> {
   Future<void> processBytes(Emitter<ManageFileState> emit) async {
     await state.mapOrNull(
       loaded: (value) async {
-        final filesToProcess = value.files.where((f) => f.melon == null).toList();
+        final filesToProcess = value.files.where((f) => f.melon == null && p.extension(f.path ?? '') == '.melmod').toList();
 
         // Process files in isolate
         for (final fileData in filesToProcess) {

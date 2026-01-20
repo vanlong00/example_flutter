@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'mod_human_v4.dart';
+part of 'mod_human_v3.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_ModHumanV4 _$ModHumanV4FromJson(Map<String, dynamic> json) => _ModHumanV4(
+_ModHumanV3 _$ModHumanV3FromJson(Map<String, dynamic> json) => _ModHumanV3(
   canBlink: json['canBlink'] as bool?,
   eyeLid: json['eyeLid'] == null
       ? null
@@ -18,14 +18,14 @@ _ModHumanV4 _$ModHumanV4FromJson(Map<String, dynamic> json) => _ModHumanV4(
       ?.map((e) => MelonVector2.fromJson(e as Map<String, dynamic>))
       .toList(),
   secondTextures: (json['secondTextures'] as List<dynamic>?)
-      ?.map((e) => AssetReferenceV4.fromJson(e as Map<String, dynamic>))
+      ?.map((e) => AssetReferenceV3.fromJson(e as Map<String, dynamic>))
       .toList(),
   thirdTextures: (json['thirdTextures'] as List<dynamic>?)
-      ?.map((e) => AssetReferenceV4.fromJson(e as Map<String, dynamic>))
+      ?.map((e) => AssetReferenceV3.fromJson(e as Map<String, dynamic>))
       .toList(),
 );
 
-Map<String, dynamic> _$ModHumanV4ToJson(_ModHumanV4 instance) =>
+Map<String, dynamic> _$ModHumanV3ToJson(_ModHumanV3 instance) =>
     <String, dynamic>{
       'canBlink': instance.canBlink,
       'eyeLid': instance.eyeLid,
