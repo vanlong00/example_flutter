@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MelonColor {
 
- int get r; int get g; int get b; int get a;
+ double get r; double get g; double get b; double get a;
 /// Create a copy of MelonColor
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $MelonColorCopyWith<$Res>  {
   factory $MelonColorCopyWith(MelonColor value, $Res Function(MelonColor) _then) = _$MelonColorCopyWithImpl;
 @useResult
 $Res call({
- int r, int g, int b, int a
+ double r, double g, double b, double a
 });
 
 
@@ -68,10 +68,10 @@ class _$MelonColorCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? r = null,Object? g = null,Object? b = null,Object? a = null,}) {
   return _then(_self.copyWith(
 r: null == r ? _self.r : r // ignore: cast_nullable_to_non_nullable
-as int,g: null == g ? _self.g : g // ignore: cast_nullable_to_non_nullable
-as int,b: null == b ? _self.b : b // ignore: cast_nullable_to_non_nullable
-as int,a: null == a ? _self.a : a // ignore: cast_nullable_to_non_nullable
-as int,
+as double,g: null == g ? _self.g : g // ignore: cast_nullable_to_non_nullable
+as double,b: null == b ? _self.b : b // ignore: cast_nullable_to_non_nullable
+as double,a: null == a ? _self.a : a // ignore: cast_nullable_to_non_nullable
+as double,
   ));
 }
 
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int r,  int g,  int b,  int a)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double r,  double g,  double b,  double a)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MelonColor() when $default != null:
 return $default(_that.r,_that.g,_that.b,_that.a);case _:
@@ -177,7 +177,7 @@ return $default(_that.r,_that.g,_that.b,_that.a);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int r,  int g,  int b,  int a)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double r,  double g,  double b,  double a)  $default,) {final _that = this;
 switch (_that) {
 case _MelonColor():
 return $default(_that.r,_that.g,_that.b,_that.a);case _:
@@ -197,7 +197,7 @@ return $default(_that.r,_that.g,_that.b,_that.a);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int r,  int g,  int b,  int a)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double r,  double g,  double b,  double a)?  $default,) {final _that = this;
 switch (_that) {
 case _MelonColor() when $default != null:
 return $default(_that.r,_that.g,_that.b,_that.a);case _:
@@ -215,10 +215,10 @@ class _MelonColor implements MelonColor {
   const _MelonColor({required this.r, required this.g, required this.b, required this.a});
   factory _MelonColor.fromJson(Map<String, dynamic> json) => _$MelonColorFromJson(json);
 
-@override final  int r;
-@override final  int g;
-@override final  int b;
-@override final  int a;
+@override final  double r;
+@override final  double g;
+@override final  double b;
+@override final  double a;
 
 /// Create a copy of MelonColor
 /// with the given fields replaced by the non-null parameter values.
@@ -253,7 +253,7 @@ abstract mixin class _$MelonColorCopyWith<$Res> implements $MelonColorCopyWith<$
   factory _$MelonColorCopyWith(_MelonColor value, $Res Function(_MelonColor) _then) = __$MelonColorCopyWithImpl;
 @override @useResult
 $Res call({
- int r, int g, int b, int a
+ double r, double g, double b, double a
 });
 
 
@@ -273,10 +273,10 @@ class __$MelonColorCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? r = null,Object? g = null,Object? b = null,Object? a = null,}) {
   return _then(_MelonColor(
 r: null == r ? _self.r : r // ignore: cast_nullable_to_non_nullable
-as int,g: null == g ? _self.g : g // ignore: cast_nullable_to_non_nullable
-as int,b: null == b ? _self.b : b // ignore: cast_nullable_to_non_nullable
-as int,a: null == a ? _self.a : a // ignore: cast_nullable_to_non_nullable
-as int,
+as double,g: null == g ? _self.g : g // ignore: cast_nullable_to_non_nullable
+as double,b: null == b ? _self.b : b // ignore: cast_nullable_to_non_nullable
+as double,a: null == a ? _self.a : a // ignore: cast_nullable_to_non_nullable
+as double,
   ));
 }
 

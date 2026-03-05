@@ -15,71 +15,71 @@ class MelonHelper {
         (bytes[3] == 0x04 || bytes[3] == 0x06 || bytes[3] == 0x08);
   }
 
-  /// Format MelonV3 - Extract and process V3 melmod files (ZIP archives)
-  static MelonV3 formatMelonV3(Uint8List bytes) {
-    // Decode the ZIP archive
-    final archive = ZipDecoder().decodeBytes(bytes);
+  static MelonBase parseMelon(Uint8List bytes) {
+    final isZipFile = validateZipFile(bytes);
 
-    MelonMetadataV3? metadata;
-    MelonDataV3? data;
-    Map<String, Uint8List>? assets;
+    if (isZipFile) {
+      // Handle V3/V4 format (ZIP archives)
+      final archive = ZipDecoder().decodeBytes(bytes);
 
-    // Process each file in the archive
-    for (final file in archive) {
-      if (file.isFile) {
-        final fileName = file.name;
-        final fileBytes = file.content;
+      MelonMetadataV3? metadataV3;
+      MelonMetadataV4? metadataV4;
+      MelonDataV3? dataV3;
+      MelonDataV4? dataV4;
+      Map<String, Uint8List>? assets;
+      int? version;
 
-        // Handle specific V3 files
-        if (fileName == 'MetaData') {
-          final metadataString = utf8.decode(fileBytes);
-          final metadataJson = jsonDecode(metadataString) as Map<String, dynamic>;
-          metadata = MelonMetadataV3.fromJson(metadataJson);
-        } else if (fileName == 'Data') {
-          final dataString = utf8.decode(fileBytes);
-          final dataJson = jsonDecode(dataString) as Map<String, dynamic>;
-          data = MelonDataV3.fromJson(dataJson);
-        } else {
-          assets ??= {};
-          assets[fileName] = fileBytes;
+      // Process each file in the archive
+      for (final file in archive) {
+        if (file.isFile) {
+          final fileName = file.name;
+          final fileBytes = file.content;
+
+          if (fileName == 'MetaData') {
+            final metadataString = utf8.decode(fileBytes);
+            final metadataJson = jsonDecode(metadataString) as Map<String, dynamic>;
+            version = metadataJson['version'] as int?;
+
+            if (version == 4) {
+              metadataV4 = MelonMetadataV4.fromJson(metadataJson);
+            } else if (version == 3) {
+              metadataV3 = MelonMetadataV3.fromJson(metadataJson);
+            } else {
+              throw Exception('Unsupported melon version: $version');
+            }
+          } else if (fileName == 'Data') {
+            final dataString = utf8.decode(fileBytes);
+            final dataJson = jsonDecode(dataString) as Map<String, dynamic>;
+
+            if (version == 4) {
+              dataV4 = MelonDataV4.fromJson(dataJson);
+            } else if (version == 3) {
+              dataV3 = MelonDataV3.fromJson(dataJson);
+            }
+          } else {
+            assets ??= {};
+            assets[fileName] = fileBytes;
+          }
         }
       }
-    }
 
-    return MelonV3(data: data, metadata: metadata, assets: assets);
-  }
-
-  /// Format MelonV4 - Extract and process V4 melmod files (ZIP archives)
-  static MelonV4 formatMelonV4(Uint8List bytes) {
-    // Decode the ZIP archive
-    final archive = ZipDecoder().decodeBytes(bytes);
-
-    MelonMetadataV4? metadata;
-    MelonDataV4? data;
-    Map<String, Uint8List>? assets;
-
-    // Process each file in the archive
-    for (final file in archive) {
-      if (file.isFile) {
-        final fileName = file.name;
-        final fileBytes = file.content;
-
-        // Handle specific V4 files
-        if (fileName == 'MetaData') {
-          final metadataString = utf8.decode(fileBytes);
-          final metadataJson = jsonDecode(metadataString) as Map<String, dynamic>;
-          metadata = MelonMetadataV4.fromJson(metadataJson);
-        } else if (fileName == 'Data') {
-          final dataString = utf8.decode(fileBytes);
-          final dataJson = jsonDecode(dataString) as Map<String, dynamic>;
-          data = MelonDataV4.fromJson(dataJson);
-        } else {
-          assets ??= {};
-          assets[fileName] = fileBytes;
-        }
+      if (version == 4) {
+        return MelonBase.v4(MelonV4(data: dataV4, metadata: metadataV4, assets: assets));
+      } else if (version == 3) {
+        return MelonBase.v3(MelonV3(data: dataV3, metadata: metadataV3, assets: assets));
+      } else {
+        throw Exception('MetaData file not found in archive');
+      }
+    } else {
+      // Handle V2 format (JSON file)
+      try {
+        final jsonString = utf8.decode(bytes);
+        final jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
+        final melonV2 = MelonV2.fromJson(jsonData);
+        return MelonBase.v2(melonV2);
+      } catch (e) {
+        throw Exception('Failed to parse V2 melon format: $e');
       }
     }
-
-    return MelonV4(data: data, metadata: metadata, assets: assets);
   }
 }

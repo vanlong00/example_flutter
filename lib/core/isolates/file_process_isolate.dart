@@ -145,14 +145,7 @@ class FileProcessingIsolateController {
       // 1. Read the file from the path
       final bytes = await File(filePath).readAsBytes();
       // 2. Parse it into a MelonBase object
-      MelonBase melonBase;
-      try {
-        final melonV4 = MelonHelper.formatMelonV4(bytes);
-        melonBase = MelonBase.v4(melonV4);
-      } catch (e, _) {
-        final melonV3 = MelonHelper.formatMelonV3(bytes);
-        melonBase = MelonBase.v3(melonV3);
-      }
+      final melonBase = MelonHelper.parseMelon(bytes);
 
       // 3. Return the result
       final result = melonBase;

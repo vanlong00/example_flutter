@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:example/data/models/models.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as p;
 
 import 'storage_helper.dart';
@@ -31,7 +33,7 @@ class FileHelper {
 
       final file = result.files.first;
       final extension = p.extension(file.name).toLowerCase().replaceFirst('.', '');
-      if (!_isValidExtension(file.name, ['melmod', 'melsave', 'melmap', 'zip'])) {
+      if (!_isValidExtension(file.name, ['melmod', 'melsave', 'melmap', 'zip', 'melworld'])) {
         // Invalid file extension
         throw Exception('Invalid file extension');
       }
@@ -45,6 +47,7 @@ class FileHelper {
           return [await handleFile(file)];
       }
     } catch (e) {
+      debugPrint('Error selecting file: $e');
       return [];
     }
   }
@@ -61,5 +64,20 @@ class FileHelper {
   static bool _isValidExtension(String fileName, List<String> allowedExtensions) {
     final extension = p.extension(fileName).toLowerCase().replaceFirst('.', '');
     return allowedExtensions.map((e) => e.toLowerCase()).contains(extension);
+  }
+
+  /// Opens a file with the system's app chooser using open_file package
+  /// Supports: Android, iOS, macOS, Linux, Windows, Web
+  static Future<OpenResult> openWith(String filePath) async {
+    return OpenFile.open(filePath, type: 'application/octet-stream');
+  }
+
+  /// Opens multiple files sequentially with the system's app chooser
+  static Future<List<OpenResult>> openWithMultiple(List<String> filePaths) async {
+    final results = <OpenResult>[];
+    for (final path in filePaths) {
+      results.add(await openWith(path));
+    }
+    return results;
   }
 }

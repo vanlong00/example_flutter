@@ -5,7 +5,7 @@ part 'melon_color.g.dart';
 
 @freezed
 abstract class MelonColor with _$MelonColor {
-  const factory MelonColor({required int r, required int g, required int b, required int a}) = _MelonColor;
+  const factory MelonColor({required double r, required double g, required double b, required double a}) = _MelonColor;
 
   factory MelonColor.fromJson(Map<String, Object?> json) => _$MelonColorFromJson(json);
 }

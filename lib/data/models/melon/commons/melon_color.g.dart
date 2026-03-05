@@ -7,10 +7,10 @@ part of 'melon_color.dart';
 // **************************************************************************
 
 _MelonColor _$MelonColorFromJson(Map<String, dynamic> json) => _MelonColor(
-  r: (json['r'] as num).toInt(),
-  g: (json['g'] as num).toInt(),
-  b: (json['b'] as num).toInt(),
-  a: (json['a'] as num).toInt(),
+  r: (json['r'] as num).toDouble(),
+  g: (json['g'] as num).toDouble(),
+  b: (json['b'] as num).toDouble(),
+  a: (json['a'] as num).toDouble(),
 );
 
 Map<String, dynamic> _$MelonColorToJson(_MelonColor instance) =>

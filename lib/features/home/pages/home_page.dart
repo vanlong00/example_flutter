@@ -1,7 +1,9 @@
+import 'package:example/core/core.dart';
 import 'package:example/data/models/models.dart';
 import 'package:example/features/home/bloc/manage_file_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:open_file/open_file.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -107,14 +109,41 @@ class FileMelonItem extends StatelessWidget {
         orElse: () => file,
       ),
       builder: (context, fileState) {
-        return Card(
-          child: ListTile(
-            leading: SizedBox.square(dimension: 40, child: _icon(fileState)),
-            title: Text(fileState.fileName ?? 'Unnamed File'),
-            subtitle: Text('${fileState.bytes?.length ?? 0} bytes'),
+        return InkWell(
+          onLongPress: () => _onLongPress(context, fileState),
+          child: Card(
+            child: ListTile(
+              leading: SizedBox.square(dimension: 40, child: _icon(fileState)),
+              title: Text(fileState.fileName ?? 'Unnamed File'),
+              subtitle: Text('${fileState.bytes?.length ?? 0} bytes'),
+            ),
           ),
         );
       },
+    );
+  }
+
+  void _onLongPress(BuildContext context, UserFileData fileState) {
+    if (fileState.path == null) return;
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Open With'),
+        content: Text('Open "${fileState.fileName}" with another app?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              final result = await FileHelper.openWith(fileState.path!);
+              if (context.mounted && result.type != ResultType.done) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result.message)));
+              }
+            },
+            child: const Text('Open'),
+          ),
+        ],
+      ),
     );
   }
 

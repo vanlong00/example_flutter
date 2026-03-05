@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:example/core/core.dart';
 import 'package:example/core/isolates/file_process_isolate.dart';
 import 'package:example/core/utils/helpers/storage_helper.dart';
@@ -37,13 +39,15 @@ class ManageFileBloc extends Bloc<ManageFileEvent, ManageFileState> {
 
     final dirStorage = await StorageHelper.getCacheDirectoryApp();
     final List<UserFileData> storedFiles = [];
-    dirStorage.listSync().forEach((file) {
-      final userFileData = UserFileData.fromPath(file.path);
+    await for (final file in dirStorage.list()) {
+      final File savedFile = File(file.path);
+      final Uint8List bytes = await savedFile.readAsBytes();
+      final userFileData = UserFileData.create(fileName: p.basename(file.path), bytes: bytes, path: savedFile.path);
       storedFiles.add(userFileData);
-    });
+    }
 
     emit(ManageFileState.loaded(files: storedFiles));
-    await processBytes(emit);
+    await processBytes(emit, storedFiles);
   }
 
   Future<void> _onPickFile(_PickFile event, Emitter<ManageFileState> emit) async {
@@ -53,29 +57,23 @@ class ManageFileBloc extends Bloc<ManageFileEvent, ManageFileState> {
     try {
       final result = await FileHelper.selectFileFormat();
       emit(ManageFileState.loaded(files: [...currentFiles, ...result]));
+      await processBytes(emit, result);
     } catch (e) {
       debugPrint('ManageFileBloc _onPickFile error: $e');
       emit(ManageFileState.error('Failed to pick file'));
     }
-
-    await processBytes(emit);
   }
 
-  Future<void> processBytes(Emitter<ManageFileState> emit) async {
+  Future<void> processBytes(Emitter<ManageFileState> emit, List<UserFileData> files) async {
     await state.mapOrNull(
       loaded: (value) async {
         final filesToProcess = value.files.where((f) => f.melon == null && p.extension(f.path ?? '') == '.melmod').toList();
 
         // Process files in isolate
         for (final fileData in filesToProcess) {
-          // Check if event handler is done before processing
-          if (emit.isDone) return;
-
           try {
             if (fileData.path == null) continue;
             final melonBase = await _isolate.processFile(fileData.path!);
-            // Check again after async operation
-            if (emit.isDone) return;
 
             // Get fresh state to avoid overwriting user actions
             final freshState = state.mapOrNull(loaded: (s) => s);

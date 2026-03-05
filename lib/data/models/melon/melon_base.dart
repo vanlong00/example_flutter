@@ -17,15 +17,15 @@ abstract class MelonBase with _$MelonBase {
     return when(
       v4: (item) => Uint8List.fromList(item.assets?["Icon"] ?? []),
       v3: (item) => Uint8List.fromList(item.assets?["Icon"] ?? []),
-      v2: (item) => Uint8List(0),
+      v2: (item) => Uint8List.fromList(item.icon),
     );
   }
 
   int? get version {
-    return when(v4: (item) => item.metadata?.version, v3: (item) => item.metadata?.version, v2: (item) => 2);
+    return when(v4: (item) => item.metadata?.version, v3: (item) => item.metadata?.version, v2: (item) => item.convertVersion);
   }
 
   String? get uniqueId {
-    return when(v4: (item) => item.metadata?.uniqueId, v3: (item) => item.metadata?.uniqueId, v2: (item) => null);
+    return when(v4: (item) => item.metadata?.uniqueId, v3: (item) => item.metadata?.uniqueId, v2: (item) => item.uniqueId);
   }
 }
