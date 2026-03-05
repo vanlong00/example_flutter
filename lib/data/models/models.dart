@@ -24,3 +24,4 @@ export 'melon/v2/melon_v2.dart';
 
 // Models
 export 'user_file_data/user_file_data.dart';
+export 'user_file_data/mel_type.dart';

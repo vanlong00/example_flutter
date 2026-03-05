@@ -47,7 +47,6 @@ class ManageFileBloc extends Bloc<ManageFileEvent, ManageFileState> {
     }
 
     emit(ManageFileState.loaded(files: storedFiles));
-    await processBytes(emit, storedFiles);
   }
 
   Future<void> _onPickFile(_PickFile event, Emitter<ManageFileState> emit) async {
@@ -57,43 +56,42 @@ class ManageFileBloc extends Bloc<ManageFileEvent, ManageFileState> {
     try {
       final result = await FileHelper.selectFileFormat();
       emit(ManageFileState.loaded(files: [...currentFiles, ...result]));
-      await processBytes(emit, result);
     } catch (e) {
       debugPrint('ManageFileBloc _onPickFile error: $e');
       emit(ManageFileState.error('Failed to pick file'));
     }
   }
 
-  Future<void> processBytes(Emitter<ManageFileState> emit, List<UserFileData> files) async {
-    await state.mapOrNull(
-      loaded: (value) async {
-        final filesToProcess = value.files.where((f) => f.melon == null && p.extension(f.path ?? '') == '.melmod').toList();
+  // Future<void> processBytes(Emitter<ManageFileState> emit, List<UserFileData> files) async {
+  //   await state.mapOrNull(
+  //     loaded: (value) async {
+  //       final filesToProcess = value.files.where((f) => f.melon == null && p.extension(f.path ?? '') == '.melmod').toList();
 
-        // Process files in isolate
-        for (final fileData in filesToProcess) {
-          try {
-            if (fileData.path == null) continue;
-            final melonBase = await _isolate.processFile(fileData.path!);
+  //       // Process files in isolate
+  //       for (final fileData in filesToProcess) {
+  //         try {
+  //           if (fileData.path == null) continue;
+  //           final melonBase = await _isolate.processFile(fileData.path!);
 
-            // Get fresh state to avoid overwriting user actions
-            final freshState = state.mapOrNull(loaded: (s) => s);
-            if (freshState == null) return;
+  //           // Get fresh state to avoid overwriting user actions
+  //           final freshState = state.mapOrNull(loaded: (s) => s);
+  //           if (freshState == null) return;
 
-            // Check if file still exists in current state
-            final fileStillExists = freshState.files.any((f) => f.id == fileData.id);
-            if (!fileStillExists) continue;
+  //           // Check if file still exists in current state
+  //           final fileStillExists = freshState.files.any((f) => f.id == fileData.id);
+  //           if (!fileStillExists) continue;
 
-            final updatedFile = fileData.copyWith(melon: melonBase);
-            final updatedFiles = freshState.files.map((f) => f.id == updatedFile.id ? updatedFile : f).toList();
+  //           final updatedFile = fileData.copyWith(melon: melonBase);
+  //           final updatedFiles = freshState.files.map((f) => f.id == updatedFile.id ? updatedFile : f).toList();
 
-            emit(ManageFileState.loaded(files: updatedFiles));
-          } catch (e) {
-            debugPrint('Failed to process ${fileData.fileName}: $e');
-          }
-        }
-      },
-    );
-  }
+  //           emit(ManageFileState.loaded(files: updatedFiles));
+  //         } catch (e) {
+  //           debugPrint('Failed to process ${fileData.fileName}: $e');
+  //         }
+  //       }
+  //     },
+  //   );
+  // }
 
   void _onClearFile(_ClearFile event, Emitter<ManageFileState> emit) {
     FileHelper.clearTemporaryFiles();

@@ -85,6 +85,13 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
     required this.onDestructive,
     required this.destructiveContainer,
     required this.onDestructiveContainer,
+    required this.neutral100,
+    required this.neutral200,
+    required this.neutral300,
+    required this.neutral400,
+    required this.neutral500,
+    required this.neutral600,
+    required this.neutral700,
   });
 
   final Color success;
@@ -107,6 +114,14 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
   final Color destructiveContainer;
   final Color onDestructiveContainer;
 
+  final Color neutral100;
+  final Color neutral200;
+  final Color neutral300;
+  final Color neutral400;
+  final Color neutral500;
+  final Color neutral600;
+  final Color neutral700;
+
   static const AppSemanticColors light = AppSemanticColors(
     success: Color(0xFF10b981),
     onSuccess: Color(0xFFffffff),
@@ -124,6 +139,13 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
     onDestructive: Color(0xFFffffff),
     destructiveContainer: Color(0xFFfee2e2),
     onDestructiveContainer: Color(0xFF991b1b),
+    neutral700: Color(0xFF1A1C24),
+    neutral600: Color(0xFF434959),
+    neutral500: Color(0xFF7A85A1),
+    neutral400: Color(0xFF9DA8C3),
+    neutral300: Color(0xFFE0E6F3),
+    neutral200: Color(0xFFF2F6FC),
+    neutral100: Color(0xFFFFFFFF),
   );
 
   static const AppSemanticColors dark = AppSemanticColors(
@@ -143,6 +165,13 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
     onDestructive: Color(0xFF000000),
     destructiveContainer: Color(0xFF7f1d1d),
     onDestructiveContainer: Color(0xFFfca5a5),
+    neutral100: Color(0xFF1A1C24),
+    neutral200: Color(0xFF434959),
+    neutral300: Color(0xFF7A85A1),
+    neutral400: Color(0xFF9DA8C3),
+    neutral500: Color(0xFFE0E6F3),
+    neutral600: Color(0xFFF2F6FC),
+    neutral700: Color(0xFFFFFFFF),
   );
 
   @override
@@ -163,6 +192,13 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
     Color? onDestructive,
     Color? destructiveContainer,
     Color? onDestructiveContainer,
+    Color? neutral100,
+    Color? neutral200,
+    Color? neutral300,
+    Color? neutral400,
+    Color? neutral500,
+    Color? neutral600,
+    Color? neutral700,
   }) {
     return AppSemanticColors(
       success: success ?? this.success,
@@ -181,6 +217,13 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
       onDestructive: onDestructive ?? this.onDestructive,
       destructiveContainer: destructiveContainer ?? this.destructiveContainer,
       onDestructiveContainer: onDestructiveContainer ?? this.onDestructiveContainer,
+      neutral100: neutral100 ?? this.neutral100,
+      neutral200: neutral200 ?? this.neutral200,
+      neutral300: neutral300 ?? this.neutral300,
+      neutral400: neutral400 ?? this.neutral400,
+      neutral500: neutral500 ?? this.neutral500,
+      neutral600: neutral600 ?? this.neutral600,
+      neutral700: neutral700 ?? this.neutral700,
     );
   }
 
@@ -204,6 +247,13 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
       onDestructive: Color.lerp(onDestructive, other.onDestructive, t)!,
       destructiveContainer: Color.lerp(destructiveContainer, other.destructiveContainer, t)!,
       onDestructiveContainer: Color.lerp(onDestructiveContainer, other.onDestructiveContainer, t)!,
+      neutral100: Color.lerp(neutral100, other.neutral100, t)!,
+      neutral200: Color.lerp(neutral200, other.neutral200, t)!,
+      neutral300: Color.lerp(neutral300, other.neutral300, t)!,
+      neutral400: Color.lerp(neutral400, other.neutral400, t)!,
+      neutral500: Color.lerp(neutral500, other.neutral500, t)!,
+      neutral600: Color.lerp(neutral600, other.neutral600, t)!,
+      neutral700: Color.lerp(neutral700, other.neutral700, t)!,
     );
   }
 }

@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
           home: const HomePage(),
           locale: DevicePreview.locale(context),
           builder: DevicePreview.appBuilder,
+          debugShowCheckedModeBanner: false,
         );
       },
     );
