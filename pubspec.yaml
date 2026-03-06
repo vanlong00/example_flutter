@@ -26,6 +26,8 @@ dependencies:
   get_it:
   injectable:
 
+  shimmer: ^3.0.0
+
   # BLoC State Management
   flutter_bloc: ^9.1.1
   equatable: ^2.0.7

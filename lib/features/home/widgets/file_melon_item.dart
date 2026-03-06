@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
 import 'package:example/core/utils/utils.dart';
 import 'package:example/data/models/models.dart';
-import 'package:example/features/home/bloc/manage_file_bloc.dart';
+import 'package:example/features/home/bloc/manage_file_bloc/manage_file_bloc.dart';
 import 'package:example/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,38 +16,43 @@ class FileMelonItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocSelector<ManageFileBloc, ManageFileState, UserFileData>(
-      selector: (state) => state.maybeWhen(
-        loaded: (files) => files.firstWhere((f) => f.id == file.id, orElse: () => file),
-        orElse: () => file,
-      ),
+      selector: (state) => state.displayedFiles.firstWhere((f) => f.id == file.id, orElse: () => file),
       builder: (_, fileState) {
-        return Row(
-          spacing: AppSpacing.md,
-          children: [
-            Container(
-              height: 48,
-              width: 48,
-              decoration: BoxDecoration(color: Color(0xFFA855F7).withValues(alpha: 0.2), borderRadius: AppStyle.borderCard),
-              alignment: Alignment.center,
-              child: SizedBox.square(dimension: 20, child: _icon(fileState)),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(fileState.fileName ?? 'Unnamed File', style: context.textTheme.titleSmall?.semiBold),
-                  Text(FileHelper.formatFileSize(fileState.bytes?.length ?? 0), style: context.textTheme.bodySmall),
-                ],
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => _onTap(context, fileState),
+          child: Row(
+            spacing: AppSpacing.md,
+            children: [
+              Container(
+                height: 48,
+                width: 48,
+                decoration: BoxDecoration(color: _iconColor(fileState).withValues(alpha: 0.2), borderRadius: AppStyle.borderCard),
+                alignment: Alignment.center,
+                child: SizedBox.square(dimension: 20, child: _icon(fileState)),
               ),
-            ),
-            Assets.icons.regular.angleRight.image(width: 16, height: 16),
-          ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(fileState.fileName ?? 'Unnamed File', style: context.textTheme.titleSmall?.semiBold),
+                    Text(
+                      FileHelper.formatFileSize(fileState.bytes?.length ?? 0),
+                      style: context.textTheme.bodySmall?.withColor(context.semanticColors.neutral500),
+                    ),
+                  ],
+                ),
+              ),
+              Assets.icons.regular.angleRight.image(width: 16, height: 16),
+            ],
+          ),
         );
       },
     );
   }
 
-  void _onLongPress(BuildContext context, UserFileData fileState) {
+  void _onTap(BuildContext context, UserFileData fileState) {
     if (fileState.path == null) return;
     showDialog(
       context: context,
@@ -74,27 +79,25 @@ class FileMelonItem extends StatelessWidget {
   Widget _icon(UserFileData fileState) {
     switch (fileState.type) {
       case MelType.melmod:
-        return Assets.icons.solid.cog.image(fit: BoxFit.contain, color: Color(0xFFA855F7));
+        return Assets.icons.solid.cog.image(fit: BoxFit.contain, color: _iconColor(fileState));
       case MelType.melsave:
-        return Assets.icons.solid.save.image(fit: BoxFit.contain, color: Color(0xFFA855F7));
+        return Assets.icons.solid.save.image(fit: BoxFit.contain, color: _iconColor(fileState));
       case MelType.melworld:
-        return Assets.icons.solid.globeAmericas.image(fit: BoxFit.contain, color: Color(0xFFA855F7));
+        return Assets.icons.solid.globeAmericas.image(fit: BoxFit.contain, color: _iconColor(fileState));
       case MelType.melmap:
-        return Assets.icons.solid.globeAmericas.image(fit: BoxFit.contain, color: Color(0xFFA855F7));
+        return Assets.icons.solid.globeAmericas.image(fit: BoxFit.contain, color: _iconColor(fileState));
       default:
-        return Assets.icons.solid.image.image(fit: BoxFit.contain, color: Color(0xFFA855F7));
+        return Assets.icons.solid.image.image(fit: BoxFit.contain, color: _iconColor(fileState));
     }
-    // final bytes = fileState.melon?.iconBytes;
-    // if (bytes == null || bytes.isEmpty) {
-    //   return FittedBox(fit: BoxFit.contain, child: Icon(Icons.image_not_supported));
-    // }
-    // return Image.memory(
-    //   icon,
-    //   filterQuality: FilterQuality.none,
-    //   fit: BoxFit.contain,
-    //   errorBuilder: (context, error, stackTrace) {
-    //     return FittedBox(fit: BoxFit.contain, child: Icon(Icons.image_not_supported));
-    //   },
-    // );
+  }
+
+  Color _iconColor(UserFileData fileState) {
+    switch (fileState.type) {
+      case MelType.melworld:
+        return Colors.cyan;
+
+      default:
+        return Colors.purple;
+    }
   }
 }

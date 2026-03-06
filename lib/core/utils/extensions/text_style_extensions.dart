@@ -13,4 +13,6 @@ extension TextStyleExtensions on TextStyle {
 
   TextStyle get italic => copyWith(fontStyle: FontStyle.italic);
   TextStyle get normal => copyWith(fontStyle: FontStyle.normal);
+
+  TextStyle withColor(Color color) => copyWith(color: color);
 }

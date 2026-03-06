@@ -1,10 +1,13 @@
 import 'package:design_system/design_system.dart';
-import 'package:example/data/models/models.dart';
-import 'package:example/features/home/bloc/manage_file_bloc.dart';
+import 'package:example/core/core.dart';
+import 'package:example/features/home/bloc/manage_file_bloc/manage_file_bloc.dart';
+import 'package:example/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../widgets/file_melon_item.dart';
+import '../widgets/file_filter_chips.dart';
+import '../widgets/file_list_area.dart';
+import '../widgets/file_search_bar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -15,86 +18,79 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _HomePageView extends StatelessWidget {
+class _HomePageView extends StatefulWidget {
   const _HomePageView();
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(appBar: _buildAppBar(context), body: _buildBody(context), floatingActionButton: _buildFAB(context));
+  State<_HomePageView> createState() => _HomePageViewState();
+}
+
+class _HomePageViewState extends State<_HomePageView> {
+  late final TextEditingController _searchController;
+  late final ValueNotifier<bool> _hasSearchText;
+  late final FocusNode _searchFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchFocusNode = FocusNode();
+    _searchController = TextEditingController();
+    _hasSearchText = ValueNotifier(false);
+    _searchController.addListener(() {
+      _hasSearchText.value = _searchController.text.isNotEmpty;
+    });
   }
 
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      title: const Text("File Explorer"),
-      actions: [
-        BlocSelector<ManageFileBloc, ManageFileState, bool>(
-          selector: (state) => state.maybeWhen(loaded: (files) => files.isNotEmpty, orElse: () => false),
-          builder: (context, hasFiles) => hasFiles ? _buildClearButton(context) : const SizedBox.shrink(),
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _hasSearchText.dispose();
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('File Explorer')),
+      body: _buildBody(context),
+      floatingActionButton: _buildFAB(context),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FileSearchBar(
+          controller: _searchController,
+          focusNode: _searchFocusNode,
+          hasSearchText: _hasSearchText,
+          onChanged: (query) => context.read<ManageFileBloc>().add(ManageFileEvent.searchChanged(query)),
+          onClear: () {
+            _searchController.clear();
+            _searchFocusNode.unfocus();
+            context.read<ManageFileBloc>().add(const ManageFileEvent.searchChanged(''));
+          },
         ),
+        const FileFilterChips(),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+          child: Text(
+            'FILES',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(color: context.colorScheme.onSurface.withAlpha(128), letterSpacing: 1.2),
+          ),
+        ),
+        const Expanded(child: FileListArea()),
       ],
     );
   }
 
-  Widget _buildClearButton(BuildContext context) {
-    return IconButton(onPressed: () => context.read<ManageFileBloc>().add(const ManageFileEvent.clearFile()), icon: const Icon(Icons.clear_all));
-  }
-
-  Widget _buildBody(BuildContext context) {
-    return BlocBuilder<ManageFileBloc, ManageFileState>(
-      buildWhen: (previous, current) =>
-          (previous.mapOrNull(loaded: (prev) => prev.files.length) ?? true) != (current.mapOrNull(loaded: (curr) => curr.files.length) ?? true),
-      builder: (context, state) {
-        return state.when(
-          initial: _buildEmptyState,
-          loading: _buildLoadingState,
-          loaded: (files) => _buildLoadedState(context, files),
-          error: _buildErrorState,
-        );
-      },
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return const Center(child: Text("Tap + to pick files"));
-  }
-
-  Widget _buildLoadingState() {
-    return const Center(child: CircularProgressIndicator());
-  }
-
-  Widget _buildLoadedState(BuildContext context, List<UserFileData> files) {
-    if (files.isEmpty) {
-      return const Center(child: Text("No files selected"));
-    }
-
-    return ListView.builder(
-      itemCount: files.length,
-      physics: const ScrollPhysics(),
-      padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
-      itemBuilder: (_, index) {
-        final bool isLast = index == files.length - 1;
-        return Padding(
-          padding: EdgeInsets.only(bottom: !isLast ? AppSpacing.md : 0),
-          child: FileMelonItem(key: ValueKey(files[index]), file: files[index], index: index),
-        );
-      },
-    );
-  }
-
-  Widget _buildErrorState(String message) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.error_outline, size: 64, color: Colors.red),
-          const SizedBox(height: 16),
-          Text(message),
-        ],
-      ),
-    );
-  }
-
   Widget _buildFAB(BuildContext context) {
-    return FloatingActionButton(onPressed: () => context.read<ManageFileBloc>().add(const ManageFileEvent.pickFile()), child: const Icon(Icons.add));
+    return FloatingActionButton(
+      onPressed: () => context.read<ManageFileBloc>().add(const ManageFileEvent.pickFile()),
+      backgroundColor: context.colorScheme.primary,
+      child: Assets.icons.solid.plus.image(width: 24, height: 24, color: context.colorScheme.onPrimary),
+    );
   }
 }

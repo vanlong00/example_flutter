@@ -15,12 +15,15 @@ part 'manage_file_bloc.freezed.dart';
 
 class ManageFileBloc extends Bloc<ManageFileEvent, ManageFileState> {
   final _isolate = FileProcessingIsolate();
+  final List<UserFileData> _storedFiles = [];
 
-  ManageFileBloc() : super(const ManageFileState.initial()) {
+  ManageFileBloc() : super(const ManageFileState()) {
     on<_PickFile>(_onPickFile);
     on<_ClearFile>(_onClearFile);
     on<_RemoveFile>(_onRemoveFile);
     on<_Initialize>(_onInitialize);
+    on<_SearchChanged>(_onSearchChanged);
+    on<_FilterChanged>(_onFilterChanged);
 
     _initializeIsolate();
     add(const ManageFileEvent.initialize());
@@ -35,7 +38,7 @@ class ManageFileBloc extends Bloc<ManageFileEvent, ManageFileState> {
   }
 
   Future<void> _onInitialize(_Initialize event, Emitter<ManageFileState> emit) async {
-    emit(const ManageFileState.loading());
+    emit(state.copyWith(status: ManageFileStatus.loading));
 
     final dirStorage = await StorageHelper.getCacheDirectoryApp();
     final List<UserFileData> storedFiles = [];
@@ -46,19 +49,28 @@ class ManageFileBloc extends Bloc<ManageFileEvent, ManageFileState> {
       storedFiles.add(userFileData);
     }
 
-    emit(ManageFileState.loaded(files: storedFiles));
+    _storedFiles
+      ..clear()
+      ..addAll(storedFiles);
+    emit(state.copyWith(status: ManageFileStatus.loaded, displayedFiles: List.from(_storedFiles), existingFiles: []));
   }
 
   Future<void> _onPickFile(_PickFile event, Emitter<ManageFileState> emit) async {
-    final currentFiles = state.maybeWhen(loaded: (files) => files, orElse: () => <UserFileData>[]);
-    emit(const ManageFileState.loading());
+    emit(state.copyWith(status: ManageFileStatus.loading, existingFiles: state.displayedFiles));
 
     try {
       final result = await FileHelper.selectFileFormat();
-      emit(ManageFileState.loaded(files: [...currentFiles, ...result]));
+      _storedFiles.addAll(result);
+      emit(
+        state.copyWith(
+          status: ManageFileStatus.loaded,
+          displayedFiles: _computeDisplayedFiles(state.activeFilter, state.searchQuery),
+          existingFiles: [],
+        ),
+      );
     } catch (e) {
       debugPrint('ManageFileBloc _onPickFile error: $e');
-      emit(ManageFileState.error('Failed to pick file'));
+      emit(state.copyWith(status: ManageFileStatus.error, errorMessage: 'Failed to pick file'));
     }
   }
 
@@ -94,22 +106,38 @@ class ManageFileBloc extends Bloc<ManageFileEvent, ManageFileState> {
   // }
 
   void _onClearFile(_ClearFile event, Emitter<ManageFileState> emit) {
+    _storedFiles.clear();
     FileHelper.clearTemporaryFiles();
-    emit(const ManageFileState.initial());
+    emit(const ManageFileState());
   }
 
   void _onRemoveFile(_RemoveFile event, Emitter<ManageFileState> emit) {
-    state.maybeWhen(
-      loaded: (files) {
-        final updatedFiles = List<UserFileData>.from(files)..removeAt(event.index);
-        if (updatedFiles.isEmpty) {
-          emit(const ManageFileState.initial());
-        } else {
-          emit(ManageFileState.loaded(files: updatedFiles));
-        }
-      },
-      orElse: () {},
-    );
+    _storedFiles.removeAt(event.index);
+    if (_storedFiles.isEmpty) {
+      emit(const ManageFileState());
+    } else {
+      emit(state.copyWith(status: ManageFileStatus.loaded, displayedFiles: _computeDisplayedFiles(state.activeFilter, state.searchQuery)));
+    }
+  }
+
+  void _onSearchChanged(_SearchChanged event, Emitter<ManageFileState> emit) {
+    emit(state.copyWith(searchQuery: event.query, displayedFiles: _computeDisplayedFiles(state.activeFilter, event.query)));
+  }
+
+  void _onFilterChanged(_FilterChanged event, Emitter<ManageFileState> emit) {
+    emit(state.copyWith(activeFilter: event.filter, displayedFiles: _computeDisplayedFiles(event.filter, state.searchQuery)));
+  }
+
+  List<UserFileData> _computeDisplayedFiles(FileFilter filter, String query) {
+    var result = List<UserFileData>.from(_storedFiles);
+    if (filter != FileFilter.all) {
+      result = result.where((f) => f.type?.name == filter.name).toList();
+    }
+    if (query.isNotEmpty) {
+      final lower = query.toLowerCase();
+      result = result.where((f) => (f.fileName ?? '').toLowerCase().contains(lower)).toList();
+    }
+    return result;
   }
 
   @override
