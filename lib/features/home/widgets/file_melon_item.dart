@@ -20,7 +20,7 @@ class FileMelonItem extends StatelessWidget {
       builder: (_, fileState) {
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () => _onTap(context, fileState),
+          onLongPressStart: (details) => _onLongPress(context, fileState, details.globalPosition),
           child: Row(
             spacing: AppSpacing.md,
             children: [
@@ -36,7 +36,12 @@ class FileMelonItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(fileState.fileName ?? 'Unnamed File', style: context.textTheme.titleSmall?.semiBold),
+                    Text(
+                      fileState.fileName ?? 'Unnamed File',
+                      style: context.textTheme.titleSmall?.semiBold,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     Text(
                       FileHelper.formatFileSize(fileState.bytes?.length ?? 0),
                       style: context.textTheme.bodySmall?.withColor(context.semanticColors.neutral500),
@@ -52,15 +57,52 @@ class FileMelonItem extends StatelessWidget {
     );
   }
 
+  void _onLongPress(BuildContext context, UserFileData fileState, Offset position) async {
+    final result = await showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(position.dx, position.dy, position.dx + 1, position.dy + 1),
+      items: [
+        PopupMenuItem(
+          value: 'open',
+          child: Row(spacing: AppSpacing.sm, children: const [Icon(Icons.open_in_new_outlined, size: 18), Text('Open with')]),
+        ),
+        PopupMenuItem(
+          value: 'remove',
+          child: Row(
+            spacing: AppSpacing.sm,
+            children: [
+              Icon(Icons.delete_outline, size: 18, color: context.semanticColors.destructive),
+              Text('Remove', style: TextStyle(color: context.semanticColors.destructive)),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    if (!context.mounted) return;
+    switch (result) {
+      case 'open':
+        _onTap(context, fileState);
+      case 'remove':
+        context.read<ManageFileBloc>().add(ManageFileEvent.removeFile(index));
+    }
+  }
+
   void _onTap(BuildContext context, UserFileData fileState) {
     if (fileState.path == null) return;
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Open With'),
-        content: Text('Open "${fileState.fileName}" with another app?'),
+        titleTextStyle: context.textTheme.titleLarge,
+        content: Text('Open "${fileState.fileName}" with Melon Sandbox?'),
+        contentTextStyle: context.textTheme.bodyMedium,
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            style: TextButton.styleFrom(foregroundColor: context.semanticColors.neutral400),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () async {
               Navigator.pop(context);

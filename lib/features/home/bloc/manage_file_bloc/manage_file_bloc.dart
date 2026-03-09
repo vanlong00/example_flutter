@@ -39,20 +39,28 @@ class ManageFileBloc extends Bloc<ManageFileEvent, ManageFileState> {
 
   Future<void> _onInitialize(_Initialize event, Emitter<ManageFileState> emit) async {
     emit(state.copyWith(status: ManageFileStatus.loading));
+    try {
+      final dirStorage = await StorageHelper.getCacheDirectoryApp();
+      final List<UserFileData> storedFiles = [];
+      final List<FileSystemEntity> files = await dirStorage.list().toList();
+      if (files.isEmpty) {
+        emit(state.copyWith(status: ManageFileStatus.initial));
+        return;
+      }
+      for (final file in files) {
+        final File savedFile = File(file.path);
+        final Uint8List bytes = await savedFile.readAsBytes();
+        final userFileData = UserFileData.create(fileName: p.basename(file.path), bytes: bytes, path: savedFile.path);
+        storedFiles.add(userFileData);
+      }
 
-    final dirStorage = await StorageHelper.getCacheDirectoryApp();
-    final List<UserFileData> storedFiles = [];
-    await for (final file in dirStorage.list()) {
-      final File savedFile = File(file.path);
-      final Uint8List bytes = await savedFile.readAsBytes();
-      final userFileData = UserFileData.create(fileName: p.basename(file.path), bytes: bytes, path: savedFile.path);
-      storedFiles.add(userFileData);
+      _storedFiles
+        ..clear()
+        ..addAll(storedFiles);
+      emit(state.copyWith(status: ManageFileStatus.loaded, displayedFiles: List.from(_storedFiles), existingFiles: []));
+    } catch (e) {
+      emit(state.copyWith(status: ManageFileStatus.error, errorMessage: 'There are some problems in accessing stored files'));
     }
-
-    _storedFiles
-      ..clear()
-      ..addAll(storedFiles);
-    emit(state.copyWith(status: ManageFileStatus.loaded, displayedFiles: List.from(_storedFiles), existingFiles: []));
   }
 
   Future<void> _onPickFile(_PickFile event, Emitter<ManageFileState> emit) async {
@@ -70,40 +78,8 @@ class ManageFileBloc extends Bloc<ManageFileEvent, ManageFileState> {
       );
     } catch (e) {
       debugPrint('ManageFileBloc _onPickFile error: $e');
-      emit(state.copyWith(status: ManageFileStatus.error, errorMessage: 'Failed to pick file'));
     }
   }
-
-  // Future<void> processBytes(Emitter<ManageFileState> emit, List<UserFileData> files) async {
-  //   await state.mapOrNull(
-  //     loaded: (value) async {
-  //       final filesToProcess = value.files.where((f) => f.melon == null && p.extension(f.path ?? '') == '.melmod').toList();
-
-  //       // Process files in isolate
-  //       for (final fileData in filesToProcess) {
-  //         try {
-  //           if (fileData.path == null) continue;
-  //           final melonBase = await _isolate.processFile(fileData.path!);
-
-  //           // Get fresh state to avoid overwriting user actions
-  //           final freshState = state.mapOrNull(loaded: (s) => s);
-  //           if (freshState == null) return;
-
-  //           // Check if file still exists in current state
-  //           final fileStillExists = freshState.files.any((f) => f.id == fileData.id);
-  //           if (!fileStillExists) continue;
-
-  //           final updatedFile = fileData.copyWith(melon: melonBase);
-  //           final updatedFiles = freshState.files.map((f) => f.id == updatedFile.id ? updatedFile : f).toList();
-
-  //           emit(ManageFileState.loaded(files: updatedFiles));
-  //         } catch (e) {
-  //           debugPrint('Failed to process ${fileData.fileName}: $e');
-  //         }
-  //       }
-  //     },
-  //   );
-  // }
 
   void _onClearFile(_ClearFile event, Emitter<ManageFileState> emit) {
     _storedFiles.clear();

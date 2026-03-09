@@ -52,7 +52,7 @@ class _HomePageViewState extends State<_HomePageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('File Explorer')),
+      appBar: AppBar(title: const Text('File Explorer'), centerTitle: false, surfaceTintColor: Colors.transparent),
       body: _buildBody(context),
       floatingActionButton: _buildFAB(context),
     );
@@ -76,9 +76,17 @@ class _HomePageViewState extends State<_HomePageView> {
         const FileFilterChips(),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
-          child: Text(
-            'FILES',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(color: context.colorScheme.onSurface.withAlpha(128), letterSpacing: 1.2),
+          child: Row(
+            spacing: AppSpacing.sm,
+            children: [
+              Text('FILES', style: context.textTheme.labelLarge?.withColor(context.semanticColors.neutral600)),
+              BlocBuilder<ManageFileBloc, ManageFileState>(
+                buildWhen: (previous, current) => previous.displayedFiles.length != current.displayedFiles.length,
+                builder: (context, state) {
+                  return Text('(${state.displayedFiles.length})', style: context.textTheme.labelLarge?.withColor(context.semanticColors.neutral600));
+                },
+              ),
+            ],
           ),
         ),
         const Expanded(child: FileListArea()),

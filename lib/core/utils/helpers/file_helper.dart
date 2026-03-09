@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:archive/archive.dart';
 import 'package:example/data/models/models.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,8 @@ class FileHelper {
     await StorageHelper.clearTemporaryFiles();
   }
 
+  static const _melExtensions = ['melmod', 'melsave', 'melmap', 'melworld'];
+
   static Future<List<UserFileData>> selectFileFormat() async {
     try {
       final result = await FilePicker.platform.pickFiles(
@@ -27,24 +31,23 @@ class FileHelper {
       );
 
       if (result == null || result.files.length != 1) {
-        // User canceled or invalid selection
-        throw Exception('No file selected or multiple files selected');
+        // User canceled
+        throw Exception('User canceled file selection');
       }
 
       final file = result.files.first;
       final extension = p.extension(file.name).toLowerCase().replaceFirst('.', '');
-      if (!_isValidExtension(file.name, ['melmod', 'melsave', 'melmap', 'zip', 'melworld'])) {
-        // Invalid file extension
-        throw Exception('Invalid file extension');
-      }
 
       switch (extension) {
         case 'zip':
-          // Todo: Handle zip file if needed
-          return [];
-        default:
-          // Handle other file types if needed
+          return await _extractZipFile(file);
+        case 'melmod':
+        case 'melsave':
+        case 'melmap':
+        case 'melworld':
           return [await handleFile(file)];
+        default:
+          throw UnsupportedError('Unsupported file format: .$extension');
       }
     } catch (e) {
       debugPrint('Error selecting file: $e');
@@ -52,11 +55,40 @@ class FileHelper {
     }
   }
 
+  static Future<List<UserFileData>> _extractZipFile(PlatformFile file) async {
+    if (file.bytes == null) throw Exception('File bytes are null');
+
+    final archive = ZipDecoder().decodeBytes(file.bytes!);
+    final results = <UserFileData>[];
+
+    for (final entry in archive) {
+      if (!entry.isFile) continue;
+      if (!_isValidExtension(entry.name, _melExtensions)) continue;
+
+      final bytes = Uint8List.fromList(entry.content as List<int>);
+      final basename = p.basenameWithoutExtension(entry.name).trimLeft().trimRight();
+      final extension = p.extension(entry.name);
+      if (basename.isEmpty) continue;
+
+      final savedFile = await StorageHelper.saveFileToCache(fileName: '$basename$extension', bytes: bytes);
+
+      results.add(UserFileData.create(fileName: p.normalize(p.basename(savedFile.path)), bytes: bytes, path: savedFile.path));
+    }
+
+    return results;
+  }
+
   static Future<UserFileData> handleFile(PlatformFile file) async {
     if (file.bytes == null) {
       throw Exception('File bytes are null');
     }
-    final File savedFile = await StorageHelper.saveFileToCache(fileName: p.normalize(file.name), bytes: file.bytes!);
+    final bytes = Uint8List.fromList(file.bytes!);
+    final basename = p.basenameWithoutExtension(file.name).trimLeft().trimRight();
+    final extension = p.extension(file.name);
+    if (basename.isEmpty) {
+      throw Exception('File name is empty after trimming');
+    }
+    final savedFile = await StorageHelper.saveFileToCache(fileName: '$basename$extension', bytes: bytes);
 
     return UserFileData.create(fileName: p.normalize(p.basename(savedFile.path)), bytes: file.bytes!, path: savedFile.path);
   }
