@@ -11,11 +11,21 @@ part 'user_file_data.freezed.dart';
 abstract class UserFileData with _$UserFileData {
   const UserFileData._();
 
-  const factory UserFileData({required String id, String? fileName, Uint8List? bytes, String? path, MelonBase? melon, MelType? type}) = _UserFileData;
+  const factory UserFileData({
+    required String id,
+    String? fileName,
+    Uint8List? bytes,
+    String? path,
+    MelonBase? melon,
+    MelType? type,
 
-  factory UserFileData.create({String? fileName, Uint8List? bytes, required String path, MelonBase? melon, MelType? type}) {
+    /// Name of the zip archive this file was extracted from, or null for directly picked files.
+    String? sourceZip,
+  }) = _UserFileData;
+
+  factory UserFileData.create({String? fileName, Uint8List? bytes, required String path, MelonBase? melon, MelType? type, String? sourceZip}) {
     final melType = MelType.fromExtension(p.extension(path));
-    return UserFileData(id: const Uuid().v4(), fileName: fileName, bytes: bytes, path: path, melon: melon, type: melType);
+    return UserFileData(id: const Uuid().v4(), fileName: fileName, bytes: bytes, path: path, melon: melon, type: melType, sourceZip: sourceZip);
   }
   factory UserFileData.fromPath(String path) {
     final melType = MelType.fromExtension(p.extension(path));

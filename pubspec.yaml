@@ -27,6 +27,7 @@ dependencies:
   injectable:
 
   shimmer: ^3.0.0
+  animated_tree_view: ^2.3.0
 
   # BLoC State Management
   flutter_bloc: ^9.1.1

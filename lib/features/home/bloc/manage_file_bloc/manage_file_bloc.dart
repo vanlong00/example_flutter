@@ -22,8 +22,6 @@ class ManageFileBloc extends Bloc<ManageFileEvent, ManageFileState> {
     on<_ClearFile>(_onClearFile);
     on<_RemoveFile>(_onRemoveFile);
     on<_Initialize>(_onInitialize);
-    on<_SearchChanged>(_onSearchChanged);
-    on<_FilterChanged>(_onFilterChanged);
 
     _initializeIsolate();
     add(const ManageFileEvent.initialize());
@@ -69,13 +67,7 @@ class ManageFileBloc extends Bloc<ManageFileEvent, ManageFileState> {
     try {
       final result = await FileHelper.selectFileFormat();
       _storedFiles.addAll(result);
-      emit(
-        state.copyWith(
-          status: ManageFileStatus.loaded,
-          displayedFiles: _computeDisplayedFiles(state.activeFilter, state.searchQuery),
-          existingFiles: [],
-        ),
-      );
+      emit(state.copyWith(status: ManageFileStatus.loaded, displayedFiles: List.from(_storedFiles), existingFiles: []));
     } catch (e) {
       debugPrint('ManageFileBloc _onPickFile error: $e');
     }
@@ -92,28 +84,8 @@ class ManageFileBloc extends Bloc<ManageFileEvent, ManageFileState> {
     if (_storedFiles.isEmpty) {
       emit(const ManageFileState());
     } else {
-      emit(state.copyWith(status: ManageFileStatus.loaded, displayedFiles: _computeDisplayedFiles(state.activeFilter, state.searchQuery)));
+      emit(state.copyWith(status: ManageFileStatus.loaded, displayedFiles: List.from(_storedFiles)));
     }
-  }
-
-  void _onSearchChanged(_SearchChanged event, Emitter<ManageFileState> emit) {
-    emit(state.copyWith(searchQuery: event.query, displayedFiles: _computeDisplayedFiles(state.activeFilter, event.query)));
-  }
-
-  void _onFilterChanged(_FilterChanged event, Emitter<ManageFileState> emit) {
-    emit(state.copyWith(activeFilter: event.filter, displayedFiles: _computeDisplayedFiles(event.filter, state.searchQuery)));
-  }
-
-  List<UserFileData> _computeDisplayedFiles(FileFilter filter, String query) {
-    var result = List<UserFileData>.from(_storedFiles);
-    if (filter != FileFilter.all) {
-      result = result.where((f) => f.type?.name == filter.name).toList();
-    }
-    if (query.isNotEmpty) {
-      final lower = query.toLowerCase();
-      result = result.where((f) => (f.fileName ?? '').toLowerCase().contains(lower)).toList();
-    }
-    return result;
   }
 
   @override

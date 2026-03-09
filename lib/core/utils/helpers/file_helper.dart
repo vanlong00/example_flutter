@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
@@ -58,6 +57,7 @@ class FileHelper {
   static Future<List<UserFileData>> _extractZipFile(PlatformFile file) async {
     if (file.bytes == null) throw Exception('File bytes are null');
 
+    final zipName = p.basenameWithoutExtension(file.name);
     final archive = ZipDecoder().decodeBytes(file.bytes!);
     final results = <UserFileData>[];
 
@@ -72,7 +72,7 @@ class FileHelper {
 
       final savedFile = await StorageHelper.saveFileToCache(fileName: '$basename$extension', bytes: bytes);
 
-      results.add(UserFileData.create(fileName: p.normalize(p.basename(savedFile.path)), bytes: bytes, path: savedFile.path));
+      results.add(UserFileData.create(fileName: p.normalize(p.basename(savedFile.path)), bytes: bytes, path: savedFile.path, sourceZip: zipName));
     }
 
     return results;

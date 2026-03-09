@@ -5,9 +5,7 @@ import 'package:example/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../widgets/file_filter_chips.dart';
 import '../widgets/file_list_area.dart';
-import '../widgets/file_search_bar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -18,36 +16,8 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _HomePageView extends StatefulWidget {
+class _HomePageView extends StatelessWidget {
   const _HomePageView();
-
-  @override
-  State<_HomePageView> createState() => _HomePageViewState();
-}
-
-class _HomePageViewState extends State<_HomePageView> {
-  late final TextEditingController _searchController;
-  late final ValueNotifier<bool> _hasSearchText;
-  late final FocusNode _searchFocusNode;
-
-  @override
-  void initState() {
-    super.initState();
-    _searchFocusNode = FocusNode();
-    _searchController = TextEditingController();
-    _hasSearchText = ValueNotifier(false);
-    _searchController.addListener(() {
-      _hasSearchText.value = _searchController.text.isNotEmpty;
-    });
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    _hasSearchText.dispose();
-    _searchFocusNode.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,18 +32,6 @@ class _HomePageViewState extends State<_HomePageView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FileSearchBar(
-          controller: _searchController,
-          focusNode: _searchFocusNode,
-          hasSearchText: _hasSearchText,
-          onChanged: (query) => context.read<ManageFileBloc>().add(ManageFileEvent.searchChanged(query)),
-          onClear: () {
-            _searchController.clear();
-            _searchFocusNode.unfocus();
-            context.read<ManageFileBloc>().add(const ManageFileEvent.searchChanged(''));
-          },
-        ),
-        const FileFilterChips(),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
           child: Row(
