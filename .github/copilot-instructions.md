@@ -93,27 +93,6 @@ class MyFeatureBloc extends Bloc<MyFeatureEvent, MyFeatureState> {
 
 ## Models (Freezed)
 
-```dart
-part 'user_file_data.freezed.dart';
-part 'user_file_data.g.dart'; // only if using @JsonSerializable
-
-@freezed
-abstract class UserFileData with _$UserFileData {
-  const factory UserFileData({
-    required String id,
-    String? fileName,
-    @Default(MelType.unknown) MelType type,
-  }) = _UserFileData;
-
-  factory UserFileData.fromJson(Map<String, dynamic> json) => _$UserFileDataFromJson(json);
-}
-```
-
-- Use `@Default(value)` for optional fields rather than nullable where possible.
-- Versioned models (e.g., `MelonBase`) use factory variants: `.v2()`, `.v3()`, `.v4()`.
-
----
-
 ## Design System Usage
 
 Always import via the barrel: `import 'package:design_system/design_system.dart';`

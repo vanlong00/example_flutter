@@ -28,6 +28,10 @@ dependencies:
 
   shimmer: ^3.0.0
   animated_tree_view: ^2.3.0
+  receive_sharing_intent:
+    git:
+      url: https://github.com/KasemJaffer/receive_sharing_intent
+      ref: 2cea396843cd3ab1b5ec4334be4233864637874e
 
   # BLoC State Management
   flutter_bloc: ^9.1.1

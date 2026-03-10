@@ -1,8 +1,9 @@
 import 'package:design_system/design_system.dart';
 import 'package:example/core/configs/di/injection.dart';
-import 'package:example/features/home/pages/home_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'features/home/pages/home_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

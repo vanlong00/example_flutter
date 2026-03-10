@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
@@ -18,84 +19,48 @@ class FileHelper {
     await StorageHelper.clearTemporaryFiles();
   }
 
-  static const _melExtensions = ['melmod', 'melsave', 'melmap', 'melworld'];
+  static const _allowedExtensions = ['melmod', 'melsave', 'melmap', 'melworld', 'mcworld', 'mcpack', 'mcaddon', 'mctemplate', 'mcstructure'];
 
-  static Future<List<UserFileData>> selectFileFormat() async {
-    try {
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['bin', 'zip'],
-        withData: true, // Important: reads file into memory on Android
-        allowMultiple: false,
-      );
-
-      if (result == null || result.files.length != 1) {
-        // User canceled
-        throw Exception('User canceled file selection');
-      }
-
-      final file = result.files.first;
-      final extension = p.extension(file.name).toLowerCase().replaceFirst('.', '');
-
-      switch (extension) {
-        case 'zip':
-          return await _extractZipFile(file);
-        case 'melmod':
-        case 'melsave':
-        case 'melmap':
-        case 'melworld':
-          return [await handleFile(file)];
-        default:
-          throw UnsupportedError('Unsupported file format: .$extension');
-      }
-    } catch (e) {
-      debugPrint('Error selecting file: $e');
-      return [];
-    }
+  static Future<FilePickerResult?> pickSingleFile() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['bin', 'zip'],
+      withData: true, // Important: reads file into memory on Android
+      allowMultiple: false,
+    );
+    return result;
   }
 
-  static Future<List<UserFileData>> _extractZipFile(PlatformFile file) async {
+  static Future<FileNode> handleFileV2(PlatformFile file) async {
     if (file.bytes == null) throw Exception('File bytes are null');
 
-    final zipName = p.basenameWithoutExtension(file.name);
-    final archive = ZipDecoder().decodeBytes(file.bytes!);
-    final results = <UserFileData>[];
-
-    for (final entry in archive) {
-      if (!entry.isFile) continue;
-      if (!_isValidExtension(entry.name, _melExtensions)) continue;
-
-      final bytes = Uint8List.fromList(entry.content as List<int>);
-      final basename = p.basenameWithoutExtension(entry.name).trimLeft().trimRight();
-      final extension = p.extension(entry.name);
-      if (basename.isEmpty) continue;
-
-      final savedFile = await StorageHelper.saveFileToCache(fileName: '$basename$extension', bytes: bytes);
-
-      results.add(UserFileData.create(fileName: p.normalize(p.basename(savedFile.path)), bytes: bytes, path: savedFile.path, sourceZip: zipName));
-    }
-
-    return results;
-  }
-
-  static Future<UserFileData> handleFile(PlatformFile file) async {
-    if (file.bytes == null) {
-      throw Exception('File bytes are null');
-    }
-    final bytes = Uint8List.fromList(file.bytes!);
     final basename = p.basenameWithoutExtension(file.name).trimLeft().trimRight();
     final extension = p.extension(file.name);
     if (basename.isEmpty) {
       throw Exception('File name is empty after trimming');
     }
-    final savedFile = await StorageHelper.saveFileToCache(fileName: '$basename$extension', bytes: bytes);
+    final savedFile = await StorageHelper.saveFileToCache(path: '$basename$extension', bytes: file.bytes!);
 
-    return UserFileData.create(fileName: p.normalize(p.basename(savedFile.path)), bytes: file.bytes!, path: savedFile.path);
+    return FileNode(data: Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream"));
   }
 
-  static bool _isValidExtension(String fileName, List<String> allowedExtensions) {
+  static Future<FolderNode> handleZipFileV2(PlatformFile file) async {
+    if (file.bytes == null) throw Exception('File bytes are null');
+
+    String zipName = p.basenameWithoutExtension(file.name);
+    final Directory tempDir = await StorageHelper.saveDirToCache(name: zipName);
+    zipName = p.basename(tempDir.path);
+
+    final archive = ZipDecoder().decodeBytes(file.bytes!);
+    final nodes = await _buildNodesFromArchive(archive, zipName, filterByExtension: true);
+    final folderNode = FolderNode(data: Explorable.createFolder(zipName));
+    folderNode.addAll(nodes);
+    return folderNode;
+  }
+
+  static bool _isValidExtension(String fileName) {
     final extension = p.extension(fileName).toLowerCase().replaceFirst('.', '');
-    return allowedExtensions.map((e) => e.toLowerCase()).contains(extension);
+    return _allowedExtensions.map((e) => e.toLowerCase()).contains(extension);
   }
 
   /// Opens a file with the system's app chooser using open_file package
@@ -120,5 +85,84 @@ class FileHelper {
     if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
     if (bytes < 1024 * 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
     return '${(bytes / (1024 * 1024 * 1024 * 1024)).toStringAsFixed(2)} TB';
+  }
+
+  /// Handles a shared file path (from receive_sharing_intent) by copying it to
+  /// the app cache and returning a [FileNode].
+  static Future<FileNode> handleSharedFile(String filePath) async {
+    final file = File(filePath);
+    if (!await file.exists()) throw Exception('Shared file not found: $filePath');
+    final bytes = await file.readAsBytes();
+    final basename = p.basenameWithoutExtension(p.basename(filePath)).trimLeft().trimRight();
+    final extension = p.extension(filePath);
+    if (basename.isEmpty) throw Exception('Shared file name is empty');
+    final savedFile = await StorageHelper.saveFileToCache(path: '$basename$extension', bytes: bytes);
+    return FileNode(data: Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream"));
+  }
+
+  /// Handles a shared ZIP file path by extracting its contents into the app
+  /// cache and returning a [FolderNode].
+  static Future<FolderNode> handleSharedZip(String filePath) async {
+    final file = File(filePath);
+    if (!await file.exists()) throw Exception('Shared ZIP not found: $filePath');
+    final bytes = await file.readAsBytes();
+    String zipName = p.basenameWithoutExtension(p.basename(filePath));
+    final Directory tempDir = await StorageHelper.saveDirToCache(name: zipName);
+    zipName = p.basename(tempDir.path);
+    final archive = ZipDecoder().decodeBytes(bytes);
+    final nodes = await _buildNodesFromArchive(archive, zipName);
+    final folderNode = FolderNode(data: Explorable.createFolder(zipName));
+    folderNode.addAll(nodes);
+    return folderNode;
+  }
+
+  /// Builds a list of [ExplorableNode]s from a [Archive], grouping files
+  /// by their immediate parent directory inside the ZIP.
+  ///
+  /// - Top-level files become [FileNode]s added directly to the result.
+  /// - Files inside a subdirectory are grouped into a [FolderNode] per
+  ///   immediate directory, with nested subdirectories recursively represented.
+  /// - When [filterByExtension] is `true`, entries not matching
+  ///   [_allowedExtensions] are skipped.
+  static Future<List<ExplorableNode>> _buildNodesFromArchive(Archive archive, String cachePrefix, {bool filterByExtension = false}) async {
+    // dir path (relative inside zip) → child FileNodes
+    final Map<String, List<FileNode>> dirMap = {};
+    final List<FileNode> rootFiles = [];
+
+    for (final entry in archive) {
+      if (!entry.isFile) continue;
+      if (filterByExtension && !_isValidExtension(entry.name)) continue;
+
+      final entryBytes = Uint8List.fromList(entry.content as List<int>);
+      final entryBasename = p.basenameWithoutExtension(entry.name).trimLeft().trimRight();
+      final entryExtension = p.extension(entry.name);
+      if (entryBasename.isEmpty) continue;
+
+      final dirName = p.dirname(entry.name);
+      final isTopLevel = dirName == '.' || dirName.isEmpty || dirName == '/';
+
+      final cachePath = isTopLevel ? '$cachePrefix/$entryBasename$entryExtension' : '$cachePrefix/$dirName/$entryBasename$entryExtension';
+
+      final savedFile = await StorageHelper.saveFileToCache(path: cachePath, bytes: entryBytes);
+      final fileNode = FileNode(data: Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream"));
+
+      if (isTopLevel) {
+        rootFiles.add(fileNode);
+      } else {
+        // Group under the first path component so all nested levels fall under
+        // a single top-level FolderNode per immediate subdirectory.
+        final topDir = p.split(dirName).first;
+        dirMap.putIfAbsent(topDir, () => []).add(fileNode);
+      }
+    }
+
+    final nodes = <ExplorableNode>[...rootFiles];
+    for (final dirEntry in dirMap.entries) {
+      final folderCachePath = '$cachePrefix/${dirEntry.key}';
+      final subFolder = FolderNode(data: Explorable.createFolder(folderCachePath));
+      subFolder.addAll(dirEntry.value);
+      nodes.add(subFolder);
+    }
+    return nodes;
   }
 }
