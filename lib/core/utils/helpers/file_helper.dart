@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:example/data/models/models.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as p;
 
@@ -41,7 +40,7 @@ class FileHelper {
     }
     final savedFile = await StorageHelper.saveFileToCache(path: '$basename$extension', bytes: file.bytes!);
 
-    return FileNode(data: Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream"));
+    return FileNode(data: await Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream"));
   }
 
   static Future<FolderNode> handleZipFileV2(PlatformFile file) async {
@@ -97,7 +96,7 @@ class FileHelper {
     final extension = p.extension(filePath);
     if (basename.isEmpty) throw Exception('Shared file name is empty');
     final savedFile = await StorageHelper.saveFileToCache(path: '$basename$extension', bytes: bytes);
-    return FileNode(data: Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream"));
+    return FileNode(data: await Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream"));
   }
 
   /// Handles a shared ZIP file path by extracting its contents into the app
@@ -116,41 +115,47 @@ class FileHelper {
     return folderNode;
   }
 
-  /// Builds a list of [ExplorableNode]s from a [Archive], grouping files
-  /// by their immediate parent directory inside the ZIP.
-  ///
-  /// - Top-level files become [FileNode]s added directly to the result.
-  /// - Files inside a subdirectory are grouped into a [FolderNode] per
-  ///   immediate directory, with nested subdirectories recursively represented.
-  /// - When [filterByExtension] is `true`, entries not matching
-  ///   [_allowedExtensions] are skipped.
   static Future<List<ExplorableNode>> _buildNodesFromArchive(Archive archive, String cachePrefix, {bool filterByExtension = false}) async {
-    // dir path (relative inside zip) → child FileNodes
+    final List<ExplorableNode> rootFiles = [];
     final Map<String, List<FileNode>> dirMap = {};
-    final List<FileNode> rootFiles = [];
 
-    for (final entry in archive) {
-      if (!entry.isFile) continue;
+    // Detect a single root folder wrapping all ZIP entries (e.g. "WP-V3/")
+    // so it can be stripped and cachePrefix used as the true root.
+    String? zipRoot;
+    for (final e in archive.where((e) => e.isFile && !e.name.startsWith('__MACOSX/'))) {
+      final firstSep = e.name.indexOf('/');
+      final candidate = firstSep > 0 ? e.name.substring(0, firstSep) : '';
+      if (zipRoot == null) {
+        zipRoot = candidate;
+      } else if (zipRoot != candidate) {
+        zipRoot = ''; // mixed roots — no common wrapper
+        break;
+      }
+    }
+
+    for (final entry in archive.where((e) => e.isFile && !e.name.startsWith('__MACOSX/') && !p.basename(e.name).startsWith('.'))) {
       if (filterByExtension && !_isValidExtension(entry.name)) continue;
 
-      final entryBytes = Uint8List.fromList(entry.content as List<int>);
-      final entryBasename = p.basenameWithoutExtension(entry.name).trimLeft().trimRight();
-      final entryExtension = p.extension(entry.name);
+      // Strip the common root wrapper (e.g. "WP-V3/file.melmod" → "file.melmod")
+      final entryRelPath = (zipRoot != null && zipRoot!.isNotEmpty) ? entry.name.substring(zipRoot!.length + 1) : entry.name;
+      if (entryRelPath.isEmpty) continue;
+
+      final entryBasename = p.basenameWithoutExtension(entryRelPath).trimLeft().trimRight();
+      final entryExtension = p.extension(entryRelPath);
       if (entryBasename.isEmpty) continue;
 
-      final dirName = p.dirname(entry.name);
+      final dirName = p.dirname(entryRelPath);
       final isTopLevel = dirName == '.' || dirName.isEmpty || dirName == '/';
 
       final cachePath = isTopLevel ? '$cachePrefix/$entryBasename$entryExtension' : '$cachePrefix/$dirName/$entryBasename$entryExtension';
 
+      final entryBytes = Uint8List.fromList(entry.content as List<int>);
       final savedFile = await StorageHelper.saveFileToCache(path: cachePath, bytes: entryBytes);
-      final fileNode = FileNode(data: Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream"));
+      final fileNode = FileNode(data: await Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream"));
 
       if (isTopLevel) {
         rootFiles.add(fileNode);
       } else {
-        // Group under the first path component so all nested levels fall under
-        // a single top-level FolderNode per immediate subdirectory.
         final topDir = p.split(dirName).first;
         dirMap.putIfAbsent(topDir, () => []).add(fileNode);
       }

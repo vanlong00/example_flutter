@@ -34,27 +34,27 @@ class ExplorableBloc extends Bloc<ExplorableEvent, ExplorableState> {
       return;
     }
     final tree = state.tree;
-    for (final file in files) {
-      if (file is File) {
-        final List<ExplorableNode> fileNodes = [];
-        fileNodes.add(FileNode(data: Explorable.createFile(file.path, mimeType: "binary/octet-stream")));
-        tree.addAll(fileNodes);
-      } else if (file is Directory) {
-        final List<ExplorableNode> folderNodes = [];
-        final List<FileSystemEntity> folderFiles = await file.list().toList();
-        for (final folderFile in folderFiles) {
-          if (folderFile is File) {
-            folderNodes.add(FileNode(data: Explorable.createFile(folderFile.path, mimeType: "binary/octet-stream")));
-          }
-        }
-        final folderNode = FolderNode(data: Explorable.createFolder(file.path));
-        folderNode.addAll(folderNodes);
-        tree.add(folderNode);
-      } else {
-        continue;
+    for (final entity in files) {
+      if (entity is File) {
+        tree.add(FileNode(data: await Explorable.createFile(entity.path, mimeType: "binary/octet-stream")));
+      } else if (entity is Directory) {
+        tree.add(await _buildFolderNode(entity));
       }
     }
     emit(state.copyWith(status: ManageFileStatus.loaded, tree: tree));
+  }
+
+  Future<FolderNode> _buildFolderNode(Directory dir) async {
+    final folderNode = FolderNode(data: Explorable.createFolder(dir.path));
+    final children = await dir.list().toList();
+    for (final child in children) {
+      if (child is File) {
+        folderNode.add(FileNode(data: await Explorable.createFile(child.path, mimeType: "binary/octet-stream")));
+      } else if (child is Directory) {
+        folderNode.add(await _buildFolderNode(child));
+      }
+    }
+    return folderNode;
   }
 
   Future<void> _onImported(_PickFile event, Emitter<ExplorableState> emit) async {

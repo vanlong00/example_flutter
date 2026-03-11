@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:animated_tree_view/tree_view/tree_node.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -9,11 +11,14 @@ part 'explorable.freezed.dart';
 sealed class Explorable with _$Explorable {
   const Explorable._();
 
-  const factory Explorable.file({required String path, required String mimeType}) = ExplorableFile;
+  const factory Explorable.file({required String path, required String mimeType, required DateTime createdAt, required int size}) = ExplorableFile;
 
   const factory Explorable.folder({required String path}) = ExplorableFolder;
 
-  static ExplorableFile createFile(String path, {required String mimeType}) => ExplorableFile(path: path, mimeType: mimeType);
+  static Future<ExplorableFile> createFile(String path, {required String mimeType}) async {
+    final stat = await FileStat.stat(path);
+    return ExplorableFile(path: path, mimeType: mimeType, createdAt: stat.changed, size: stat.size);
+  }
 
   static ExplorableFolder createFolder(String path) => ExplorableFolder(path: path);
 }
@@ -55,4 +60,18 @@ extension ExplorableFileExtension on ExplorableFile {
 
 extension ExplorableFolderExtension on ExplorableFolder {
   String get name => p.basename(path);
+}
+
+extension FolderNodeExtension on FolderNode {
+  int get totalSize {
+    int sum = 0;
+    for (final child in children.values) {
+      if (child is FileNode) {
+        sum += child.data?.size ?? 0;
+      } else if (child is FolderNode) {
+        sum += child.totalSize;
+      }
+    }
+    return sum;
+  }
 }

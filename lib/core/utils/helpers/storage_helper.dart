@@ -18,7 +18,9 @@ class StorageHelper {
     final appCacheDir = await getCacheDirectoryApp();
     final parentDir = p.dirname(path);
     if (parentDir != '.' && parentDir != '/') {
-      final file = await File('${appCacheDir.path}/$parentDir').namePlus(p.basename(path), format: '(d)');
+      final dir = Directory('${appCacheDir.path}/$parentDir');
+      if (!await dir.exists()) await dir.create(recursive: true);
+      final file = await File(dir.path).namePlus(p.basename(path), format: '(d)');
       await file.writeAsBytes(bytes);
       return file;
     } else {
