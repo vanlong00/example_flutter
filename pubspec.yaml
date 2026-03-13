@@ -22,10 +22,6 @@ dependencies:
   archive: ^4.0.7
   open_file: ^3.5.11
 
-  # Dependency Injection
-  get_it:
-  injectable:
-
   shimmer: ^3.0.0
   animated_tree_view: ^2.3.0
   receive_sharing_intent:
@@ -34,6 +30,8 @@ dependencies:
       ref: 2cea396843cd3ab1b5ec4334be4233864637874e
 
   shared_preferences: ^2.5.3
+  showcaseview: ^3.0.0
+  permission_handler: ^12.0.1
 
   # BLoC State Management
   flutter_bloc: ^9.1.1
@@ -46,7 +44,6 @@ dev_dependencies:
     sdk: flutter
   build_runner:
   flutter_gen_runner:
-  injectable_generator:
   flutter_lints: ^6.0.0
   freezed: ^3.2.3
   json_serializable: ^6.11.2

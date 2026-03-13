@@ -137,7 +137,7 @@ class FileHelper {
       if (filterByExtension && !_isValidExtension(entry.name)) continue;
 
       // Strip the common root wrapper (e.g. "WP-V3/file.melmod" → "file.melmod")
-      final entryRelPath = (zipRoot != null && zipRoot!.isNotEmpty) ? entry.name.substring(zipRoot!.length + 1) : entry.name;
+      final entryRelPath = (zipRoot != null && zipRoot.isNotEmpty) ? entry.name.substring(zipRoot.length + 1) : entry.name;
       if (entryRelPath.isEmpty) continue;
 
       final entryBasename = p.basenameWithoutExtension(entryRelPath).trimLeft().trimRight();

@@ -30,10 +30,10 @@ class ExplorableBloc extends Bloc<ExplorableEvent, ExplorableState> {
     final dirStorage = await StorageHelper.getCacheDirectoryApp();
     final List<FileSystemEntity> files = await dirStorage.list().toList();
     if (files.isEmpty) {
-      emit(state.copyWith(status: ManageFileStatus.initial));
+      emit(state.copyWith(status: ManageFileStatus.initial, tree: TreeNode<Explorable>.root()));
       return;
     }
-    final tree = state.tree;
+    final tree = TreeNode<Explorable>.root();
     for (final entity in files) {
       if (entity is File) {
         tree.add(FileNode(data: await Explorable.createFile(entity.path, mimeType: "binary/octet-stream")));

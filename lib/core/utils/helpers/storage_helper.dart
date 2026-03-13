@@ -43,6 +43,19 @@ class StorageHelper {
     }
   }
 
+  /// Returns total size in bytes of all files under the app cache directory.
+  static Future<int> getCacheSize() async {
+    final appCacheDir = await getCacheDirectoryApp();
+    if (!await appCacheDir.exists()) return 0;
+    int total = 0;
+    await for (final entity in appCacheDir.list(recursive: true, followLinks: false)) {
+      if (entity is File) {
+        total += await entity.length();
+      }
+    }
+    return total;
+  }
+
   static Future<File> getTemporaryFile(String fileName) async {
     final appCacheDir = await getCacheDirectoryApp();
     final file = File('${appCacheDir.path}/$fileName');
