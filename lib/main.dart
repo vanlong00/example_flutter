@@ -8,9 +8,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/core.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  configureDependencies();
   final prefs = await SharedPreferences.getInstance();
   runApp(
     MultiBlocProvider(
@@ -33,7 +36,7 @@ class MyApp extends StatelessWidget {
         return Sizer(
           builder: (context, orientation, deviceType) {
             return MaterialApp(
-              title: 'Flutter Demo',
+              title: AppConstants.appName,
               theme: AppTheme.lightTheme,
               darkTheme: AppTheme.darkTheme,
               themeMode: state.themeMode,
@@ -42,6 +45,7 @@ class MyApp extends StatelessWidget {
               locale: DevicePreview.locale(context),
               builder: DevicePreview.appBuilder,
               debugShowCheckedModeBanner: false,
+              navigatorKey: NavigationHelper.navigatorKey,
             );
           },
         );

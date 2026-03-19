@@ -47,7 +47,7 @@ class _CacheSettingPageState extends State<CacheSettingPage> with SingleTickerPr
   Future<void> _onClearCache() async {
     final confirmed = await AppHelper.showConfirmDialog(
       context,
-      title: 'Clear cache',
+      title: 'Clear data',
       message: 'All cached files will be permanently deleted. This cannot be undone.',
       confirmText: 'Clear',
       cancelText: 'Cancel',
@@ -202,7 +202,7 @@ class _CacheSettingPageState extends State<CacheSettingPage> with SingleTickerPr
         icon: _isClearing
             ? SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white.withValues(alpha: 0.8)))
             : const Icon(Icons.cleaning_services_rounded, size: 20),
-        label: Text(_isClearing ? 'Clearing…' : 'Clear cache', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+        label: Text(_isClearing ? 'Clearing…' : 'Clear data', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
       ),
     );
   }

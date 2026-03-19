@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
+import 'package:example/core/utils/exceptions/app_exception.dart';
 import 'package:example/data/models/models.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -32,19 +33,24 @@ class FileHelper {
   }
 
   static Future<ExplorableFile> handleFileV2(PlatformFile file) async {
-    if (file.bytes == null) throw Exception('File bytes are null');
+    if (file.bytes == null) throw FileReadException(file.name);
 
     final basename = p.basenameWithoutExtension(file.name).trimLeft().trimRight();
     final extension = p.extension(file.name);
-    if (basename.isEmpty) throw Exception('File name is empty after trimming');
+    if (basename.isEmpty) throw InvalidFileNameException(file.name);
     final savedFile = await StorageHelper.saveFileToCache(path: '$basename$extension', bytes: file.bytes!);
     return Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream");
   }
 
   static Future<ExplorableFolder> handleZipFileV2(PlatformFile file) async {
-    if (file.bytes == null) throw Exception('File bytes are null');
+    if (file.bytes == null) throw FileReadException(file.name);
 
-    final archive = ZipDecoder().decodeBytes(file.bytes!);
+    final Archive archive;
+    try {
+      archive = ZipDecoder().decodeBytes(file.bytes!);
+    } catch (_) {
+      throw CorruptedArchiveException(file.name);
+    }
 
     final hasValidFiles = archive.any(
       (e) =>
@@ -53,7 +59,7 @@ class FileHelper {
           !p.basename(e.name).startsWith('.') &&
           _isValidExtension(e.name),
     );
-    if (!hasValidFiles) throw Exception('No supported files found in the ZIP archive');
+    if (!hasValidFiles) throw UnsupportedArchiveContentException(file.name);
 
     String zipName = p.basenameWithoutExtension(file.name);
     final Directory tempDir = await StorageHelper.saveDirToCache(name: zipName);
@@ -123,11 +129,11 @@ class FileHelper {
   /// the app cache and returning an [ExplorableFile].
   static Future<ExplorableFile> handleSharedFile(String filePath) async {
     final file = File(filePath);
-    if (!await file.exists()) throw Exception('Shared file not found: $filePath');
+    if (!await file.exists()) throw FileNotFoundException(p.basename(filePath));
     final bytes = await file.readAsBytes();
     final basename = p.basenameWithoutExtension(p.basename(filePath)).trimLeft().trimRight();
     final extension = p.extension(filePath);
-    if (basename.isEmpty) throw Exception('Shared file name is empty');
+    if (basename.isEmpty) throw InvalidFileNameException(p.basename(filePath));
     final savedFile = await StorageHelper.saveFileToCache(path: '$basename$extension', bytes: bytes);
     return Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream");
   }
@@ -136,12 +142,17 @@ class FileHelper {
   /// cache and returning an [ExplorableFolder].
   static Future<ExplorableFolder> handleSharedZip(String filePath) async {
     final file = File(filePath);
-    if (!await file.exists()) throw Exception('Shared ZIP not found: $filePath');
+    if (!await file.exists()) throw FileNotFoundException(p.basename(filePath));
     final bytes = await file.readAsBytes();
     String zipName = p.basenameWithoutExtension(p.basename(filePath));
     final Directory tempDir = await StorageHelper.saveDirToCache(name: zipName);
     zipName = p.basename(tempDir.path);
-    final archive = ZipDecoder().decodeBytes(bytes);
+    final Archive archive;
+    try {
+      archive = ZipDecoder().decodeBytes(bytes);
+    } catch (_) {
+      throw CorruptedArchiveException(p.basename(filePath));
+    }
     final children = await _buildItemsFromArchive(archive, zipName);
     return Explorable.createFolder(zipName, children: children);
   }

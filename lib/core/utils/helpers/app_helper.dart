@@ -151,6 +151,28 @@ class AppHelper {
     );
   }
 
+  static Future<bool> showExitAppDialog(BuildContext context) async {
+    final result = await showGeneralDialog<bool>(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: const Color(0xFF242424).withValues(alpha: 0.8),
+      transitionDuration: const Duration(milliseconds: 280),
+      transitionBuilder: (_, anim, __, child) => FadeTransition(
+        opacity: CurvedAnimation(parent: anim, curve: Curves.easeOut),
+        child: ScaleTransition(
+          scale: Tween<double>(begin: 0.92, end: 1).animate(CurvedAnimation(parent: anim, curve: Curves.easeOutBack)),
+          child: child,
+        ),
+      ),
+      pageBuilder: (ctx, _, __) => BackdropFilter(
+        filter: ui.ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+        child: const _ExitAppDialog(),
+      ),
+    );
+    return result ?? false;
+  }
+
   static String formatCurrency(double amount, {String symbol = '\$'}) {
     return '$symbol${amount.toStringAsFixed(2)}';
   }
@@ -342,7 +364,6 @@ class _ConfirmDeleteDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
     return Center(
@@ -360,10 +381,7 @@ class _ConfirmDeleteDialog extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      Colors.white.withValues(alpha: 0.15),
-                      Colors.white.withValues(alpha: 0.05),
-                    ],
+                    colors: [Colors.white.withValues(alpha: 0.15), Colors.white.withValues(alpha: 0.05)],
                   ),
                   border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
                 ),
@@ -412,6 +430,98 @@ class _ConfirmDeleteDialog extends StatelessWidget {
                           ),
                         ],
                       ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Exit App dialog ──────────────────────────────────────────────────────────
+
+class _ExitAppDialog extends StatelessWidget {
+  const _ExitAppDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+        child: Material(
+          color: Colors.transparent,
+          child: ClipRRect(
+            borderRadius: AppStyle.borderExtraLarge,
+            child: BackdropFilter(
+              filter: ui.ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: AppStyle.borderExtraLarge,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Colors.white.withValues(alpha: 0.15), Colors.white.withValues(alpha: 0.05)],
+                  ),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.lg),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: AppSpacing.md,
+                  children: [
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withValues(alpha: 0.12),
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                      ),
+                      alignment: Alignment.center,
+                      child: const Icon(Icons.exit_to_app_rounded, size: 28, color: Colors.white),
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      spacing: AppSpacing.xs,
+                      children: [
+                        Text('Exit App', textAlign: TextAlign.center, style: textTheme.titleMedium?.semiBold.withColor(Colors.white)),
+                        Text('Are you sure you want to exit?', textAlign: TextAlign.center, style: textTheme.bodySmall?.withColor(Colors.white70)),
+                      ],
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      spacing: AppSpacing.smMd,
+                      children: [
+                        Flexible(
+                          child: OutlinedButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: Colors.white.withValues(alpha: 0.4)),
+                              shape: const StadiumBorder(),
+                              padding: const EdgeInsets.symmetric(vertical: AppSpacing.smMd / 2, horizontal: AppSpacing.xl),
+                            ),
+                            child: Text('Cancel', style: textTheme.titleSmall?.withColor(Colors.white)),
+                          ),
+                        ),
+                        Flexible(
+                          child: OutlinedButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white.withValues(alpha: 0.15),
+                              side: BorderSide(color: Colors.white.withValues(alpha: 0.4)),
+                              shape: const StadiumBorder(),
+                              padding: const EdgeInsets.symmetric(vertical: AppSpacing.smMd / 2, horizontal: AppSpacing.xl),
+                            ),
+                            child: Text('Exit', style: textTheme.titleSmall?.semiBold.withColor(Colors.white)),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

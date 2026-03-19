@@ -32,6 +32,18 @@ class SettingsPage extends StatelessWidget {
             onTap: () => context.pushNamed(KeyRoute.cacheSetting),
           ),
           AppSpacing.gapSm,
+          _SectionHeader('Support'),
+          _SettingsTile(
+            icon: Icons.bug_report_outlined,
+            iconColor: Colors.red,
+            title: 'Report Bugs',
+            subtitle: 'Contact us at contact@joycraft.io',
+            onTap: () {
+              const url = 'mailto:contact@joycraft.io?subject=Report%20bugs%20PArchiver';
+              LauncherHelper.launcher(url);
+            },
+          ),
+          AppSpacing.gapSm,
           _SectionHeader('Info'),
           _SettingsTile(
             icon: Icons.privacy_tip_outlined,

@@ -81,8 +81,18 @@ class ExplorableBloc extends Bloc<ExplorableEvent, ExplorableState> {
       }
       final newItems = [...state.items, imported];
       emit(state.copyWith(status: newItems.isEmpty ? ManageFileStatus.initial : ManageFileStatus.loaded, items: newItems));
+    } on UnsupportedError catch (e) {
+      AppShowSnackBar.error(message: e.message ?? "Unsupported file format.");
+    } on FileReadException catch (e) {
+      AppShowSnackBar.error(message: e.message);
+    } on InvalidFileNameException catch (e) {
+      AppShowSnackBar.error(message: e.message);
+    } on CorruptedArchiveException catch (e) {
+      AppShowSnackBar.error(message: e.message);
+    } on UnsupportedArchiveContentException catch (e) {
+      AppShowSnackBar.error(message: e.message);
     } catch (e) {
-      print('Error importing file: $e');
+      AppShowSnackBar.error(message: "Something went wrong while importing the file. Please try again.");
     }
   }
 
@@ -109,8 +119,18 @@ class ExplorableBloc extends Bloc<ExplorableEvent, ExplorableState> {
       }
       final newItems = [...state.items, imported];
       emit(state.copyWith(status: newItems.isEmpty ? ManageFileStatus.initial : ManageFileStatus.loaded, items: newItems));
+    } on UnsupportedError catch (e) {
+      AppShowSnackBar.error(message: e.message ?? "Unsupported file format.");
+    } on FileReadException catch (e) {
+      AppShowSnackBar.error(message: e.message);
+    } on InvalidFileNameException catch (e) {
+      AppShowSnackBar.error(message: e.message);
+    } on CorruptedArchiveException catch (e) {
+      AppShowSnackBar.error(message: e.message);
+    } on UnsupportedArchiveContentException catch (e) {
+      AppShowSnackBar.error(message: e.message);
     } catch (e) {
-      print('Error handling shared file: $e');
+      AppShowSnackBar.error(message: "Something went wrong while handling the shared file. Please try again.");
     }
   }
 

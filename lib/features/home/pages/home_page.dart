@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:design_system/design_system.dart';
+import 'package:flutter/services.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:example/core/core.dart';
 import 'package:example/features/home/bloc/explorable_bloc/explorable_bloc.dart';
@@ -79,9 +80,22 @@ class _HomePageViewState extends State<_HomePageView> {
   Widget build(BuildContext context) {
     return BlocBuilder<BrowserCubit, List<BreadcrumbEntry>>(
       builder: (context, navStack) => PopScope(
-        canPop: navStack.isEmpty,
-        onPopInvokedWithResult: (didPop, _) {
-          if (!didPop) context.read<BrowserCubit>().navigateTo(navStack.length - 2);
+        canPop: false,
+        onPopInvokedWithResult: (_, _) async {
+          if (navStack.isNotEmpty) {
+            context.read<BrowserCubit>().navigateTo(navStack.length - 2);
+            return;
+          }
+          final shouldExit = await AppHelper.showConfirmDialog(
+            context,
+            title: 'Exit App',
+            message: 'Are you sure you want to exit PArchiver?',
+            confirmText: 'Exit',
+            cancelText: 'Cancel',
+            icon: Icons.exit_to_app_rounded,
+            isDestructive: true,
+          );
+          if (shouldExit) SystemNavigator.pop();
         },
         child: Scaffold(
           floatingActionButton: ValueListenableBuilder<bool>(

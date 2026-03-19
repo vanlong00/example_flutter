@@ -105,12 +105,11 @@ class _FolderName extends StatelessWidget {
   Widget build(BuildContext context) {
     final dotIndex = name.lastIndexOf('.');
     final baseName = dotIndex > 0 ? name.substring(0, dotIndex) : name;
-    final ext = dotIndex > 0 ? name.substring(dotIndex) : '';
+    final ext = dotIndex > 0 ? name.substring(dotIndex) : name.substring(baseName.length - 4).trim();
     return Row(
-      mainAxisSize: MainAxisSize.min,
       children: [
         Flexible(
-          child: Text(baseName, style: style, maxLines: 1, overflow: TextOverflow.ellipsis),
+          child: Text(baseName.trim(), style: style, maxLines: 1, overflow: TextOverflow.ellipsis),
         ),
         if (ext.isNotEmpty) Text(ext, style: style, maxLines: 1),
       ],

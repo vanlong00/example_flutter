@@ -62,7 +62,7 @@ class BreadcrumbBar extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: 4),
                       child: Text(
-                        entry.name,
+                        entry.name.length > 12 ? '${entry.name.substring(0, 12)}…' : entry.name,
                         style: context.textTheme.labelLarge?.copyWith(
                           color: !isLast ? context.colorScheme.onSurface : context.colorScheme.primary,
                           fontWeight: isLast ? FontWeight.w600 : FontWeight.normal,
