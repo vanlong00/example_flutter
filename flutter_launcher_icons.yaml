@@ -1,0 +1,21 @@
+flutter_launcher_icons:
+  # ─── Main icon (iOS + Android fallback) ───────────────────────────────────────
+  image_path: "assets/launcher_icon/icon.png"
+
+  # ─── Android ──────────────────────────────────────────────────────────────────
+  android: "launcher_icon"
+  min_sdk_android: 21
+  image_path_android: "assets/launcher_icon/icon.png"
+
+  # Adaptive icon (API 26+)
+  adaptive_icon_foreground: "assets/launcher_icon/icon_transparent.png"
+  adaptive_icon_background: "#FFFFFF"   # <-- đổi màu nền adaptive ở đây
+
+  # Themed / monochrome icon (Android 13+)
+  adaptive_icon_monochrome: "assets/launcher_icon/icon_transparent.png"
+
+  # ─── iOS ──────────────────────────────────────────────────────────────────────
+  ios: true
+  image_path_ios: "assets/launcher_icon/icon.png"
+  remove_alpha_ios: true
+  background_color_ios: "#FFFFFF"

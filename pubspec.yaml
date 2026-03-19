@@ -21,7 +21,7 @@ dependencies:
   path: ^1.9.1
   archive: ^4.0.7
   open_file: ^3.5.11
-
+  url_launcher: ^6.3.2
   shimmer: ^3.0.0
   animated_tree_view: ^2.3.0
   receive_sharing_intent:
@@ -42,6 +42,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.4
   build_runner:
   flutter_gen_runner:
   flutter_lints: ^6.0.0

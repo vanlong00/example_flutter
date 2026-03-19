@@ -1,6 +1,7 @@
 import 'package:design_system/design_system.dart';
 import 'package:example/core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -37,7 +38,10 @@ class SettingsPage extends StatelessWidget {
             iconColor: Colors.blue,
             title: 'Privacy Policy',
             subtitle: 'How we handle your data',
-            onTap: () {},
+            onTap: () {
+              final url = 'https://joycraft.io/privacy-policy';
+              LauncherHelper.launcher(url, mode: LaunchMode.externalApplication);
+            },
           ),
           AppSpacing.gapSm,
           _SettingsTile(
@@ -45,20 +49,23 @@ class SettingsPage extends StatelessWidget {
             iconColor: Colors.brown,
             title: 'Terms of Conditions',
             subtitle: 'Rules and agreements for using the app',
-            onTap: () {},
+            onTap: () {
+              final url = 'https://joycraft.io/terms-conditions.html';
+              LauncherHelper.launcher(url, mode: LaunchMode.externalApplication);
+            },
           ),
           AppSpacing.gapSm,
           _SettingsTile(
             icon: Icons.info_outline_rounded,
             iconColor: Colors.teal,
             title: 'About',
-            subtitle: 'Version 1.0.0',
+            subtitle: 'Version ${AppConstants.appVersion}',
             onTap: () => AppHelper.showAppAboutDialog(
               context,
-              appName: 'Example',
-              version: '1.0.0',
-              description: 'A simple and powerful file manager for your device.',
-              legalese: '© 2026 Example App',
+              appName: AppConstants.appName,
+              version: AppConstants.appVersion,
+              description: AppConstants.appDescription,
+              legalese: '© 2026 ${AppConstants.appName}. All rights reserved.',
             ),
           ),
         ],

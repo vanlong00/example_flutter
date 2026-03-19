@@ -1,4 +1,4 @@
-package com.example.example
+package io.pamg.file.archiver
 
 import io.flutter.embedding.android.FlutterActivity
 
