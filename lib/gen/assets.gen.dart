@@ -14,11 +14,42 @@ import 'package:flutter/widgets.dart';
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// Directory path: assets/icons/Feat
+  $AssetsIconsFeatGen get feat => const $AssetsIconsFeatGen();
+
   /// Directory path: assets/icons/Regular
   $AssetsIconsRegularGen get regular => const $AssetsIconsRegularGen();
 
   /// Directory path: assets/icons/Solid
   $AssetsIconsSolidGen get solid => const $AssetsIconsSolidGen();
+}
+
+class $AssetsIconsFeatGen {
+  const $AssetsIconsFeatGen();
+
+  /// File path: assets/icons/Feat/export.png
+  AssetGenImage get export => const AssetGenImage('assets/icons/Feat/export.png');
+
+  /// File path: assets/icons/Feat/folder-open.png
+  AssetGenImage get folderOpen => const AssetGenImage('assets/icons/Feat/folder-open.png');
+
+  /// File path: assets/icons/Feat/garbage.png
+  AssetGenImage get garbage => const AssetGenImage('assets/icons/Feat/garbage.png');
+
+  /// File path: assets/icons/Feat/ic24-plus.png
+  AssetGenImage get ic24Plus => const AssetGenImage('assets/icons/Feat/ic24-plus.png');
+
+  /// File path: assets/icons/Feat/search-normal.png
+  AssetGenImage get searchNormal => const AssetGenImage('assets/icons/Feat/search-normal.png');
+
+  /// File path: assets/icons/Feat/setting-2.png
+  AssetGenImage get setting2 => const AssetGenImage('assets/icons/Feat/setting-2.png');
+
+  /// File path: assets/icons/Feat/trash.png
+  AssetGenImage get trash => const AssetGenImage('assets/icons/Feat/trash.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [export, folderOpen, garbage, ic24Plus, searchNormal, setting2, trash];
 }
 
 class $AssetsIconsRegularGen {

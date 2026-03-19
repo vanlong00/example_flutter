@@ -42,6 +42,18 @@ extension ContextExtensions on BuildContext {
     return navigator.pushAndRemoveUntil<T>(MaterialPageRoute(builder: (_) => page), (_) => false);
   }
 
+  Future<T?> pushNamed<T>(String routeName, {Object? arguments}) {
+    return navigator.pushNamed<T>(routeName, arguments: arguments);
+  }
+
+  Future<T?> pushReplacementNamed<T>(String routeName, {Object? arguments}) {
+    return navigator.pushReplacementNamed<T, T>(routeName, arguments: arguments);
+  }
+
+  Future<T?> pushNamedAndRemoveAll<T>(String routeName, {Object? arguments}) {
+    return navigator.pushNamedAndRemoveUntil<T>(routeName, (_) => false, arguments: arguments);
+  }
+
   // ─── Focus ────────────────────────────────────────────────
   FocusScopeNode get focusScope => FocusScope.of(this);
   void unfocus() => focusScope.unfocus();

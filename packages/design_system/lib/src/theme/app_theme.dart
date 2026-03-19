@@ -1,6 +1,5 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
-import 'color_schemes.dart';
-import 'text_theme.dart';
 
 /// Main theme configuration for the design system
 class AppTheme {
@@ -12,8 +11,14 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: AppColorSchemes.light,
-      textTheme: AppTextTheme.textTheme,
+      // textTheme: AppTextTheme.textTheme,
       extensions: const [AppSemanticColors.light],
+      popupMenuTheme: PopupMenuThemeData(
+        color: Color(0xFFFFFFFF),
+        shape: RoundedRectangleBorder(borderRadius: AppStyle.borderMedium),
+        menuPadding: EdgeInsets.all(AppSpacing.md),
+        surfaceTintColor: Colors.transparent,
+      ),
     );
   }
 
@@ -23,8 +28,14 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: AppColorSchemes.dark,
-      textTheme: AppTextTheme.textTheme,
+      // textTheme: AppTextTheme.textTheme,
       extensions: const [AppSemanticColors.dark],
+      popupMenuTheme: PopupMenuThemeData(
+        color: Color(0xFFFFFFFF),
+        shape: RoundedRectangleBorder(borderRadius: AppStyle.borderMedium),
+        menuPadding: EdgeInsets.all(AppSpacing.md),
+        surfaceTintColor: Colors.transparent,
+      ),
     );
   }
 }

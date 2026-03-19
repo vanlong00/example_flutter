@@ -21,7 +21,7 @@ class ThemeSettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Appearance'), centerTitle: false, surfaceTintColor: Colors.transparent),
+      appBar: const AppAppBar(title: 'Appearance'),
       body: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, state) {
           return ListView(
@@ -34,7 +34,7 @@ class ThemeSettingPage extends StatelessWidget {
               const SizedBox(height: AppSpacing.xs),
               Text(
                 'Select how the app looks on your device.',
-                style: context.textTheme.bodyMedium?.copyWith(color: context.semanticColors.neutral500),
+                style: context.textTheme.bodyMedium?.copyWith(color: context.semanticColors.neutral60),
               ),
               const SizedBox(height: AppSpacing.lg),
               // ── Selection cards ───────────────────────────────────────────
@@ -284,12 +284,12 @@ class _ThemeCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 spacing: 4,
                 children: [
-                  Icon(icon, size: 14, color: isSelected ? context.colorScheme.primary : context.semanticColors.neutral500),
+                  Icon(icon, size: 14, color: isSelected ? context.colorScheme.primary : context.semanticColors.neutral60),
                   Flexible(
                     child: Text(
                       label,
                       style: context.textTheme.labelSmall?.copyWith(
-                        color: isSelected ? context.colorScheme.primary : context.semanticColors.neutral500,
+                        color: isSelected ? context.colorScheme.primary : context.semanticColors.neutral60,
                         fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                       ),
                       overflow: TextOverflow.ellipsis,

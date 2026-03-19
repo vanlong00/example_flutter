@@ -77,7 +77,7 @@ class _CacheSettingPageState extends State<CacheSettingPage> with SingleTickerPr
     final isEmpty = _cacheBytes == 0 && !_isLoading;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Cache'), centerTitle: false, surfaceTintColor: Colors.transparent),
+      appBar: const AppAppBar(title: 'Cache'),
       body: SafeArea(
         child: Padding(
           padding: AppSpacing.pagePadding,
@@ -99,7 +99,7 @@ class _CacheSettingPageState extends State<CacheSettingPage> with SingleTickerPr
                       isEmpty
                           ? 'Your app cache is clean.\nFiles will be re-created as you use the app.'
                           : 'These are temporary files created while using the app.\nClearing them frees up device storage.',
-                      style: context.textTheme.bodyMedium?.copyWith(color: context.semanticColors.neutral500),
+                      style: context.textTheme.bodyMedium?.copyWith(color: context.semanticColors.neutral60),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: AppSpacing.x2l),
@@ -126,7 +126,7 @@ class _CacheSettingPageState extends State<CacheSettingPage> with SingleTickerPr
           alignment: Alignment.center,
           children: [
             CircularProgressIndicator(strokeWidth: 2, color: color.withValues(alpha: 0.4)),
-            Text('...', style: context.textTheme.titleMedium?.copyWith(color: context.semanticColors.neutral500)),
+            Text('...', style: context.textTheme.titleMedium?.copyWith(color: context.semanticColors.neutral60)),
           ],
         ),
       );
@@ -229,7 +229,7 @@ class _InfoCard extends StatelessWidget {
           Icon(icon, size: 20, color: color),
           const SizedBox(height: AppSpacing.xs),
           Text(value, style: context.textTheme.labelMedium?.semiBold),
-          Text(label, style: context.textTheme.labelSmall?.copyWith(color: context.semanticColors.neutral500)),
+          Text(label, style: context.textTheme.labelSmall?.copyWith(color: context.semanticColors.neutral60)),
         ],
       ),
     );

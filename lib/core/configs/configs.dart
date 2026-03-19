@@ -1,4 +1,5 @@
 export 'di/injection.dart';
-export '../tutorial/tutorial_card.dart';
-export '../tutorial/tutorial_keys.dart';
-export '../tutorial/tutorial_service.dart';
+export 'routes/routes.dart';
+export '../../features/tutorial/tutorial_card.dart';
+export '../../features/tutorial/tutorial_keys.dart';
+export '../../features/tutorial/tutorial_service.dart';

@@ -85,13 +85,18 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
     required this.onDestructive,
     required this.destructiveContainer,
     required this.onDestructiveContainer,
+    required this.neutral0,
+    required this.neutral10,
+    required this.neutral20,
+    required this.neutral30,
+    required this.neutral40,
+    required this.neutral50,
+    required this.neutral60,
+    required this.neutral70,
+    required this.neutral80,
+    required this.neutral90,
     required this.neutral100,
-    required this.neutral200,
-    required this.neutral300,
-    required this.neutral400,
-    required this.neutral500,
-    required this.neutral600,
-    required this.neutral700,
+    required this.backgroundCard,
   });
 
   final Color success;
@@ -114,64 +119,96 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
   final Color destructiveContainer;
   final Color onDestructiveContainer;
 
+  // Neutral scale: 0 = darkest end, 100 = lightest end (light theme)
+  // Inverted for dark theme: 0 = white, 100 = near-black
+  final Color neutral0;
+  final Color neutral10;
+  final Color neutral20;
+  final Color neutral30;
+  final Color neutral40;
+  final Color neutral50;
+  final Color neutral60;
+  final Color neutral70;
+  final Color neutral80;
+  final Color neutral90;
   final Color neutral100;
-  final Color neutral200;
-  final Color neutral300;
-  final Color neutral400;
-  final Color neutral500;
-  final Color neutral600;
-  final Color neutral700;
 
+  final Color backgroundCard;
+
+  // ─── Light ────────────────────────────────────────────────────────────────
   static const AppSemanticColors light = AppSemanticColors(
     success: Color(0xFF10b981),
     onSuccess: Color(0xFFffffff),
     successContainer: Color(0xFFd1fae5),
     onSuccessContainer: Color(0xFF065f46),
+
     warning: Color(0xFFf59e0b),
     onWarning: Color(0xFF000000),
     warningContainer: Color(0xFFfef3c7),
     onWarningContainer: Color(0xFF92400e),
+
     info: Color(0xFF3b82f6),
     onInfo: Color(0xFFffffff),
     infoContainer: Color(0xFFdbeafe),
     onInfoContainer: Color(0xFF1d4ed8),
-    destructive: Color(0xFFdc2626),
+
+    destructive: Color(0xFFFF0000),
     onDestructive: Color(0xFFffffff),
     destructiveContainer: Color(0xFFfee2e2),
     onDestructiveContainer: Color(0xFF991b1b),
-    neutral700: Color(0xFF1A1C24),
-    neutral600: Color(0xFF434959),
-    neutral500: Color(0xFF7A85A1),
-    neutral400: Color(0xFF9DA8C3),
-    neutral300: Color(0xFFE0E6F3),
-    neutral200: Color(0xFFF2F6FC),
+
+    // Light: 0 = black → 100 = white
+    neutral0: Color(0xFF000000),
+    neutral10: Color(0xFF030405),
+    neutral20: Color(0xFF080A0D),
+    neutral30: Color(0xFF121418),
+    neutral40: Color(0xFF1A1C24),
+    neutral50: Color(0xFF434959),
+    neutral60: Color(0xFF7A85A1),
+    neutral70: Color(0xFF9DA8C3),
+    neutral80: Color(0xFFE0E6F3),
+    neutral90: Color(0xFFF2F6FC),
     neutral100: Color(0xFFFFFFFF),
+
+    backgroundCard: Color(0xfff3b383e),
   );
 
+  // ─── Dark ─────────────────────────────────────────────────────────────────
   static const AppSemanticColors dark = AppSemanticColors(
     success: Color(0xFF4ade80),
     onSuccess: Color(0xFF000000),
     successContainer: Color(0xFF064e3b),
     onSuccessContainer: Color(0xFF6ee7b7),
+
     warning: Color(0xFFfbbf24),
     onWarning: Color(0xFF000000),
     warningContainer: Color(0xFF92400e),
     onWarningContainer: Color(0xFFfcd34d),
+
     info: Color(0xFF60a5fa),
     onInfo: Color(0xFF000000),
     infoContainer: Color(0xFF1e3a8a),
     onInfoContainer: Color(0xFF93c5fd),
-    destructive: Color(0xFFf87171),
+
+    destructive: Color(0xFFFF0000),
     onDestructive: Color(0xFF000000),
     destructiveContainer: Color(0xFF7f1d1d),
     onDestructiveContainer: Color(0xFFfca5a5),
-    neutral100: Color(0xFF1A1C24),
-    neutral200: Color(0xFF434959),
-    neutral300: Color(0xFF7A85A1),
-    neutral400: Color(0xFF9DA8C3),
-    neutral500: Color(0xFFE0E6F3),
-    neutral600: Color(0xFFF2F6FC),
-    neutral700: Color(0xFFFFFFFF),
+
+    // Dark: 0 = white → 100 = near-black (inverted)
+    neutral0: Color(0xFFFFFFFF),
+    neutral10: Color(0xFFFCFCFC),
+    neutral20: Color(0xFFEDEDED),
+    neutral30: Color(0xFFB3B4B4),
+    neutral40: Color(0xFF999B9B),
+    neutral50: Color(0xFF808282),
+    neutral60: Color(0xFF666968),
+    neutral70: Color(0xFF4D504F),
+    neutral80: Color(0xFF333736),
+    neutral90: Color(0xFF1A1E1D),
+    neutral100: Color(0xFF020202),
+
+    backgroundCard: Color(0xFF35383f),
   );
 
   @override
@@ -192,13 +229,18 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
     Color? onDestructive,
     Color? destructiveContainer,
     Color? onDestructiveContainer,
+    Color? neutral0,
+    Color? neutral10,
+    Color? neutral20,
+    Color? neutral30,
+    Color? neutral40,
+    Color? neutral50,
+    Color? neutral60,
+    Color? neutral70,
+    Color? neutral80,
+    Color? neutral90,
     Color? neutral100,
-    Color? neutral200,
-    Color? neutral300,
-    Color? neutral400,
-    Color? neutral500,
-    Color? neutral600,
-    Color? neutral700,
+    Color? backgroundCard,
   }) {
     return AppSemanticColors(
       success: success ?? this.success,
@@ -217,13 +259,18 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
       onDestructive: onDestructive ?? this.onDestructive,
       destructiveContainer: destructiveContainer ?? this.destructiveContainer,
       onDestructiveContainer: onDestructiveContainer ?? this.onDestructiveContainer,
+      neutral0: neutral0 ?? this.neutral0,
+      neutral10: neutral10 ?? this.neutral10,
+      neutral20: neutral20 ?? this.neutral20,
+      neutral30: neutral30 ?? this.neutral30,
+      neutral40: neutral40 ?? this.neutral40,
+      neutral50: neutral50 ?? this.neutral50,
+      neutral60: neutral60 ?? this.neutral60,
+      neutral70: neutral70 ?? this.neutral70,
+      neutral80: neutral80 ?? this.neutral80,
+      neutral90: neutral90 ?? this.neutral90,
       neutral100: neutral100 ?? this.neutral100,
-      neutral200: neutral200 ?? this.neutral200,
-      neutral300: neutral300 ?? this.neutral300,
-      neutral400: neutral400 ?? this.neutral400,
-      neutral500: neutral500 ?? this.neutral500,
-      neutral600: neutral600 ?? this.neutral600,
-      neutral700: neutral700 ?? this.neutral700,
+      backgroundCard: backgroundCard ?? this.backgroundCard,
     );
   }
 
@@ -247,13 +294,18 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
       onDestructive: Color.lerp(onDestructive, other.onDestructive, t)!,
       destructiveContainer: Color.lerp(destructiveContainer, other.destructiveContainer, t)!,
       onDestructiveContainer: Color.lerp(onDestructiveContainer, other.onDestructiveContainer, t)!,
+      neutral0: Color.lerp(neutral0, other.neutral0, t)!,
+      neutral10: Color.lerp(neutral10, other.neutral10, t)!,
+      neutral20: Color.lerp(neutral20, other.neutral20, t)!,
+      neutral30: Color.lerp(neutral30, other.neutral30, t)!,
+      neutral40: Color.lerp(neutral40, other.neutral40, t)!,
+      neutral50: Color.lerp(neutral50, other.neutral50, t)!,
+      neutral60: Color.lerp(neutral60, other.neutral60, t)!,
+      neutral70: Color.lerp(neutral70, other.neutral70, t)!,
+      neutral80: Color.lerp(neutral80, other.neutral80, t)!,
+      neutral90: Color.lerp(neutral90, other.neutral90, t)!,
       neutral100: Color.lerp(neutral100, other.neutral100, t)!,
-      neutral200: Color.lerp(neutral200, other.neutral200, t)!,
-      neutral300: Color.lerp(neutral300, other.neutral300, t)!,
-      neutral400: Color.lerp(neutral400, other.neutral400, t)!,
-      neutral500: Color.lerp(neutral500, other.neutral500, t)!,
-      neutral600: Color.lerp(neutral600, other.neutral600, t)!,
-      neutral700: Color.lerp(neutral700, other.neutral700, t)!,
+      backgroundCard: Color.lerp(backgroundCard, other.backgroundCard, t)!,
     );
   }
 }

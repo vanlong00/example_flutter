@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:example/core/core.dart';
-import 'package:example/core/utils/helpers/storage_helper.dart';
 import 'package:example/data/models/models.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -14,7 +12,7 @@ part 'explorable_state.dart';
 part 'explorable_bloc.freezed.dart';
 
 class ExplorableBloc extends Bloc<ExplorableEvent, ExplorableState> {
-  ExplorableBloc() : super(ExplorableState(tree: TreeNode<Explorable>.root())) {
+  ExplorableBloc() : super(const ExplorableState()) {
     on<_Started>(_onStarted);
     on<_PickFile>(_onImported);
     on<_ShareFile>(_onShareFile);
@@ -28,52 +26,46 @@ class ExplorableBloc extends Bloc<ExplorableEvent, ExplorableState> {
     emit(state.copyWith(status: ManageFileStatus.loading));
 
     final dirStorage = await StorageHelper.getCacheDirectoryApp();
-    final List<FileSystemEntity> files = await dirStorage.list().toList();
-    if (files.isEmpty) {
-      emit(state.copyWith(status: ManageFileStatus.initial, tree: TreeNode<Explorable>.root()));
+    final List<FileSystemEntity> entities = await dirStorage.list().toList();
+    if (entities.isEmpty) {
+      emit(state.copyWith(status: ManageFileStatus.initial, items: const []));
       return;
     }
-    final tree = TreeNode<Explorable>.root();
-    for (final entity in files) {
+
+    final items = <Explorable>[];
+    for (final entity in entities) {
       if (entity is File) {
-        tree.add(FileNode(data: await Explorable.createFile(entity.path, mimeType: "binary/octet-stream")));
+        items.add(await Explorable.createFile(entity.path, mimeType: "binary/octet-stream"));
       } else if (entity is Directory) {
-        tree.add(await _buildFolderNode(entity));
+        items.add(await _buildFolderFromDir(entity));
       }
     }
-    emit(state.copyWith(status: ManageFileStatus.loaded, tree: tree));
+    emit(state.copyWith(status: ManageFileStatus.loaded, items: items));
   }
 
-  Future<FolderNode> _buildFolderNode(Directory dir) async {
-    final folderNode = FolderNode(data: Explorable.createFolder(dir.path));
-    final children = await dir.list().toList();
-    for (final child in children) {
+  Future<ExplorableFolder> _buildFolderFromDir(Directory dir) async {
+    final children = <Explorable>[];
+    for (final child in await dir.list().toList()) {
       if (child is File) {
-        folderNode.add(FileNode(data: await Explorable.createFile(child.path, mimeType: "binary/octet-stream")));
+        children.add(await Explorable.createFile(child.path, mimeType: "binary/octet-stream"));
       } else if (child is Directory) {
-        folderNode.add(await _buildFolderNode(child));
+        children.add(await _buildFolderFromDir(child));
       }
     }
-    return folderNode;
+    return Explorable.createFolder(dir.path, children: children);
   }
 
   Future<void> _onImported(_PickFile event, Emitter<ExplorableState> emit) async {
     final filePickerResult = await FileHelper.pickSingleFile();
-
     try {
-      if (filePickerResult == null || filePickerResult.files.isEmpty) {
-        throw Exception('User canceled file selection');
-      }
+      if (filePickerResult == null || filePickerResult.files.isEmpty) return;
       final file = filePickerResult.files.first;
       final extension = file.extension?.toLowerCase();
 
+      final Explorable imported;
       switch (extension) {
         case 'zip':
-          // Handle ZIP file import
-          final importedFile = await FileHelper.handleZipFileV2(file);
-          final updatedTree = state.tree..add(importedFile);
-          emit(state.copyWith(status: ManageFileStatus.loaded, tree: updatedTree));
-          break;
+          imported = await FileHelper.handleZipFileV2(file);
         case 'melmod':
         case 'melsave':
         case 'melmap':
@@ -83,15 +75,12 @@ class ExplorableBloc extends Bloc<ExplorableEvent, ExplorableState> {
         case 'mcaddon':
         case 'mctemplate':
         case 'mcstructure':
-          // Handle MEL file import
-          final importedFile = await FileHelper.handleFileV2(file);
-          final updatedTree = state.tree..add(importedFile);
-          emit(state.copyWith(status: ManageFileStatus.loaded, tree: updatedTree));
-          break;
+          imported = await FileHelper.handleFileV2(file);
         default:
-          // Unsupported file type
           throw UnsupportedError('Unsupported file format: .$extension');
       }
+      final newItems = [...state.items, imported];
+      emit(state.copyWith(status: newItems.isEmpty ? ManageFileStatus.initial : ManageFileStatus.loaded, items: newItems));
     } catch (e) {
       print('Error importing file: $e');
     }
@@ -101,12 +90,10 @@ class ExplorableBloc extends Bloc<ExplorableEvent, ExplorableState> {
     final filePath = event.filePath;
     final extension = p.extension(filePath).toLowerCase().replaceFirst('.', '');
     try {
+      final Explorable imported;
       switch (extension) {
         case 'zip':
-          final importedFile = await FileHelper.handleSharedZip(filePath);
-          final updatedTree = state.tree..add(importedFile);
-          emit(state.copyWith(status: ManageFileStatus.loaded, tree: updatedTree));
-          break;
+          imported = await FileHelper.handleSharedZip(filePath);
         case 'melmod':
         case 'melsave':
         case 'melmap':
@@ -116,50 +103,51 @@ class ExplorableBloc extends Bloc<ExplorableEvent, ExplorableState> {
         case 'mcaddon':
         case 'mctemplate':
         case 'mcstructure':
-          final importedFile = await FileHelper.handleSharedFile(filePath);
-          final updatedTree = state.tree..add(importedFile);
-          emit(state.copyWith(status: ManageFileStatus.loaded, tree: updatedTree));
-          break;
+          imported = await FileHelper.handleSharedFile(filePath);
         default:
           throw UnsupportedError('Unsupported file format: .$extension');
       }
+      final newItems = [...state.items, imported];
+      emit(state.copyWith(status: newItems.isEmpty ? ManageFileStatus.initial : ManageFileStatus.loaded, items: newItems));
     } catch (e) {
       print('Error handling shared file: $e');
     }
   }
 
   Future<void> _onRemoveFile(_RemoveFile event, Emitter<ExplorableState> emit) async {
-    final data = event.node.data;
-    final parentNode = event.node.parent;
-
-    if (data is ExplorableFile) {
-      final file = File(data.path);
+    final item = event.item;
+    if (item is ExplorableFile) {
+      final file = File(item.path);
       if (await file.exists()) await file.delete();
-    } else if (data is ExplorableFolder) {
-      final dir = Directory(data.path);
+    } else if (item is ExplorableFolder) {
+      final dir = Directory(item.path);
       if (await dir.exists()) await dir.delete(recursive: true);
     }
-    event.node.delete();
 
-    // If parent is a non-root folder node and is now empty, remove it too
-    if (parentNode != null && !parentNode.isRoot && parentNode is FolderNode) {
-      if (parentNode.children.isEmpty) {
-        final parentData = parentNode.data;
-        if (parentData is ExplorableFolder) {
-          final dir = Directory(parentData.path);
-          if (await dir.exists()) await dir.delete(recursive: true);
-        }
-        parentNode.delete();
-      }
-    }
-
-    final isEmpty = state.tree.children.isEmpty;
-    emit(state.copyWith(status: isEmpty ? ManageFileStatus.initial : ManageFileStatus.loaded, tree: state.tree));
+    final newItems = _removeItem(state.items, item);
+    emit(state.copyWith(status: newItems.isEmpty ? ManageFileStatus.initial : ManageFileStatus.loaded, items: newItems));
   }
 
   Future<void> _onRemoveAll(_RemoveAll event, Emitter<ExplorableState> emit) async {
     await StorageHelper.clearTemporaryFiles();
-    state.tree.clear();
-    emit(state.copyWith(status: ManageFileStatus.initial, tree: state.tree));
+    emit(state.copyWith(status: ManageFileStatus.initial, items: const []));
   }
+
+  /// Recursively removes [target] from [items].
+  /// Folders that become empty after the removal are also pruned.
+  List<Explorable> _removeItem(List<Explorable> items, Explorable target) => items
+      .where((e) => e != target)
+      .map(
+        (e) => switch (e) {
+          ExplorableFolder f => f.copyWith(children: _removeItem(f.children, target)),
+          _ => e,
+        },
+      )
+      .where(
+        (e) => switch (e) {
+          ExplorableFolder f => f.children.isNotEmpty,
+          _ => true,
+        },
+      )
+      .toList();
 }

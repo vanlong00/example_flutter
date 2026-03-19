@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:example/data/models/models.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as p;
 
@@ -24,37 +25,42 @@ class FileHelper {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['bin', 'zip'],
-      withData: true, // Important: reads file into memory on Android
+      withData: true,
       allowMultiple: false,
     );
     return result;
   }
 
-  static Future<FileNode> handleFileV2(PlatformFile file) async {
+  static Future<ExplorableFile> handleFileV2(PlatformFile file) async {
     if (file.bytes == null) throw Exception('File bytes are null');
 
     final basename = p.basenameWithoutExtension(file.name).trimLeft().trimRight();
     final extension = p.extension(file.name);
-    if (basename.isEmpty) {
-      throw Exception('File name is empty after trimming');
-    }
+    if (basename.isEmpty) throw Exception('File name is empty after trimming');
     final savedFile = await StorageHelper.saveFileToCache(path: '$basename$extension', bytes: file.bytes!);
-
-    return FileNode(data: await Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream"));
+    return Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream");
   }
 
-  static Future<FolderNode> handleZipFileV2(PlatformFile file) async {
+  static Future<ExplorableFolder> handleZipFileV2(PlatformFile file) async {
     if (file.bytes == null) throw Exception('File bytes are null');
+
+    final archive = ZipDecoder().decodeBytes(file.bytes!);
+
+    final hasValidFiles = archive.any(
+      (e) =>
+          e.isFile &&
+          !e.name.startsWith('__MACOSX/') &&
+          !p.basename(e.name).startsWith('.') &&
+          _isValidExtension(e.name),
+    );
+    if (!hasValidFiles) throw Exception('No supported files found in the ZIP archive');
 
     String zipName = p.basenameWithoutExtension(file.name);
     final Directory tempDir = await StorageHelper.saveDirToCache(name: zipName);
     zipName = p.basename(tempDir.path);
 
-    final archive = ZipDecoder().decodeBytes(file.bytes!);
-    final nodes = await _buildNodesFromArchive(archive, zipName, filterByExtension: true);
-    final folderNode = FolderNode(data: Explorable.createFolder(zipName));
-    folderNode.addAll(nodes);
-    return folderNode;
+    final children = await _buildItemsFromArchive(archive, zipName, filterByExtension: true);
+    return Explorable.createFolder(zipName, children: children);
   }
 
   static bool _isValidExtension(String fileName) {
@@ -63,7 +69,6 @@ class FileHelper {
   }
 
   /// Opens a file with the system's app chooser using open_file package
-  /// Supports: Android, iOS, macOS, Linux, Windows, Web
   static Future<OpenResult> openWith(String filePath) async {
     return OpenFile.open(filePath, type: 'application/octet-stream');
   }
@@ -77,6 +82,34 @@ class FileHelper {
     return results;
   }
 
+  /// Returns color and icon for a given file path based on its extension.
+  static ({Color color, IconData icon}) fileTypeStyle(String path) {
+    final ext = path.contains('.') ? path.split('.').last.toLowerCase() : '';
+    return switch (ext) {
+      'pdf' => (color: Colors.red, icon: Icons.picture_as_pdf_rounded),
+      'jpg' || 'jpeg' || 'png' || 'gif' || 'webp' || 'bmp' => (color: const Color(0xFF8B5CF6), icon: Icons.image_rounded),
+      'mp4' || 'mov' || 'avi' || 'mkv' || 'webm' => (color: Colors.orange, icon: Icons.videocam_rounded),
+      'mp3' || 'wav' || 'flac' || 'aac' || 'm4a' => (color: const Color(0xFF10B981), icon: Icons.music_note_rounded),
+      'zip' || 'rar' || '7z' || 'tar' || 'gz' => (color: Colors.amber, icon: Icons.folder_zip_rounded),
+      'doc' || 'docx' => (color: Colors.blue, icon: Icons.description_rounded),
+      'xls' || 'xlsx' || 'csv' => (color: const Color(0xFF059669), icon: Icons.table_chart_rounded),
+      'ppt' || 'pptx' => (color: Colors.deepOrange, icon: Icons.slideshow_rounded),
+      'txt' || 'md' || 'log' => (color: Colors.blueGrey, icon: Icons.article_rounded),
+      'apk' => (color: const Color(0xFF4CAF50), icon: Icons.android_rounded),
+      _ => (color: Colors.indigo, icon: Icons.insert_drive_file_rounded),
+    };
+  }
+
+  /// Formats a [DateTime] to ISO 8601 style: `yyyy-MM-dd HH:mm`.
+  static String formatDate(DateTime dt) {
+    final y = dt.year.toString().padLeft(4, '0');
+    final mo = dt.month.toString().padLeft(2, '0');
+    final d = dt.day.toString().padLeft(2, '0');
+    final h = dt.hour.toString().padLeft(2, '0');
+    final mi = dt.minute.toString().padLeft(2, '0');
+    return '$y-$mo-$d $h:$mi';
+  }
+
   /// Formats a byte count into a human-readable string (B, KB, MB, GB, TB).
   static String formatFileSize(int bytes) {
     if (bytes < 1024) return '$bytes B';
@@ -87,8 +120,8 @@ class FileHelper {
   }
 
   /// Handles a shared file path (from receive_sharing_intent) by copying it to
-  /// the app cache and returning a [FileNode].
-  static Future<FileNode> handleSharedFile(String filePath) async {
+  /// the app cache and returning an [ExplorableFile].
+  static Future<ExplorableFile> handleSharedFile(String filePath) async {
     final file = File(filePath);
     if (!await file.exists()) throw Exception('Shared file not found: $filePath');
     final bytes = await file.readAsBytes();
@@ -96,12 +129,12 @@ class FileHelper {
     final extension = p.extension(filePath);
     if (basename.isEmpty) throw Exception('Shared file name is empty');
     final savedFile = await StorageHelper.saveFileToCache(path: '$basename$extension', bytes: bytes);
-    return FileNode(data: await Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream"));
+    return Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream");
   }
 
   /// Handles a shared ZIP file path by extracting its contents into the app
-  /// cache and returning a [FolderNode].
-  static Future<FolderNode> handleSharedZip(String filePath) async {
+  /// cache and returning an [ExplorableFolder].
+  static Future<ExplorableFolder> handleSharedZip(String filePath) async {
     final file = File(filePath);
     if (!await file.exists()) throw Exception('Shared ZIP not found: $filePath');
     final bytes = await file.readAsBytes();
@@ -109,15 +142,13 @@ class FileHelper {
     final Directory tempDir = await StorageHelper.saveDirToCache(name: zipName);
     zipName = p.basename(tempDir.path);
     final archive = ZipDecoder().decodeBytes(bytes);
-    final nodes = await _buildNodesFromArchive(archive, zipName);
-    final folderNode = FolderNode(data: Explorable.createFolder(zipName));
-    folderNode.addAll(nodes);
-    return folderNode;
+    final children = await _buildItemsFromArchive(archive, zipName);
+    return Explorable.createFolder(zipName, children: children);
   }
 
-  static Future<List<ExplorableNode>> _buildNodesFromArchive(Archive archive, String cachePrefix, {bool filterByExtension = false}) async {
-    final List<ExplorableNode> rootFiles = [];
-    final Map<String, List<FileNode>> dirMap = {};
+  static Future<List<Explorable>> _buildItemsFromArchive(Archive archive, String cachePrefix, {bool filterByExtension = false}) async {
+    final List<ExplorableFile> rootFiles = [];
+    final Map<String, List<ExplorableFile>> dirMap = {};
 
     // Detect a single root folder wrapping all ZIP entries (e.g. "WP-V3/")
     // so it can be stripped and cachePrefix used as the true root.
@@ -128,7 +159,7 @@ class FileHelper {
       if (zipRoot == null) {
         zipRoot = candidate;
       } else if (zipRoot != candidate) {
-        zipRoot = ''; // mixed roots — no common wrapper
+        zipRoot = '';
         break;
       }
     }
@@ -136,7 +167,6 @@ class FileHelper {
     for (final entry in archive.where((e) => e.isFile && !e.name.startsWith('__MACOSX/') && !p.basename(e.name).startsWith('.'))) {
       if (filterByExtension && !_isValidExtension(entry.name)) continue;
 
-      // Strip the common root wrapper (e.g. "WP-V3/file.melmod" → "file.melmod")
       final entryRelPath = (zipRoot != null && zipRoot.isNotEmpty) ? entry.name.substring(zipRoot.length + 1) : entry.name;
       if (entryRelPath.isEmpty) continue;
 
@@ -151,23 +181,21 @@ class FileHelper {
 
       final entryBytes = Uint8List.fromList(entry.content as List<int>);
       final savedFile = await StorageHelper.saveFileToCache(path: cachePath, bytes: entryBytes);
-      final fileNode = FileNode(data: await Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream"));
+      final explorableFile = await Explorable.createFile(savedFile.path, mimeType: "binary/octet-stream");
 
       if (isTopLevel) {
-        rootFiles.add(fileNode);
+        rootFiles.add(explorableFile);
       } else {
         final topDir = p.split(dirName).first;
-        dirMap.putIfAbsent(topDir, () => []).add(fileNode);
+        dirMap.putIfAbsent(topDir, () => []).add(explorableFile);
       }
     }
 
-    final nodes = <ExplorableNode>[...rootFiles];
+    final items = <Explorable>[...rootFiles];
     for (final dirEntry in dirMap.entries) {
       final folderCachePath = '$cachePrefix/${dirEntry.key}';
-      final subFolder = FolderNode(data: Explorable.createFolder(folderCachePath));
-      subFolder.addAll(dirEntry.value);
-      nodes.add(subFolder);
+      items.add(Explorable.createFolder(folderCachePath, children: dirEntry.value));
     }
-    return nodes;
+    return items;
   }
 }

@@ -106,7 +106,7 @@ class TutorialCard extends StatelessWidget {
                     const SizedBox(height: AppSpacing.sm),
 
                     // ── Description ─────────────────────────────────
-                    Text(description, style: context.textTheme.bodySmall?.copyWith(color: context.semanticColors.neutral500, height: 1.55)),
+                    Text(description, style: context.textTheme.bodySmall?.copyWith(color: context.semanticColors.neutral60, height: 1.55)),
 
                     const SizedBox(height: AppSpacing.md),
 
@@ -117,7 +117,7 @@ class TutorialCard extends StatelessWidget {
                           onTap: onSkip,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs, horizontal: AppSpacing.xs),
-                            child: Text('Skip', style: context.textTheme.labelMedium?.copyWith(color: context.semanticColors.neutral500)),
+                            child: Text('Skip', style: context.textTheme.labelMedium?.copyWith(color: context.semanticColors.neutral60)),
                           ),
                         ),
                         const Spacer(),

@@ -1,7 +1,5 @@
 import 'package:design_system/design_system.dart';
 import 'package:example/core/core.dart';
-import 'package:example/features/settings/pages/cache_setting_page.dart';
-import 'package:example/features/settings/pages/theme_setting_page.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -10,7 +8,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings'), centerTitle: false, surfaceTintColor: Colors.transparent),
+      appBar: const AppAppBar(title: 'Settings'),
       body: ListView(
         physics: const ScrollPhysics(),
         padding: AppSpacing.horizontalMd,
@@ -21,7 +19,7 @@ class SettingsPage extends StatelessWidget {
             iconColor: Colors.deepPurple,
             title: 'Appearance',
             subtitle: 'Theme and display options',
-            onTap: () => context.push(const ThemeSettingPage()),
+            onTap: () => context.pushNamed(KeyRoute.themeSetting),
           ),
           AppSpacing.gapSm,
           _SectionHeader('Storage'),
@@ -30,7 +28,7 @@ class SettingsPage extends StatelessWidget {
             iconColor: Colors.blueGrey,
             title: 'Cache',
             subtitle: 'Manage temporary cached files',
-            onTap: () => context.push(const CacheSettingPage()),
+            onTap: () => context.pushNamed(KeyRoute.cacheSetting),
           ),
           AppSpacing.gapSm,
           _SectionHeader('Info'),
@@ -77,7 +75,7 @@ class _SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.lg, bottom: AppSpacing.sm),
-      child: Text(title.toUpperCase(), style: context.textTheme.labelSmall?.copyWith(color: context.semanticColors.neutral500, letterSpacing: 1.2)),
+      child: Text(title.toUpperCase(), style: context.textTheme.labelSmall?.copyWith(color: context.semanticColors.neutral60, letterSpacing: 1.2)),
     );
   }
 }
@@ -117,11 +115,11 @@ class _SettingsTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title, style: context.textTheme.titleSmall?.semiBold),
-                  Text(subtitle, style: context.textTheme.bodySmall?.copyWith(color: context.semanticColors.neutral500)),
+                  Text(subtitle, style: context.textTheme.bodySmall?.copyWith(color: context.semanticColors.neutral60)),
                 ],
               ),
             ),
-            Icon(Icons.chevron_right_rounded, color: context.semanticColors.neutral500, size: 20),
+            Icon(Icons.chevron_right_rounded, color: context.semanticColors.neutral60, size: 20),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:design_system/design_system.dart';
+import 'package:example/core/configs/routes/routes.dart';
 import 'package:example/features/home/bloc/explorable_bloc/explorable_bloc.dart';
 import 'package:example/features/theme/cubit/theme_cubit.dart';
 import 'package:flutter/foundation.dart';
@@ -6,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'features/main/pages/main_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +37,8 @@ class MyApp extends StatelessWidget {
               theme: AppTheme.lightTheme,
               darkTheme: AppTheme.darkTheme,
               themeMode: state.themeMode,
-              home: const MainPage(),
+              initialRoute: KeyRoute.main,
+              onGenerateRoute: AppRoute.onGenerateRoute,
               locale: DevicePreview.locale(context),
               builder: DevicePreview.appBuilder,
               debugShowCheckedModeBanner: false,
