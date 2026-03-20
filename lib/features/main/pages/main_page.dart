@@ -1,4 +1,5 @@
 import 'package:example/core/core.dart';
+import 'package:example/features/ads/widgets/app_native_ad_widget.dart';
 import 'package:example/features/home/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -43,7 +44,12 @@ class _MainPageViewState extends State<_MainPageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: HomePage(),
+      body: Column(
+        children: [
+          Expanded(child: HomePage()),
+          AppNativeAdWidget(),
+        ],
+      ),
       // bottomNavigationBar: NavigationBar(
       //   selectedIndex: _selectedIndex,
       //   onDestinationSelected: (index) => setState(() => _selectedIndex = index),

@@ -24,6 +24,22 @@ class $AssetsIconsGen {
   $AssetsIconsSolidGen get solid => const $AssetsIconsSolidGen();
 }
 
+class $AssetsLauncherIconGen {
+  const $AssetsLauncherIconGen();
+
+  /// File path: assets/launcher_icon/README.md
+  String get readme => 'assets/launcher_icon/README.md';
+
+  /// File path: assets/launcher_icon/icon.png
+  AssetGenImage get icon => const AssetGenImage('assets/launcher_icon/icon.png');
+
+  /// File path: assets/launcher_icon/icon_transparent.png
+  AssetGenImage get iconTransparent => const AssetGenImage('assets/launcher_icon/icon_transparent.png');
+
+  /// List of all assets
+  List<dynamic> get values => [readme, icon, iconTransparent];
+}
+
 class $AssetsIconsFeatGen {
   const $AssetsIconsFeatGen();
 
@@ -1514,6 +1530,7 @@ class Assets {
   const Assets._();
 
   static const $AssetsIconsGen icons = $AssetsIconsGen();
+  static const $AssetsLauncherIconGen launcherIcon = $AssetsLauncherIconGen();
 }
 
 class AssetGenImage {

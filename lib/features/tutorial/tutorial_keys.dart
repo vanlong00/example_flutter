@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 /// exact same key instances.
 abstract final class TutorialKeys {
   static final GlobalKey addFile = GlobalKey(debugLabel: 'showcase_add_file');
-  static final GlobalKey collapseAll = GlobalKey(debugLabel: 'showcase_collapse_all');
+  // static final GlobalKey collapseAll = GlobalKey(debugLabel: 'showcase_collapse_all');
 
   /// Ordered list of keys that defines the tutorial step sequence.
-  static List<GlobalKey> get orderedKeys => [addFile, collapseAll];
+  static List<GlobalKey> get orderedKeys => [addFile];
 }

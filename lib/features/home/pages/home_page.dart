@@ -78,79 +78,79 @@ class _HomePageViewState extends State<_HomePageView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BrowserCubit, List<BreadcrumbEntry>>(
-      builder: (context, navStack) => PopScope(
-        canPop: false,
-        onPopInvokedWithResult: (_, _) async {
-          if (navStack.isNotEmpty) {
-            context.read<BrowserCubit>().navigateTo(navStack.length - 2);
-            return;
-          }
-          final shouldExit = await AppHelper.showConfirmDialog(
-            context,
-            title: 'Exit App',
-            message: 'Are you sure you want to exit PArchiver?',
-            confirmText: 'Exit',
-            cancelText: 'Cancel',
-            icon: Icons.exit_to_app_rounded,
-            isDestructive: true,
-          );
-          if (shouldExit) SystemNavigator.pop();
-        },
-        child: Scaffold(
-          floatingActionButton: ValueListenableBuilder<bool>(
-            valueListenable: _showScrollToTop,
-            builder: (_, show, child) => show
-                ? FloatingActionButton.small(
-                    onPressed: () => _scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeOut),
-                    tooltip: 'Scroll to top',
-                    child: child,
-                  )
-                : const SizedBox.shrink(),
-            child: const Icon(Icons.keyboard_arrow_up_rounded),
+    print('HomePage build');
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (_, _) async {
+        final navStack = context.read<BrowserCubit>().state;
+        if (navStack.isNotEmpty) {
+          context.read<BrowserCubit>().navigateTo(navStack.length - 2);
+          return;
+        }
+        final shouldExit = await AppHelper.showConfirmDialog(
+          context,
+          title: 'Exit App',
+          message: 'Are you sure you want to exit PArchiver?',
+          confirmText: 'Exit',
+          cancelText: 'Cancel',
+          icon: Icons.exit_to_app_rounded,
+          isDestructive: true,
+        );
+        if (shouldExit) SystemNavigator.pop();
+      },
+      child: Scaffold(
+        floatingActionButton: ValueListenableBuilder<bool>(
+          valueListenable: _showScrollToTop,
+          builder: (_, show, child) => show
+              ? FloatingActionButton.small(
+                  onPressed: () => _scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeOut),
+                  tooltip: 'Scroll to top',
+                  child: child,
+                )
+              : const SizedBox.shrink(),
+          child: const Icon(Icons.keyboard_arrow_up_rounded),
+        ),
+        appBar: AppAppBar(
+          title: 'Management File',
+          centerTitle: true,
+          leading: IconButton(
+            onPressed: () => context.pushNamed(KeyRoute.settings),
+            icon: Assets.icons.feat.setting2.image(width: 24, height: 24, color: context.colorScheme.onSurface),
+            tooltip: 'Settings',
           ),
-          appBar: AppAppBar(
-            title: 'Management File',
-            centerTitle: true,
-            leading: IconButton(
-              onPressed: () => context.pushNamed(KeyRoute.settings),
-              icon: Assets.icons.feat.setting2.image(width: 24, height: 24, color: context.colorScheme.onSurface),
-              tooltip: 'Settings',
-            ),
-            actions: [
-              Showcase.withWidget(
-                key: TutorialKeys.addFile,
-                height: 210,
-                width: 284,
-                overlayOpacity: 0.7,
-                targetBorderRadius: BorderRadius.circular(24),
-                container: TutorialCard(
-                  icon: Icons.file_upload_outlined,
-                  iconColor: context.colorScheme.primary,
-                  title: 'Import Files',
-                  description: 'Tap + to import your game mod files.\nSupports .melmod, .melsave, .mcworld, .mcpack, .mcaddon, .zip and more.',
-                  stepIndex: 0,
-                  totalSteps: 2,
-                  onNext: () => ShowCaseWidget.of(context).completed(TutorialKeys.addFile),
-                  onSkip: () => ShowCaseWidget.of(context).dismiss(),
-                ),
-                child: IconButton(
-                  onPressed: () => context.read<ExplorableBloc>().add(const ExplorableEvent.pickFile()),
-                  icon: Assets.icons.feat.ic24Plus.image(width: 24, height: 24, color: context.colorScheme.onSurface),
-                  tooltip: 'Import File',
-                ),
+          actions: [
+            Showcase.withWidget(
+              key: TutorialKeys.addFile,
+              height: 210,
+              width: 284,
+              overlayOpacity: 0.7,
+              targetBorderRadius: BorderRadius.circular(24),
+              container: TutorialCard(
+                icon: Icons.file_upload_outlined,
+                iconColor: context.colorScheme.primary,
+                title: 'Import Files',
+                description: 'Tap + to import your game mod files.\nSupports .melmod, .melsave, .mcworld, .mcpack, .mcaddon, .zip and more.',
+                stepIndex: 0,
+                totalSteps: 2,
+                onNext: () => ShowCaseWidget.of(context).completed(TutorialKeys.addFile),
+                onSkip: () => ShowCaseWidget.of(context).dismiss(),
               ),
-            ],
-          ),
-          body: Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.xl),
-            child: Column(
-              spacing: AppSpacing.smMd,
-              children: [
-                const HomeHeaderWidget(),
-                Expanded(child: FileListBody(scrollController: _scrollController)),
-              ],
+              child: IconButton(
+                onPressed: () => context.read<ExplorableBloc>().add(const ExplorableEvent.pickFile()),
+                icon: Assets.icons.feat.ic24Plus.image(width: 24, height: 24, color: context.colorScheme.onSurface),
+                tooltip: 'Import File',
+              ),
             ),
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.only(top: AppSpacing.xl),
+          child: Column(
+            spacing: AppSpacing.smMd,
+            children: [
+              const HomeHeaderWidget(),
+              Expanded(child: FileListBody(scrollController: _scrollController)),
+            ],
           ),
         ),
       ),
