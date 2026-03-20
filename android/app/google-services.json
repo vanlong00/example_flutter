@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "736284870385",
+    "project_id": "parchiver-extract-unzip",
+    "storage_bucket": "parchiver-extract-unzip.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:736284870385:android:d4e4111a9fe7feb1b9cb50",
+        "android_client_info": {
+          "package_name": "io.pamg.file.archiver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLNvwkuGzUantAw-c6_Vxpjk4-cYgbUSg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

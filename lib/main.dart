@@ -2,6 +2,7 @@ import 'package:design_system/design_system.dart';
 import 'package:example/core/configs/routes/routes.dart';
 import 'package:example/features/home/bloc/explorable_bloc/explorable_bloc.dart';
 import 'package:example/features/theme/cubit/theme_cubit.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,9 +10,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/core.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   configureDependencies();
   final prefs = await SharedPreferences.getInstance();
