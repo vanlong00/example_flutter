@@ -106,8 +106,8 @@ class ExplorableFileWidget extends StatelessWidget {
                       spacing: AppSpacing.sm,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Assets.icons.feat.export.image(width: iconSize, height: iconSize, color: AppSemanticColors.light.neutral50),
-                        Text('Open with', style: context.textTheme.labelSmall?.withColor(AppSemanticColors.light.neutral50)),
+                        Assets.icons.feat.export.image(width: iconSize, height: iconSize, color: AppSemanticColors.dark.neutral80),
+                        Text('Open with', style: context.textTheme.labelSmall?.withColor(AppSemanticColors.dark.neutral80)),
                       ],
                     ),
                   ),

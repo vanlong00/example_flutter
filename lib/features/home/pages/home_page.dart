@@ -78,7 +78,6 @@ class _HomePageViewState extends State<_HomePageView> {
 
   @override
   Widget build(BuildContext context) {
-    print('HomePage build');
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (_, _) async {
@@ -104,6 +103,7 @@ class _HomePageViewState extends State<_HomePageView> {
           builder: (_, show, child) => show
               ? FloatingActionButton.small(
                   onPressed: () => _scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeOut),
+                  backgroundColor: context.colorScheme.primary,
                   tooltip: 'Scroll to top',
                   child: child,
                 )

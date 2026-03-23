@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/ad_unit_ids.dart';
 import '../constants/ads_enums.dart';
+import '../constants/native_ad_style.dart';
 
 const _kAgeRestrictedKey = 'ads_age_restricted';
 const _kAppOpenAdMaxAge = Duration(hours: 1);
@@ -110,16 +111,21 @@ class AdsManager {
 
   // ── Native Ad ───────────────────────────────────────────────────────────────
 
-  Future<void> loadNativeAd({required bool isAgeRestricted, required void Function(NativeAd ad) onLoaded, required void Function() onFailed}) async {
+  Future<void> loadNativeAd({
+    required bool isAgeRestricted,
+    required NativeAdStyle style,
+    required void Function(NativeAd ad) onLoaded,
+    required void Function() onFailed,
+  }) async {
     // Dispose any previously cached ad
     _cachedNativeAd?.dispose();
     _cachedNativeAd = null;
 
     final ad = NativeAd(
       adUnitId: AdUnitIds.native,
+      factoryId: NativeAdStyle.factoryId,
+      customOptions: style.toCustomOptions(),
       request: _adRequest(isAgeRestricted: isAgeRestricted),
-      // TODO: customise NativeTemplateStyle colours and fonts to match branding
-      nativeTemplateStyle: NativeTemplateStyle(templateType: TemplateType.medium),
       listener: NativeAdListener(
         onAdLoaded: (loadedAd) {
           debugPrint('[AdsManager] NativeAd loaded');

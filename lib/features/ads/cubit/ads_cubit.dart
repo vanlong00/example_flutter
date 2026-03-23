@@ -1,8 +1,11 @@
+import 'package:example/core/core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../constants/ads_enums.dart';
+import '../constants/native_ad_style.dart';
 import '../manager/ads_manager.dart';
 
 part 'ads_state.dart';
@@ -15,7 +18,9 @@ class AdsCubit extends Cubit<AdsState> {
 
   // ── Initialization ───────────────────────────────────────────────────────────
 
-  /// Called once from SplashPage. Orchestrates consent → SDK init → ad loading.
+  /// Called once from SplashPage. Orchestrates consent → SDK init.
+  /// Native ad is loaded by [AppNativeAdWidget] after init so it can
+  /// pass the correct theme-aware [NativeAdStyle].
   Future<void> initialize() async {
     // 1. Read age-restriction preference
     final isAgeRestricted = await _manager.loadAgeRestricted();
@@ -31,7 +36,7 @@ class AdsCubit extends Cubit<AdsState> {
     // 4. Load ads in parallel — App Open Ad and Native Ad
     await Future.wait([
       // _loadAppOpenAd(),
-      _loadNativeAd(),
+      loadNativeAd(),
     ]);
 
     // 5. Signal splash that init is complete
@@ -59,22 +64,31 @@ class AdsCubit extends Cubit<AdsState> {
 
   // ── Native Ad ───────────────────────────────────────────────────────────────
 
-  Future<void> _loadNativeAd() async {
-    _safeEmit(state.copyWith(nativeAdStatus: AdLoadStatus.loading));
+  /// Loads (or reloads) the native ad with a theme-aware [style].
+  /// Called by [AppNativeAdWidget] on first mount and on every theme change.
+  Future<void> loadNativeAd() async {
+    _safeEmit(state.copyWith(nativeAdStatus: AdLoadStatus.loading, nativeAd: null));
 
     await _manager.loadNativeAd(
       isAgeRestricted: state.isAgeRestricted,
-      onLoaded: (ad) => _safeEmit(
-        state.copyWith(nativeAd: ad, nativeAdStatus: AdLoadStatus.ready),
-      ),
+      style: _buildStyle(context),
+      onLoaded: (ad) => _safeEmit(state.copyWith(nativeAd: ad, nativeAdStatus: AdLoadStatus.ready)),
       onFailed: () => _safeEmit(state.copyWith(nativeAdStatus: AdLoadStatus.failed)),
     );
   }
 
+  BuildContext get context => NavigationHelper.context;
+
+  NativeAdStyle _buildStyle(BuildContext context) => NativeAdStyle(
+    textStyleHeadline: NativeTemplateTextStyle(textColor: context.colorScheme.onSurface, style: NativeTemplateFontStyle.bold, size: 14.0),
+    textStyleBody: NativeTemplateTextStyle(textColor: context.semanticColors.neutral30, style: NativeTemplateFontStyle.normal, size: 8.0),
+    backgroundColor: context.semanticColors.neutral80,
+    ctaBackgroundColor: context.colorScheme.primary,
+    ctaTextStyle: NativeTemplateTextStyle(textColor: context.colorScheme.onPrimary, style: NativeTemplateFontStyle.bold, size: 16.0),
+  );
+
   // ── Helpers ──────────────────────────────────────────────────────────────────
 
-  /// Emits only when the cubit is still open — guards against callbacks firing
-  /// after [close()] has been called (e.g. rapid screen dispose during loading).
   void _safeEmit(AdsState newState) {
     if (!isClosed) emit(newState);
   }

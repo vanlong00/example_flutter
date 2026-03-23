@@ -96,12 +96,9 @@ class _HomeHeaderWidgetState extends State<HomeHeaderWidget> with SingleTickerPr
                         child: DecoratedBox(
                           decoration: BoxDecoration(
                             borderRadius: AppStyle.borderRound,
-                            border: Border.all(color: context.semanticColors.neutral90),
+                            border: Border.all(color: Color(0xFF9D9D9D).withValues(alpha: 0.2)),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Assets.icons.feat.searchNormal.image(color: context.colorScheme.primary),
-                          ),
+                          child: Center(child: Assets.icons.feat.searchNormal.image(color: context.colorScheme.primary, width: 18, height: 18)),
                         ),
                       ),
                     ),
@@ -222,8 +219,8 @@ class _ManagementPill extends StatelessWidget {
           ),
           Text(
             'Management',
-            style: context.textTheme.titleSmall?.regular.withColor(
-              context.isDarkMode ? context.semanticColors.neutral0 : context.semanticColors.neutral50,
+            style: context.textTheme.titleSmall?.medium.withColor(
+              context.isDarkMode ? context.semanticColors.neutral0 : context.semanticColors.neutral20,
             ),
           ),
         ],

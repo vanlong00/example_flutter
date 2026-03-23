@@ -1,5 +1,4 @@
 import 'package:design_system/design_system.dart';
-import 'package:example/core/configs/routes/routes.dart';
 import 'package:example/features/ads/cubit/ads_cubit.dart';
 import 'package:example/features/ads/manager/ads_manager.dart';
 import 'package:example/features/home/bloc/explorable_bloc/explorable_bloc.dart';

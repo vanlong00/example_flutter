@@ -105,7 +105,7 @@ class _FolderName extends StatelessWidget {
   Widget build(BuildContext context) {
     final dotIndex = name.lastIndexOf('.');
     final baseName = dotIndex > 0 ? name.substring(0, dotIndex) : name;
-    final ext = dotIndex > 0 ? name.substring(dotIndex) : name.substring(baseName.length - 4).trim();
+    final ext = dotIndex > 0 ? name.substring(dotIndex) : name.substring(baseName.length - (baseName.length < 4 ? 0 : 4));
     return Row(
       children: [
         Flexible(
