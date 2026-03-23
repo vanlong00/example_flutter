@@ -1,8 +1,8 @@
 import 'package:design_system/design_system.dart';
+import 'package:example/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../constants/ads_enums.dart';
 import '../cubit/ads_cubit.dart';
@@ -21,10 +21,24 @@ class AppNativeAdWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AdsCubit, AdsState>(
       buildWhen: (prev, curr) => prev.nativeAdStatus != curr.nativeAdStatus || prev.nativeAd != curr.nativeAd,
-      builder: (context, state) => switch (state.nativeAdStatus) {
-        AdLoadStatus.loading => SizedBox.shrink(),
-        AdLoadStatus.ready when state.nativeAd != null => _NativeAdView(ad: state.nativeAd!),
-        _ => const SizedBox.shrink(),
+      builder: (context, state) {
+        if (state.nativeAdStatus != AdLoadStatus.loading && state.nativeAdStatus != AdLoadStatus.ready) {
+          return const SizedBox.shrink();
+        }
+
+        final child = switch (state.nativeAdStatus) {
+          AdLoadStatus.loading => const _NativeAdSkeleton(),
+          AdLoadStatus.ready when state.nativeAd != null => _NativeAdView(ad: state.nativeAd!),
+          _ => const SizedBox.shrink(),
+        };
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+          child: ClipRRect(
+            borderRadius: AppStyle.borderExtraLarge,
+            clipBehavior: Clip.hardEdge,
+            child: Container(color: Colors.red, constraints: const BoxConstraints(minWidth: 270, minHeight: 270, maxHeight: 270), child: child),
+          ),
+        );
       },
     );
   }
@@ -39,14 +53,7 @@ class _NativeAdView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 350,
-      color: Colors.red,
-      child: ClipRRect(
-        borderRadius: AppStyle.borderCard,
-        child: AdWidget(ad: ad),
-      ),
-    );
+    return AdWidget(ad: ad);
   }
 }
 
@@ -57,52 +64,72 @@ class _NativeAdSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final base = Theme.of(context).colorScheme.surfaceContainerHighest;
-    final highlight = Theme.of(context).colorScheme.surfaceContainer;
-
-    return Shimmer.fromColors(
-      baseColor: base,
-      highlightColor: highlight,
-      child: Padding(
-        padding: AppSpacing.allMd,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Thumbnail placeholder
-            ClipRRect(
-              borderRadius: AppStyle.borderCard,
-              child: Container(height: 180, color: Colors.white),
+    return Container(
+      // Background Color native ad 
+      color: context.semanticColors.neutral80,
+      child: Column(
+        spacing: AppSpacing.sm,
+        children: [
+          // MediaView
+          Expanded(
+            child: Container(decoration: BoxDecoration(color: Colors.redAccent)),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: AppSpacing.smMd, right: AppSpacing.smMd, bottom: AppSpacing.md),
+            child: Column(
+              spacing: AppSpacing.sm,
+              children: [
+                IntrinsicHeight(
+                  child: Row(
+                    spacing: AppSpacing.md + AppSpacing.xs,
+                    children: [
+                      // IconView
+                      AspectRatio(aspectRatio: 1, child: SizedBox.shrink()),
+                      Expanded(
+                        child: Column(
+                          spacing: AppSpacing.xs / 2,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // AdvertiserView
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                              decoration: BoxDecoration(color: context.colorScheme.primary, borderRadius: BorderRadius.circular(4)),
+                              child: Text('Ad', style: TextStyle(color: context.colorScheme.onPrimary, fontSize: 8).semiBold),
+                            ),
+                            // HeadlineView
+                            Text('MiraClean - Trình Quản Lý Tệp', style: context.textTheme.titleSmall, maxLines: 2, overflow: TextOverflow.ellipsis),
+                            // BodyView
+                            Text(
+                              'MiraClean – Công cụ Giúp Quản lý Tệp và Bộ nhớ của Bạn',
+                              style: TextStyle(fontSize: 8).regular.copyWith(color: context.semanticColors.neutral30),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // CallToActionView
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: context.colorScheme.primary,
+                      foregroundColor: context.colorScheme.onPrimary,
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.smMd),
+                      elevation: .0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: Text('INSTALL', style: context.textTheme.titleMedium),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: AppSpacing.md),
-            // Title line
-            Container(
-              height: 16,
-              width: 200,
-              decoration: BoxDecoration(color: Colors.white, borderRadius: AppStyle.borderButton),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            // Body line 1
-            Container(
-              height: 12,
-              decoration: BoxDecoration(color: Colors.white, borderRadius: AppStyle.borderButton),
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            // Body line 2
-            Container(
-              height: 12,
-              width: 260,
-              decoration: BoxDecoration(color: Colors.white, borderRadius: AppStyle.borderButton),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            // CTA button placeholder
-            Container(
-              height: 40,
-              width: 140,
-              decoration: BoxDecoration(color: Colors.white, borderRadius: AppStyle.borderButton),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

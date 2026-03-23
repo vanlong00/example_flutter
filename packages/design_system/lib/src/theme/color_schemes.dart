@@ -158,19 +158,19 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
     onDestructiveContainer: Color(0xFF991b1b),
 
     // Light: 0 = black → 100 = white
-    neutral0: Color(0xFF000000),
-    neutral10: Color(0xFF030405),
-    neutral20: Color(0xFF080A0D),
-    neutral30: Color(0xFF121418),
-    neutral40: Color(0xFF1A1C24),
-    neutral50: Color(0xFF434959),
-    neutral60: Color(0xFF7A85A1),
-    neutral70: Color(0xFF9DA8C3),
-    neutral80: Color(0xFFE0E6F3),
-    neutral90: Color(0xFFF2F6FC),
     neutral100: Color(0xFFFFFFFF),
+    neutral90: Color(0xFFFCFCFC),
+    neutral80: Color(0xFFEDEDED),
+    neutral70: Color(0xFFB3B4B4),
+    neutral60: Color(0xFF999B9B),
+    neutral50: Color(0xFF808282),
+    neutral40: Color(0xFF666968),
+    neutral30: Color(0xFF4D504F),
+    neutral20: Color(0xFF333736),
+    neutral10: Color(0xFF1A1E1D),
+    neutral0: Color(0xFF020202),
 
-    backgroundCard: Color(0xfff3b383e),
+    backgroundCard: Color(0xff3b383e),
   );
 
   // ─── Dark ─────────────────────────────────────────────────────────────────

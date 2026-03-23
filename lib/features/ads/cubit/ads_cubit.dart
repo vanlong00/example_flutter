@@ -30,7 +30,7 @@ class AdsCubit extends Cubit<AdsState> {
 
     // 4. Load ads in parallel — App Open Ad and Native Ad
     await Future.wait([
-      _loadAppOpenAd(),
+      // _loadAppOpenAd(),
       _loadNativeAd(),
     ]);
 
