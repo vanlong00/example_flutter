@@ -44,6 +44,7 @@ class _MainPageViewState extends State<_MainPageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           Expanded(child: HomePage()),

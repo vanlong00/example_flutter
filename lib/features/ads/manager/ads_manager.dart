@@ -9,7 +9,7 @@ import '../constants/ad_unit_ids.dart';
 import '../constants/ads_enums.dart';
 import '../constants/native_ad_style.dart';
 
-const _kAgeRestrictedKey = 'ads_age_restricted';
+const _kBirthYearKey = 'ads_birth_year';
 const _kAppOpenAdMaxAge = Duration(hours: 1);
 
 @lazySingleton
@@ -18,17 +18,24 @@ class AdsManager {
   AppOpenAd? _appOpenAd;
   DateTime? _appOpenAdLoadTime;
 
-  // ── Age Restriction ──────────────────────────────────────────────────────────
+  // ── Birth Year / Age Restriction ─────────────────────────────────────────────
 
-  Future<bool> loadAgeRestricted() async {
+  int? _birthYear;
+  int get birthYear => _birthYear ?? DateTime.now().year - 20; // default to 20-year-old if missing (shouldn't happen since we ask on first launch)
+
+  Future<int?> loadBirthYear() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_kAgeRestrictedKey) ?? false;
+    _birthYear = prefs.getInt(_kBirthYearKey);
+    return _birthYear;
   }
 
-  Future<void> setAgeRestricted({required bool value}) async {
+  Future<void> setBirthYear(int year) async {
+    _birthYear = year;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_kAgeRestrictedKey, value);
+    await prefs.setInt(_kBirthYearKey, year);
   }
+
+  static bool isAgeRestricted(int birthYear) => DateTime.now().year - birthYear < 13;
 
   // ── Consent (UMP SDK) ────────────────────────────────────────────────────────
 
@@ -87,11 +94,13 @@ class AdsManager {
   // ── SDK Initialization ───────────────────────────────────────────────────────
 
   /// Must be called AFTER consent resolves.
-  Future<void> initializeSdk({required bool isAgeRestricted}) async {
+  Future<void> initializeSdk() async {
+    final restricted = isAgeRestricted(birthYear);
     MobileAds.instance.updateRequestConfiguration(
       RequestConfiguration(
-        tagForChildDirectedTreatment: isAgeRestricted ? TagForChildDirectedTreatment.yes : TagForChildDirectedTreatment.unspecified,
-        tagForUnderAgeOfConsent: isAgeRestricted ? TagForUnderAgeOfConsent.yes : TagForUnderAgeOfConsent.unspecified,
+        maxAdContentRating: _maxAdContentRating(),
+        tagForChildDirectedTreatment: restricted ? TagForChildDirectedTreatment.yes : TagForChildDirectedTreatment.unspecified,
+        tagForUnderAgeOfConsent: restricted ? TagForUnderAgeOfConsent.yes : TagForUnderAgeOfConsent.unspecified,
         testDeviceIds: kDebugMode ? AdUnitIds.testDeviceIds : null,
       ),
     );
@@ -102,17 +111,31 @@ class AdsManager {
 
   // ── Ad Request Builder ───────────────────────────────────────────────────────
 
-  AdRequest _adRequest({required bool isAgeRestricted}) {
+  AdRequest _adRequest() {
+    final restricted = isAgeRestricted(birthYear);
     return AdRequest(
-      // Force non-personalized ads for under-age or restricted users
-      extras: isAgeRestricted ? {'npa': '1'} : null,
+      // Force non-personalized ads for under-age users
+      extras: restricted ? {'npa': '1'} : null,
     );
+  }
+
+  String? _maxAdContentRating() {
+    switch (DateTime.now().year - birthYear) {
+      case 0 || 1 || 2 || 3 || 4 || 5 || 6 || 7 || 8 || 9 || 10 || 11 || 12:
+        return MaxAdContentRating.g;
+      case 13 || 14 || 15:
+        return MaxAdContentRating.pg;
+      case 16 || 17 || 18:
+        return MaxAdContentRating.t;
+      default:
+        return MaxAdContentRating.unspecified; // no restrictions for 20+-year-olds
+    }
+    
   }
 
   // ── Native Ad ───────────────────────────────────────────────────────────────
 
   Future<void> loadNativeAd({
-    required bool isAgeRestricted,
     required NativeAdStyle style,
     required void Function(NativeAd ad) onLoaded,
     required void Function() onFailed,
@@ -125,7 +148,7 @@ class AdsManager {
       adUnitId: AdUnitIds.native,
       factoryId: NativeAdStyle.factoryId,
       customOptions: style.toCustomOptions(),
-      request: _adRequest(isAgeRestricted: isAgeRestricted),
+      request: _adRequest(),
       listener: NativeAdListener(
         onAdLoaded: (loadedAd) {
           debugPrint('[AdsManager] NativeAd loaded');
@@ -146,7 +169,6 @@ class AdsManager {
   // ── App Open Ad ──────────────────────────────────────────────────────────────
 
   Future<void> loadAppOpenAd({
-    required bool isAgeRestricted,
     required void Function(AppOpenAd ad) onLoaded,
     required void Function() onFailed,
   }) async {
@@ -156,7 +178,7 @@ class AdsManager {
 
     await AppOpenAd.load(
       adUnitId: AdUnitIds.appOpen,
-      request: _adRequest(isAgeRestricted: isAgeRestricted),
+      request: _adRequest(),
       adLoadCallback: AppOpenAdLoadCallback(
         onAdLoaded: (ad) {
           debugPrint('[AdsManager] AppOpenAd loaded');

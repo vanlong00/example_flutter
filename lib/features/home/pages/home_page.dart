@@ -98,6 +98,7 @@ class _HomePageViewState extends State<_HomePageView> {
         if (shouldExit) SystemNavigator.pop();
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         floatingActionButton: ValueListenableBuilder<bool>(
           valueListenable: _showScrollToTop,
           builder: (_, show, child) => show

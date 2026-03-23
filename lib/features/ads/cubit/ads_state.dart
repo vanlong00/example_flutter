@@ -7,7 +7,7 @@ abstract class AdsState with _$AdsState {
     @Default(AdLoadStatus.idle) AdLoadStatus nativeAdStatus,
     @Default(AdLoadStatus.idle) AdLoadStatus appOpenAdStatus,
     @Default(false) bool isInitialized,
-    @Default(false) bool isAgeRestricted,
     NativeAd? nativeAd,
+    @Default([]) List<MoreApp> moreApps,
   }) = _AdsState;
 }

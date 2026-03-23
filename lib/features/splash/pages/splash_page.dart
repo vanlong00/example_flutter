@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:design_system/design_system.dart';
+import 'package:example/core/core.dart';
+import 'package:example/data/datasources/remote_config_service.dart';
 import 'package:example/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/configs/routes/key_route.dart';
-import '../../ads/constants/ads_enums.dart';
 import '../../ads/cubit/ads_cubit.dart';
 
 class SplashPage extends StatefulWidget {
@@ -23,12 +23,15 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-
     // Kick off the full ads initialization flow
     context.read<AdsCubit>().initialize();
 
     // Safety net: navigate home after 5 s even if initialization stalls
-    // _timer = Timer(const Duration(seconds: 5), _navigateHome);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await getIt<RemoteConfigService>().init(); // FetchTimeout is 5s
+
+      _navigateHome();
+    });
   }
 
   @override
@@ -47,14 +50,12 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AdsCubit, AdsState>(
-      // Fire only on the transition to isInitialized == true
       listenWhen: (prev, curr) => !prev.isInitialized && curr.isInitialized,
-      listener: (context, state) async {
-        if (state.appOpenAdStatus == AdLoadStatus.ready) {
-          // Show App Open Ad; navigate home after it is dismissed or fails
-          await context.read<AdsCubit>().showAppOpenAd();
-        }
-        _navigateHome();
+      listener: (context, state) {
+        // if (state.appOpenAdStatus == AdLoadStatus.ready) {
+        //   await context.read<AdsCubit>().showAppOpenAd();
+        // }
+        // _navigateHome();
       },
       child: Scaffold(
         body: SafeArea(

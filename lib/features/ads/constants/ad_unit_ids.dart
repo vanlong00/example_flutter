@@ -10,19 +10,21 @@ abstract final class AdUnitIds {
   /// Find it in logcat: "Use RequestConfiguration.Builder().setTestDeviceIds(...)"
   static const List<String> testDeviceIds = [];
 
-  static String get banner => kDebugMode
+  static bool get _kDebugMode => kDebugMode;
+
+  static String get banner => _kDebugMode
       ? 'ca-app-pub-3940256099942544/6300978111'
       : 'ca-app-pub-9131188183332364/9021628092';
 
-  static String get interstitial => kDebugMode
+  static String get interstitial => _kDebugMode
       ? 'ca-app-pub-3940256099942544/1033173712'
       : 'ca-app-pub-9131188183332364/5353845825';
 
-  static String get native => kDebugMode
+  static String get native => _kDebugMode
       ? 'ca-app-pub-3940256099942544/2247696110'
       : 'ca-app-pub-9131188183332364/4040764158';
 
-  static String get appOpen => kDebugMode
+  static String get appOpen => _kDebugMode
       ? 'ca-app-pub-3940256099942544/9257395921'
       : 'ca-app-pub-9131188183332364/5485707768';
 }

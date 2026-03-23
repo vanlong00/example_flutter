@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:design_system/design_system.dart';
 import 'package:example/core/core.dart';
+import 'package:example/data/datasources/remote_config_service.dart';
 import 'package:example/features/theme/cubit/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,9 +51,12 @@ class _AppNativeAdWidgetState extends State<AppNativeAdWidget> {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
             child: ClipRRect(
-              borderRadius: AppStyle.borderExtraLarge,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(AppStyle.radiusExtraLarge)),
               clipBehavior: Clip.hardEdge,
-              child: Container(constraints: const BoxConstraints(minWidth: 270, minHeight: 270, maxHeight: 270), child: child),
+              child: Container(
+                constraints: const BoxConstraints(minWidth: 270, minHeight: 270, maxHeight: 270),
+                child: AspectRatio(aspectRatio: 1.36, child: child),
+              ),
             ),
           );
         },
@@ -79,13 +85,18 @@ class _NativeAdSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final moreApps = getIt<RemoteConfigService>().getMoreApps();
+    final moreApp = moreApps.elementAt(Random().nextInt(moreApps.length));
+
     return Container(
       color: context.semanticColors.neutral80,
       child: Column(
         spacing: AppSpacing.sm,
         children: [
           // MediaView
-          Expanded(child: Container(color: context.semanticColors.neutral70)),
+          Expanded(
+            child: Image.network(moreApp.banner, fit: BoxFit.cover, width: double.infinity),
+          ),
           Padding(
             padding: const EdgeInsets.only(left: AppSpacing.smMd, right: AppSpacing.smMd, bottom: AppSpacing.md),
             child: Column(
@@ -94,9 +105,19 @@ class _NativeAdSkeleton extends StatelessWidget {
                 IntrinsicHeight(
                   child: Row(
                     spacing: AppSpacing.md + AppSpacing.xs,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       // IconView
-                      AspectRatio(aspectRatio: 1, child: SizedBox.shrink()),
+                      SizedBox(
+                        width:
+                            context.textTheme.titleSmall!.fontSize! * context.textTheme.titleSmall!.height! +
+                            2 * TextStyle(fontSize: 8).fontSize! * 1.32 +
+                            2 * AppSpacing.xs / 2,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Image.network(moreApp.icon, fit: BoxFit.cover),
+                        ),
+                      ),
                       Expanded(
                         child: Column(
                           spacing: AppSpacing.xs / 2,
@@ -106,14 +127,14 @@ class _NativeAdSkeleton extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
                               decoration: BoxDecoration(color: context.colorScheme.primary, borderRadius: BorderRadius.circular(4)),
-                              child: Text('Ad', style: TextStyle(color: context.colorScheme.onPrimary, fontSize: 8).semiBold),
+                              child: Text('Ad', style: TextStyle(color: context.colorScheme.onPrimary, fontSize: 8, height: 1.32).semiBold),
                             ),
                             // HeadlineView
-                            Text('MiraClean - Trình Quản Lý Tệp', style: context.textTheme.titleSmall, maxLines: 2, overflow: TextOverflow.ellipsis),
+                            Text(moreApp.name, style: context.textTheme.titleSmall, maxLines: 2, overflow: TextOverflow.ellipsis),
                             // BodyView
                             Text(
-                              'MiraClean – Công cụ Giúp Quản lý Tệp và Bộ nhớ của Bạn',
-                              style: TextStyle(fontSize: 8).regular.copyWith(color: context.semanticColors.neutral30),
+                              moreApp.description,
+                              style: TextStyle(fontSize: 8, height: 1.32).regular.copyWith(color: context.semanticColors.neutral30),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),

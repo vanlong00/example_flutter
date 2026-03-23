@@ -1,6 +1,5 @@
 import 'package:design_system/design_system.dart';
 import 'package:example/features/ads/cubit/ads_cubit.dart';
-import 'package:example/features/ads/manager/ads_manager.dart';
 import 'package:example/features/home/bloc/explorable_bloc/explorable_bloc.dart';
 import 'package:example/features/theme/cubit/theme_cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -24,7 +23,7 @@ Future<void> main() async {
       providers: [
         BlocProvider(create: (_) => ThemeCubit(prefs)),
         BlocProvider(create: (_) => ExplorableBloc()),
-        BlocProvider(create: (_) => AdsCubit(getIt<AdsManager>())),
+        BlocProvider(create: (_) => getIt<AdsCubit>()),
       ],
       child: DevicePreview(enabled: !kReleaseMode, builder: (context) => const MyApp()),
     ),
